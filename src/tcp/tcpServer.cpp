@@ -1,3 +1,12 @@
+/**
+ *  @file    tcpServer.cpp
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #include <tcp/tcpServer.h>
 #include <tcp/tcpClient.h>
 #include <iostream>

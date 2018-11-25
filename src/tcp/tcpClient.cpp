@@ -1,3 +1,12 @@
+/**
+ *  @file    tcpClient.cpp
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #include <tcp/tcpClient.h>
 #include <commonDataBuffer.h>
 

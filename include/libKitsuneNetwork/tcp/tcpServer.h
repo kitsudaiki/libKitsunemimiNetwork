@@ -1,15 +1,21 @@
+/**
+ *  @file    tcpServer.h
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
 
-/* server.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <time.h>
-
-/* Headerfiles für UNIX/Linux */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

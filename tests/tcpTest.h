@@ -1,3 +1,12 @@
+/**
+ *  @file    tcpTest.h
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #ifndef TCPTEST_H
 #define TCPTEST_H
 

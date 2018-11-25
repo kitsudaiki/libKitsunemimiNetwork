@@ -1,18 +1,25 @@
+/**
+ *  @file    tcpClient.h
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #ifndef TCPCLIENT_H
 #define TCPCLIENT_H
 
-/* client.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
-/* Headerfiles für UNIX/Linux */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+
 #include <unistd.h>
 
 #include <string>
