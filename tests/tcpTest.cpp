@@ -1,3 +1,12 @@
+/**
+ *  @file    tcpTest.cpp
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #include "tcpTest.h"
 #include <iostream>
 #include <commonDataBuffer.h>
