@@ -1,6 +1,10 @@
-QT       -= qt core gui
+TEMPLATE = subdirs
+CONFIG += ordered
+QT -= qt core gui
+CONFIG += c++14
 
-TARGET = KitsuneNetwork
-TEMPLATE = lib
-CONFIG += c++17
+SUBDIRS = \
+   src \
+   tests
 
+tests.depends = src
