@@ -8,7 +8,7 @@
  */
 
 #include <tcp/tcpClient.h>
-#include <commonDataBuffer.h>
+#include <networkTrigger.h>
 
 namespace Kitsune
 {
@@ -45,15 +45,6 @@ TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 TcpClient::~TcpClient()
 {
     closeSocket();
-}
-
-/**
- * @brief TcpClient::setNewBufferSize
- * @param numberOfBlocks
- */
-void TcpClient::setNewBufferSize(uint32_t numberOfBlocks)
-{
-    m_bufferSize = numberOfBlocks;
 }
 
 /**
@@ -111,20 +102,19 @@ bool TcpClient::initClientSide()
  */
 bool TcpClient::waitForMessage()
 {
-    m_incomingBuffer = new Kitsune::CommonDataBuffer(m_bufferSize);
-    const uint64_t bufferSize = m_incomingBuffer->getTotalBufferSize();
     long recvSize = recv(m_fd,
-                          m_incomingBuffer->getBufferPointer(),
-                          bufferSize,
-                          0);
+                         m_recvBuffer,
+                         RCVBUFSIZE,
+                         0);
 
     if(recvSize < 0) {
         return false;
     }
 
-    m_incomingBuffer->addNumberOfWrittenBytes(recvSize);
-    addDataBuffer(m_incomingBuffer);
-    m_incomingBuffer = nullptr;
+    for(uint32_t i = 0; i < m_trigger.size(); i++)
+    {
+        m_trigger[i]->runTask(m_recvBuffer, recvSize);
+    }
 
     return true;
 }

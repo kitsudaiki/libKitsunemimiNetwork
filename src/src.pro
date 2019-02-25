@@ -15,7 +15,8 @@ INCLUDEPATH += $$PWD \
 
 HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcpServer.h \
-    ../include/libKitsuneNetwork/tcp/tcpClient.h
+    ../include/libKitsuneNetwork/tcp/tcpClient.h \
+    networkTrigger.h
 
 SOURCES += \
     tcp/tcpServer.cpp \
