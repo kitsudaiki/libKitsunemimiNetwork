@@ -1,10 +1,10 @@
 /**
  *  @file    tcpClient.h
+ *
  *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
  *
- *  @section DESCRIPTION
- *
- *  TODO: Description
+ *  MIT License
  */
 
 #ifndef TCPCLIENT_H

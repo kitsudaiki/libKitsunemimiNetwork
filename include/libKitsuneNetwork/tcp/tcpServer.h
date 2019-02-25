@@ -1,10 +1,10 @@
 /**
  *  @file    tcpServer.h
+ *
  *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
  *
- *  @section DESCRIPTION
- *
- *  TODO: Description
+ *  MIT License
  */
 
 #ifndef TCPSERVER_H

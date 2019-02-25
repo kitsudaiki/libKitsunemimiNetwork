@@ -1,10 +1,10 @@
 /**
  *  @file    tcpTest.cpp
+ *
  *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
  *
- *  @section DESCRIPTION
- *
- *  TODO: Description
+ *  MIT License
  */
 
 #include "tcpTest.h"

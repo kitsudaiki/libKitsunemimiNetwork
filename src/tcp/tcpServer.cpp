@@ -1,10 +1,10 @@
 /**
  *  @file    tcpServer.cpp
+ *
  *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
  *
- *  @section DESCRIPTION
- *
- *  TODO: Description
+ *  MIT License
  */
 
 #include <tcp/tcpServer.h>
