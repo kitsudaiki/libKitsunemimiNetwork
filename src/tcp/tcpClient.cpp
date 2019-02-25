@@ -72,6 +72,12 @@ bool TcpClient::initClientSide()
         return false;
     }
 
+    // set TCP_NODELAY for sure
+    //int optval = 1;
+    //if(setsockopt(m_fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0) {
+    //    printf("Cannot set TCP_NODELAY option on listen socket (%s)\n", strerror(errno));
+    //}
+
     // set server-address
     memset(&server, 0, sizeof(server));
     if((addr = inet_addr(m_address.c_str())) != INADDR_NONE) {
