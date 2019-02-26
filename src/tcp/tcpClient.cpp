@@ -52,7 +52,8 @@ TcpClient::~TcpClient()
  * @param trigger
  * @return
  */
-bool TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
+bool
+TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
 {
     if(trigger == nullptr) {
         return false;
@@ -65,7 +66,8 @@ bool TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
  * @brief TcpClient::init
  * @return
  */
-bool TcpClient::initClientSide()
+bool
+TcpClient::initClientSide()
 {
     struct sockaddr_in server;
     struct hostent* hostInfo;
@@ -114,7 +116,8 @@ bool TcpClient::initClientSide()
  * @brief TcpClient::waitForMessage
  * @return
  */
-bool TcpClient::waitForMessage()
+bool
+TcpClient::waitForMessage()
 {
     long recvSize = recv(m_fd,
                          m_recvBuffer,
@@ -138,7 +141,8 @@ bool TcpClient::waitForMessage()
  * @param message
  * @return
  */
-bool TcpClient::sendMessage(const std::string &message)
+bool
+TcpClient::sendMessage(const std::string &message)
 {
     const uint32_t messageLength = message.length();
     return sendMessage((uint8_t*)message.c_str(), messageLength);
@@ -150,7 +154,8 @@ bool TcpClient::sendMessage(const std::string &message)
  * @param numberOfBytes
  * @return
  */
-bool TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
+bool
+TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 {
     const uint32_t successfulSended = send(m_fd, message, numberOfBytes, 0);
     if(successfulSended != numberOfBytes) {
@@ -163,7 +168,8 @@ bool TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
  * @brief TcpClient::closeSocket
  * @return
  */
-bool TcpClient::closeSocket()
+bool
+TcpClient::closeSocket()
 {
     stop();
     if(m_fd >= 0)
@@ -178,7 +184,8 @@ bool TcpClient::closeSocket()
 /**
  * @brief TcpClient::run
  */
-void TcpClient::run()
+void
+TcpClient::run()
 {
     while(!m_abort) {
         waitForMessage();

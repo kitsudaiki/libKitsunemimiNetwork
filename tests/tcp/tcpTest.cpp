@@ -31,8 +31,8 @@ TcpTest::TcpTest() : Kitsune::CommonTest("TcpTest")
 
 void TcpTest::initTestCase()
 {
-    m_server = new TcpServer();
     m_buffer = new TestBuffer();
+    m_server = new TcpServer(m_buffer);
 }
 
 void TcpTest::checkConnectionInit()
@@ -47,7 +47,6 @@ void TcpTest::checkConnectionInit()
     if(m_server->getNumberOfSockets() == 1)
     {
         m_clientServerSide = m_server->getSocket(0);
-        m_clientServerSide->addNetworkTrigger(m_buffer);
         m_clientServerSide->start();
     }
 }

@@ -31,12 +31,13 @@ namespace Kitsune
 {
 namespace Network
 {
+class NetworkTrigger;
 class TcpClient;
 
 class TcpServer : public Kitsune::CommonThread
 {
 public:
-    TcpServer();
+    TcpServer(NetworkTrigger* trigger = nullptr);
     ~TcpServer();
 
     bool initSocket(const uint16_t port);
@@ -52,6 +53,7 @@ protected:
 
 private:
     int m_serverSocket = 0;
+    NetworkTrigger* m_trigger = nullptr;
     std::vector<TcpClient*> m_sockets;
     struct sockaddr_in m_server;
 };
