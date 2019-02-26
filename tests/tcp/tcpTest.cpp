@@ -13,6 +13,7 @@
 
 #include <tcp/tcpServer.h>
 #include <tcp/tcpClient.h>
+#include <testBuffer.h>
 
 namespace Kitsune
 {
@@ -31,6 +32,7 @@ TcpTest::TcpTest() : Kitsune::CommonTest("TcpTest")
 void TcpTest::initTestCase()
 {
     m_server = new TcpServer();
+    m_buffer = new TestBuffer();
 }
 
 void TcpTest::checkConnectionInit()
@@ -39,29 +41,36 @@ void TcpTest::checkConnectionInit()
     UNITTEST(m_server->start(), true);
     m_clientClientSide = new TcpClient("127.0.0.1", 12345);
     sleep(1);
+
     UNITTEST(m_server->getNumberOfSockets(), 1);
-    if(m_server->getNumberOfSockets() == 1) {
+
+    if(m_server->getNumberOfSockets() == 1)
+    {
         m_clientServerSide = m_server->getSocket(0);
+        m_clientServerSide->addNetworkTrigger(m_buffer);
         m_clientServerSide->start();
     }
 }
 
 void TcpTest::checkLittleDataTransfer()
 {
+    sleep(1);
+
     std::string sendMessage("poipoipoi");
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
-    sleep(2);
-    UNITTEST(m_clientServerSide->getNumberOfBuffer(), 1);
-    if(m_clientServerSide->getNumberOfBuffer() == 1)
+    sleep(1);
+    UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
+
+
+    if(m_buffer->getNumberOfWrittenBytes() == 9)
     {
-        CommonDataBuffer* buffer = m_clientServerSide->getCommonDataBuffer(0);
+        CommonDataBuffer* buffer = m_buffer->getBuffer();
         uint64_t bufferSize = buffer->getNumberOfWrittenBytes();
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->getBufferPointer(), bufferSize);
         UNITTEST(bufferSize, 9);
         UNITTEST(recvMessage[2], sendMessage.at(2));
-        UNITTEST(m_clientServerSide->clearBuffer(), true);
-        UNITTEST(m_clientServerSide->clearBuffer(), false);
+        m_buffer->clearBuffer();
     }
 }
 
@@ -73,11 +82,7 @@ void TcpTest::checkBigDataTransfer()
     }
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
     sleep(1);
-    uint32_t bufferSize = m_clientServerSide->getNumberOfBuffer();
-    uint32_t totalIncom = 0;
-    for(uint32_t i = 0; i < bufferSize; i++) {
-        totalIncom += m_clientServerSide->getCommonDataBuffer(i)->getNumberOfWrittenBytes();
-    }
+    uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
     UNITTEST(totalIncom, sendMessage.size());
 }
 
@@ -92,6 +97,7 @@ void TcpTest::cleanupTestCase()
     delete m_clientServerSide;
     delete m_clientClientSide;
     delete m_server;
+    delete m_buffer;
 }
 
 }

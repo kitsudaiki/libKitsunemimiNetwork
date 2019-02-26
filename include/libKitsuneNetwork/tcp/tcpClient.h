@@ -45,6 +45,8 @@ public:
               struct sockaddr_in client);
     ~TcpClient();
 
+    bool addNetworkTrigger(NetworkTrigger* trigger);
+
     bool sendMessage(const std::string &message);
     bool sendMessage(uint8_t* message, const uint32_t numberOfBytes);
 

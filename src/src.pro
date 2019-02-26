@@ -20,7 +20,8 @@ HEADERS += \
 
 SOURCES += \
     tcp/tcpServer.cpp \
-    tcp/tcpClient.cpp
+    tcp/tcpClient.cpp \
+    networkTrigger.cpp
 
 unix {
     target.path = /usr/lib

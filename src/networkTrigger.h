@@ -18,11 +18,10 @@ namespace Kitsune
 namespace Network
 {
 
-
 class NetworkTrigger
 {
 public:
-    NetworkTrigger() {}
+    NetworkTrigger();
     virtual ~NetworkTrigger();
     virtual void runTask(uint8_t* buffer, const long bufferSize) = 0;
 };

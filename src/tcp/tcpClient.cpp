@@ -48,6 +48,20 @@ TcpClient::~TcpClient()
 }
 
 /**
+ * @brief TcpClient::addNetworkTrigger
+ * @param trigger
+ * @return
+ */
+bool TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
+{
+    if(trigger == nullptr) {
+        return false;
+    }
+    m_trigger.push_back(trigger);
+    return true;
+}
+
+/**
  * @brief TcpClient::init
  * @return
  */
