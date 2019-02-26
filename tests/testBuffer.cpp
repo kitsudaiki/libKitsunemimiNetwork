@@ -18,7 +18,7 @@ TestBuffer::~TestBuffer()
 }
 
 void
-TestBuffer::runTask(uint8_t *buffer, const long bufferSize)
+TestBuffer::runTask(uint8_t *buffer, const long bufferSize, TcpClient *client)
 {
     m_buffer->addData(buffer, static_cast<uint32_t>(bufferSize));
 }
