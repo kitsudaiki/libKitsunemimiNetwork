@@ -63,6 +63,30 @@ TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
 }
 
 /**
+ * @brief TcpClient::removeNetworkTrigger
+ * @param index
+ * @return
+ */
+bool
+TcpClient::removeNetworkTrigger(const uint32_t index)
+{
+    if(m_trigger.size() <= index) {
+        return false;
+    }
+    m_trigger.erase(m_trigger.begin() + index);
+    return true;
+}
+
+/**
+ * @brief TcpClient::clearNetworkTrigger
+ */
+void
+TcpClient::clearNetworkTrigger()
+{
+    m_trigger.clear();
+}
+
+/**
  * @brief TcpClient::init
  * @return
  */
@@ -130,7 +154,7 @@ TcpClient::waitForMessage()
 
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
-        m_trigger[i]->runTask(m_recvBuffer, recvSize);
+        m_trigger[i]->runTask(m_recvBuffer, recvSize, this);
     }
 
     return true;

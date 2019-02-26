@@ -46,6 +46,8 @@ public:
     ~TcpClient();
 
     bool addNetworkTrigger(NetworkTrigger* trigger);
+    bool removeNetworkTrigger(const uint32_t index);
+    void clearNetworkTrigger();
 
     bool sendMessage(const std::string &message);
     bool sendMessage(uint8_t* message, const uint32_t numberOfBytes);
