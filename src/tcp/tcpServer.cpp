@@ -92,6 +92,7 @@ TcpServer::waitForIncomingConnection()
     if(m_trigger != nullptr) {
         tcpClient->addNetworkTrigger(m_trigger);
     }
+    tcpClient->start();
 
     mutexLock();
     m_sockets.push_back(tcpClient);
