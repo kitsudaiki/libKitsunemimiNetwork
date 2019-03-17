@@ -154,7 +154,7 @@ TcpClient::waitForMessage()
 
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
-        m_trigger[i]->runTask(m_recvBuffer, recvSize);
+        m_trigger[i]->runTask(m_recvBuffer, recvSize, nullptr);
     }
 
     return true;
