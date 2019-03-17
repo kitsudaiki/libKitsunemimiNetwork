@@ -89,7 +89,8 @@ TcpServer::waitForIncomingConnection()
 
     // create new client-object from file-descriptor
     TcpClient* tcpClient = new TcpClient(fd, client);
-    for(uint32_t i = 0; i < m_trigger.size(); i++) {
+    for(uint32_t i = 0; i < m_trigger.size(); i++) 
+    {
         tcpClient->addNetworkTrigger(m_trigger.at(i));
     }
     tcpClient->start();

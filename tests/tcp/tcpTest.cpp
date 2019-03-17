@@ -47,7 +47,6 @@ void TcpTest::checkConnectionInit()
     if(m_server->getNumberOfSockets() == 1)
     {
         m_clientServerSide = m_server->getSocket(0);
-        m_clientServerSide->start();
     }
 }
 
