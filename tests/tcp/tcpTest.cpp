@@ -86,8 +86,6 @@ void TcpTest::checkBigDataTransfer()
 
 void TcpTest::cleanupTestCase()
 {
-    m_clientServerSide->stop();
-    m_server->stop();
     UNITTEST(m_clientServerSide->closeSocket(), true);
     UNITTEST(m_server->closeServer(), true);
     m_clientClientSide->closeSocket();

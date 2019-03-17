@@ -64,7 +64,7 @@ private:
 
     uint8_t m_recvBuffer[RCVBUFSIZE];
 
-    int m_fd = 0;
+    int m_clientSocket = 0;
     sockaddr_in m_client;
 
     std::vector<NetworkTrigger*> m_trigger;

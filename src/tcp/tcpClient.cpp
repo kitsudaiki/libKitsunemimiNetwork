@@ -34,7 +34,7 @@ TcpClient::TcpClient(const std::string address,
  */
 TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 {
-    m_fd = clientFd;
+    m_clientSocket = clientFd;
     m_client = client;
     m_clientSide = false;
 }
@@ -98,8 +98,8 @@ TcpClient::initClientSide()
     unsigned long addr;
 
     // create socket
-    m_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if(m_fd < 0) {
+    m_clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if(m_clientSocket < 0) {
         return false;
     }
 
@@ -129,7 +129,7 @@ TcpClient::initClientSide()
     server.sin_port = htons(m_port);
 
     // create connection
-    if(connect(m_fd, (struct sockaddr*)&server, sizeof(server)) < 0) {
+    if(connect(m_clientSocket, (struct sockaddr*)&server, sizeof(server)) < 0) {
         return false;
     }
 
@@ -143,7 +143,7 @@ TcpClient::initClientSide()
 bool
 TcpClient::waitForMessage()
 {
-    long recvSize = recv(m_fd,
+    long recvSize = recv(m_clientSocket,
                          m_recvBuffer,
                          RCVBUFSIZE,
                          0);
@@ -181,7 +181,7 @@ TcpClient::sendMessage(const std::string &message)
 bool
 TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 {
-    const uint32_t successfulSended = send(m_fd, message, numberOfBytes, 0);
+    const uint32_t successfulSended = send(m_clientSocket, message, numberOfBytes, 0);
     if(successfulSended != numberOfBytes) {
         return false;
     }
@@ -195,14 +195,21 @@ TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 bool
 TcpClient::closeSocket()
 {
-    stop();
-    if(m_fd >= 0)
-    {
-        close(m_fd);
-        m_fd = 0;
-        return true;
+    if(m_abort == true) {
+        return false;
     }
-    return false;
+
+    m_abort = true;
+
+    if(m_clientSocket >= 0)
+    {
+        shutdown(m_clientSocket, SHUT_RDWR);
+        close(m_clientSocket);
+        m_clientSocket = 0;
+    }
+    stop();
+
+    return true;
 }
 
 /**
