@@ -48,12 +48,15 @@ public:
     uint32_t getNumberOfSockets();
     TcpClient* getSocket(const uint32_t pos);
 
+    void addAdditionalTrigger(NetworkTrigger* trigger);
+    void clearTrigger();
+
 protected:
     void run();
 
 private:
     int m_serverSocket = 0;
-    NetworkTrigger* m_trigger = nullptr;
+    std::vector<NetworkTrigger*> m_trigger;
     std::vector<TcpClient*> m_sockets;
     struct sockaddr_in m_server;
 };

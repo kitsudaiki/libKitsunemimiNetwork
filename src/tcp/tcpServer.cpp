@@ -20,9 +20,9 @@ namespace Network
 /**
  * @brief TcpServer::TcpServer
  */
-TcpServer::TcpServer(NetworkTrigger *trigger)
+TcpServer::TcpServer(NetworkTrigger* trigger)
 {
-    m_trigger = trigger;
+    m_trigger.push_back(trigger);
 }
 
 /**
@@ -89,8 +89,8 @@ TcpServer::waitForIncomingConnection()
 
     // create new client-object from file-descriptor
     TcpClient* tcpClient = new TcpClient(fd, client);
-    if(m_trigger != nullptr) {
-        tcpClient->addNetworkTrigger(m_trigger);
+    for(uint32_t i = 0; i < m_trigger.size(); i++) {
+        tcpClient->addNetworkTrigger(m_trigger.at(i));
     }
     tcpClient->start();
 
@@ -155,6 +155,25 @@ TcpServer::getSocket(const uint32_t pos)
     }
     mutexUnlock();
     return result;
+}
+
+/**
+ * @brief TcpServer::addAdditionalTrigger
+ * @param trigger
+ */
+void
+TcpServer::addAdditionalTrigger(NetworkTrigger *trigger)
+{
+    m_trigger.push_back(trigger);
+}
+
+/**
+ * @brief TcpServer::clearTrigger
+ */
+void
+TcpServer::clearTrigger()
+{
+    m_trigger.clear();
 }
 
 /**
