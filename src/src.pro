@@ -2,7 +2,7 @@ QT       -= qt core gui
 
 TARGET = KitsuneNetwork
 TEMPLATE = lib
-CONFIG += staticlib
+# CONFIG += staticlib
 CONFIG += c++14
 
 LIBS += -L../../libKitsuneCommon -lKitsuneCommon
@@ -11,7 +11,7 @@ LIBS += -L../../libKitsuneCommon/release -lKitsuneCommon
 INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
 
 INCLUDEPATH += $$PWD \
-            $$PWD/../include/libKitsuneNetwork
+               $$PWD/../include/libKitsuneNetwork
 
 HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcpServer.h \
