@@ -9,6 +9,7 @@
 
 #include <tcp/tcpClient.h>
 #include <networkTrigger.h>
+#include <iostream>
 
 namespace Kitsune
 {
@@ -152,6 +153,7 @@ TcpClient::waitForMessage()
         return false;
     }
 
+    std::cout<<"recv message"<<std::endl;
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
         m_trigger[i]->runTask(m_recvBuffer, recvSize, this);
@@ -181,8 +183,12 @@ TcpClient::sendMessage(const std::string &message)
 bool
 TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 {
+    if(m_clientSocket == 0) {
+        return false;
+    }
     const uint32_t successfulSended = send(m_clientSocket, message, numberOfBytes, 0);
     if(successfulSended != numberOfBytes) {
+        std::cout<<"send failed"<<std::endl;
         return false;
     }
     return true;
@@ -195,6 +201,7 @@ TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 bool
 TcpClient::closeSocket()
 {
+    std::cout<<"close socket"<<std::endl;
     if(m_abort == true) {
         return false;
     }
