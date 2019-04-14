@@ -16,8 +16,10 @@ INCLUDEPATH += $$PWD \
 LIBS += -L../src -lKitsuneNetwork
 
 HEADERS += \
-    tcp/tcpTest.h
+    tcp/tcpTest.h \
+    testBuffer.h
 
 SOURCES += \
     tcp/tcpTest.cpp \
-    main.cpp
+    main.cpp \
+    testBuffer.cpp

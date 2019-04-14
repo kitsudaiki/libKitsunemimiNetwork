@@ -20,18 +20,19 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <cinttypes>
 
 #include <unistd.h>
 
 #include <string>
+#include <vector>
 #include <commonThread.h>
 
 namespace Kitsune
 {
-class CommonDataBuffer;
-
 namespace Network
 {
+class NetworkTrigger;
 
 #define RCVBUFSIZE 8192
 
@@ -44,7 +45,9 @@ public:
               struct sockaddr_in client);
     ~TcpClient();
 
-    void setNewBufferSize(uint32_t numberOfBlocks);
+    bool addNetworkTrigger(NetworkTrigger* trigger);
+    bool removeNetworkTrigger(const uint32_t index);
+    void clearNetworkTrigger();
 
     bool sendMessage(const std::string &message);
     bool sendMessage(uint8_t* message, const uint32_t numberOfBytes);
@@ -59,11 +62,12 @@ private:
     std::string m_address = "";
     uint16_t m_port = 0;
 
-    Kitsune::CommonDataBuffer* m_incomingBuffer = nullptr;
-    uint32_t m_bufferSize = 1;  // number of blocks
+    uint8_t m_recvBuffer[RCVBUFSIZE];
 
-    int m_fd = 0;
+    int m_clientSocket = 0;
     sockaddr_in m_client;
+
+    std::vector<NetworkTrigger*> m_trigger;
 
     bool initClientSide();
     bool waitForMessage();

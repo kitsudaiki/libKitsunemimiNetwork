@@ -19,6 +19,7 @@ namespace Network
 
 class TcpServer;
 class TcpClient;
+class TestBuffer;
 
 class TcpTest : public Kitsune::CommonTest
 {
@@ -35,6 +36,7 @@ private:
     TcpServer* m_server = nullptr;
     TcpClient* m_clientClientSide = nullptr;
     TcpClient* m_clientServerSide = nullptr;
+    TestBuffer* m_buffer = nullptr;
 };
 
 }

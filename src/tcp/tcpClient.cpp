@@ -8,7 +8,8 @@
  */
 
 #include <tcp/tcpClient.h>
-#include <commonDataBuffer.h>
+#include <networkTrigger.h>
+#include <iostream>
 
 namespace Kitsune
 {
@@ -34,7 +35,7 @@ TcpClient::TcpClient(const std::string address,
  */
 TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 {
-    m_fd = clientFd;
+    m_clientSocket = clientFd;
     m_client = client;
     m_clientSide = false;
 }
@@ -48,27 +49,58 @@ TcpClient::~TcpClient()
 }
 
 /**
- * @brief TcpClient::setNewBufferSize
- * @param numberOfBlocks
+ * @brief TcpClient::addNetworkTrigger
+ * @param trigger
+ * @return
  */
-void TcpClient::setNewBufferSize(uint32_t numberOfBlocks)
+bool
+TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
 {
-    m_bufferSize = numberOfBlocks;
+    if(trigger == nullptr) {
+        return false;
+    }
+    m_trigger.push_back(trigger);
+    return true;
+}
+
+/**
+ * @brief TcpClient::removeNetworkTrigger
+ * @param index
+ * @return
+ */
+bool
+TcpClient::removeNetworkTrigger(const uint32_t index)
+{
+    if(m_trigger.size() <= index) {
+        return false;
+    }
+    m_trigger.erase(m_trigger.begin() + index);
+    return true;
+}
+
+/**
+ * @brief TcpClient::clearNetworkTrigger
+ */
+void
+TcpClient::clearNetworkTrigger()
+{
+    m_trigger.clear();
 }
 
 /**
  * @brief TcpClient::init
  * @return
  */
-bool TcpClient::initClientSide()
+bool
+TcpClient::initClientSide()
 {
     struct sockaddr_in server;
     struct hostent* hostInfo;
     unsigned long addr;
 
     // create socket
-    m_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if(m_fd < 0) {
+    m_clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if(m_clientSocket < 0) {
         return false;
     }
 
@@ -98,7 +130,7 @@ bool TcpClient::initClientSide()
     server.sin_port = htons(m_port);
 
     // create connection
-    if(connect(m_fd, (struct sockaddr*)&server, sizeof(server)) < 0) {
+    if(connect(m_clientSocket, (struct sockaddr*)&server, sizeof(server)) < 0) {
         return false;
     }
 
@@ -109,22 +141,22 @@ bool TcpClient::initClientSide()
  * @brief TcpClient::waitForMessage
  * @return
  */
-bool TcpClient::waitForMessage()
+bool
+TcpClient::waitForMessage()
 {
-    m_incomingBuffer = new Kitsune::CommonDataBuffer(m_bufferSize);
-    const uint64_t bufferSize = m_incomingBuffer->getTotalBufferSize();
-    long recvSize = recv(m_fd,
-                          m_incomingBuffer->getBufferPointer(),
-                          bufferSize,
-                          0);
+    long recvSize = recv(m_clientSocket,
+                         m_recvBuffer,
+                         RCVBUFSIZE,
+                         0);
 
     if(recvSize < 0) {
         return false;
     }
 
-    m_incomingBuffer->addNumberOfWrittenBytes(recvSize);
-    addDataBuffer(m_incomingBuffer);
-    m_incomingBuffer = nullptr;
+    for(uint32_t i = 0; i < m_trigger.size(); i++)
+    {
+        m_trigger[i]->runTask(m_recvBuffer, recvSize, this);
+    }
 
     return true;
 }
@@ -134,7 +166,8 @@ bool TcpClient::waitForMessage()
  * @param message
  * @return
  */
-bool TcpClient::sendMessage(const std::string &message)
+bool
+TcpClient::sendMessage(const std::string &message)
 {
     const uint32_t messageLength = message.length();
     return sendMessage((uint8_t*)message.c_str(), messageLength);
@@ -146,10 +179,16 @@ bool TcpClient::sendMessage(const std::string &message)
  * @param numberOfBytes
  * @return
  */
-bool TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
+bool
+TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 {
-    const uint32_t successfulSended = send(m_fd, message, numberOfBytes, 0);
+    if(m_clientSocket == 0) {
+        std::cout<<"send failed"<<std::endl;
+        return false;
+    }
+    const uint32_t successfulSended = send(m_clientSocket, message, numberOfBytes, 0);
     if(successfulSended != numberOfBytes) {
+        std::cout<<"send failed"<<std::endl;
         return false;
     }
     return true;
@@ -159,22 +198,32 @@ bool TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
  * @brief TcpClient::closeSocket
  * @return
  */
-bool TcpClient::closeSocket()
+bool
+TcpClient::closeSocket()
 {
-    stop();
-    if(m_fd >= 0)
-    {
-        close(m_fd);
-        m_fd = 0;
-        return true;
+    std::cout<<"close socket"<<std::endl;
+    if(m_abort == true) {
+        return false;
     }
-    return false;
+
+    m_abort = true;
+
+    if(m_clientSocket >= 0)
+    {
+        shutdown(m_clientSocket, SHUT_RDWR);
+        close(m_clientSocket);
+        m_clientSocket = 0;
+    }
+    stop();
+
+    return true;
 }
 
 /**
  * @brief TcpClient::run
  */
-void TcpClient::run()
+void
+TcpClient::run()
 {
     while(!m_abort) {
         waitForMessage();
