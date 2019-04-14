@@ -9,6 +9,7 @@
 
 #include <tcp/tcpServer.h>
 #include <tcp/tcpClient.h>
+#include <networkTrigger.h>
 #include <iostream>
 
 namespace Kitsune
@@ -19,9 +20,9 @@ namespace Network
 /**
  * @brief TcpServer::TcpServer
  */
-TcpServer::TcpServer()
+TcpServer::TcpServer(NetworkTrigger* trigger)
 {
-
+    m_trigger.push_back(trigger);
 }
 
 /**
@@ -37,7 +38,8 @@ TcpServer::~TcpServer()
  * @param port
  * @return
  */
-bool TcpServer::initSocket(const uint16_t port)
+bool
+TcpServer::initSocket(const uint16_t port)
 {
     // create socket
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -73,7 +75,8 @@ bool TcpServer::initSocket(const uint16_t port)
  * @brief Kitsune::Network::TcpServer::waitForMessage
  * @return
  */
-TcpClient* TcpServer::waitForIncomingConnection()
+TcpClient*
+TcpServer::waitForIncomingConnection()
 {
     struct sockaddr_in client;
     uint32_t length = sizeof(client);
@@ -86,6 +89,12 @@ TcpClient* TcpServer::waitForIncomingConnection()
 
     // create new client-object from file-descriptor
     TcpClient* tcpClient = new TcpClient(fd, client);
+    for(uint32_t i = 0; i < m_trigger.size(); i++) 
+    {
+        tcpClient->addNetworkTrigger(m_trigger.at(i));
+    }
+    tcpClient->start();
+
     mutexLock();
     m_sockets.push_back(tcpClient);
     mutexUnlock();
@@ -97,31 +106,42 @@ TcpClient* TcpServer::waitForIncomingConnection()
  * @brief Kitsune::Network::TcpServer::closeSocket
  * @return
  */
-bool TcpServer::closeServer()
+bool
+TcpServer::closeServer()
 {
-    if(m_serverSocket >= 0)
-    {
-        // close all connected sockets
-        mutexLock();
-        for(uint32_t i = 0; i < m_sockets.size(); i++) {
-            m_sockets[i]->closeSocket();
-        }
-        m_sockets.clear();
-        mutexUnlock();
+    if(m_abort == true) {
+        return false;
+    }
 
+    m_abort = true;
+
+    if(m_serverSocket >= 0)
+    {   
         // close server itself
+        shutdown(m_serverSocket, SHUT_RDWR);
         close(m_serverSocket);
         m_serverSocket = 0;
-        return true;
     }
-    return false;
+
+    stop();
+
+    // close all connected sockets
+    mutexLock();
+    for(uint32_t i = 0; i < m_sockets.size(); i++) {
+        m_sockets[i]->closeSocket();
+    }
+    m_sockets.clear();
+    mutexUnlock();
+
+    return true;
 }
 
 /**
  * @brief TcpServer::getNumberOfSockets
  * @return
  */
-uint32_t TcpServer::getNumberOfSockets()
+uint32_t
+TcpServer::getNumberOfSockets()
 {
     uint32_t result = 0;
     mutexLock();
@@ -135,7 +155,8 @@ uint32_t TcpServer::getNumberOfSockets()
  * @param pos
  * @return
  */
-TcpClient *TcpServer::getSocket(const uint32_t pos)
+TcpClient*
+TcpServer::getSocket(const uint32_t pos)
 {
     TcpClient* result = nullptr;
     mutexLock();
@@ -147,9 +168,29 @@ TcpClient *TcpServer::getSocket(const uint32_t pos)
 }
 
 /**
+ * @brief TcpServer::addAdditionalTrigger
+ * @param trigger
+ */
+void
+TcpServer::addAdditionalTrigger(NetworkTrigger *trigger)
+{
+    m_trigger.push_back(trigger);
+}
+
+/**
+ * @brief TcpServer::clearTrigger
+ */
+void
+TcpServer::clearTrigger()
+{
+    m_trigger.clear();
+}
+
+/**
  * @brief TcpServer::run
  */
-void TcpServer::run()
+void
+TcpServer::run()
 {
     while(!m_abort) {
         waitForIncomingConnection();
