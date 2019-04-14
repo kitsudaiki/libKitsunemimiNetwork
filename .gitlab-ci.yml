@@ -17,7 +17,7 @@ build:
     - /usr/bin/make
     - cd tests
     - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsuneCommon'
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsuneNetwork'
+    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsuneNetwork/src'
     - ./tests
 
   tags:
