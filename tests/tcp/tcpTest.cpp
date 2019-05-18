@@ -9,7 +9,7 @@
 
 #include "tcpTest.h"
 #include <iostream>
-#include <commonDataBuffer.h>
+#include <buffering/commonDataBuffer.h>
 
 #include <tcp/tcpServer.h>
 #include <tcp/tcpClient.h>
@@ -63,9 +63,9 @@ void TcpTest::checkLittleDataTransfer()
     if(m_buffer->getNumberOfWrittenBytes() == 9)
     {
         CommonDataBuffer* buffer = m_buffer->getBuffer();
-        uint64_t bufferSize = buffer->getNumberOfWrittenBytes();
+        uint64_t bufferSize = buffer->bufferPosition;
         char recvMessage[bufferSize];
-        memcpy(recvMessage, buffer->getBufferPointer(), bufferSize);
+        memcpy(recvMessage, buffer->data, bufferSize);
         UNITTEST(bufferSize, 9);
         UNITTEST(recvMessage[2], sendMessage.at(2));
         m_buffer->clearBuffer();
