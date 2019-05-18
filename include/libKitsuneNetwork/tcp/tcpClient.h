@@ -26,7 +26,7 @@
 
 #include <string>
 #include <vector>
-#include <commonThread.h>
+#include <threading/commonThread.h>
 
 namespace Kitsune
 {

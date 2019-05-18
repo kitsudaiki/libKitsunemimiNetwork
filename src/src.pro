@@ -5,9 +5,9 @@ TEMPLATE = lib
 # CONFIG += staticlib
 CONFIG += c++14
 
-LIBS += -L../../libKitsuneCommon -lKitsuneCommon
-LIBS += -L../../libKitsuneCommon/debug -lKitsuneCommon
-LIBS += -L../../libKitsuneCommon/release -lKitsuneCommon
+LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
+LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
+LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
 INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
 
 INCLUDEPATH += $$PWD \
