@@ -130,7 +130,9 @@ TcpClient::initClientSide()
     server.sin_port = htons(m_port);
 
     // create connection
-    if(connect(m_clientSocket, (struct sockaddr*)&server, sizeof(server)) < 0) {
+    if(connect(m_clientSocket, (struct sockaddr*)&server, sizeof(server)) < 0)
+    {
+        m_clientSocket = 0;
         return false;
     }
 
@@ -184,12 +186,10 @@ bool
 TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 {
     if(m_clientSocket == 0) {
-        std::cout<<"send failed"<<std::endl;
         return false;
     }
     const uint32_t successfulSended = send(m_clientSocket, message, numberOfBytes, 0);
     if(successfulSended != numberOfBytes) {
-        std::cout<<"send failed"<<std::endl;
         return false;
     }
     return true;
@@ -202,7 +202,6 @@ TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
 bool
 TcpClient::closeSocket()
 {
-    std::cout<<"close socket"<<std::endl;
     if(m_abort == true) {
         return false;
     }
