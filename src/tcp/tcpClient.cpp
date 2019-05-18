@@ -149,7 +149,7 @@ TcpClient::waitForMessage()
                          RCVBUFSIZE,
                          0);
 
-    if(recvSize < 0) {
+    if(recvSize < 0 || m_abort) {
         return false;
     }
 
@@ -157,6 +157,7 @@ TcpClient::waitForMessage()
     {
         m_trigger[i]->runTask(m_recvBuffer, recvSize, this);
     }
+    memset(m_recvBuffer, 0, RCVBUFSIZE);
 
     return true;
 }

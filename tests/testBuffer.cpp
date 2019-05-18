@@ -1,5 +1,6 @@
 #include "testBuffer.h"
-#include <commonDataBuffer.h>
+#include <buffering/commonDataBuffer.h>
+#include <buffering/commonDataBufferMethods.h>
 
 namespace Kitsune
 {
@@ -20,7 +21,7 @@ TestBuffer::~TestBuffer()
 void
 TestBuffer::runTask(uint8_t *buffer, const long bufferSize, TcpClient *client)
 {
-    m_buffer->addData(buffer, static_cast<uint32_t>(bufferSize));
+    addDataToBuffer(m_buffer, buffer, static_cast<uint32_t>(bufferSize));
 }
 
 CommonDataBuffer*
@@ -32,13 +33,13 @@ TestBuffer::getBuffer()
 uint64_t
 TestBuffer::getNumberOfWrittenBytes()
 {
-    return m_buffer->getNumberOfWrittenBytes();
+    return m_buffer->bufferPosition;
 }
 
 void
 TestBuffer::clearBuffer()
 {
-    m_buffer->resetBuffer();
+    resetBuffer(m_buffer);
 }
 
 }
