@@ -21,12 +21,12 @@
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <cinttypes>
-
 #include <unistd.h>
-
 #include <string>
 #include <vector>
+
 #include <threading/commonThread.h>
+#include <buffering/commonDataBuffer.h>
 
 namespace Kitsune
 {
@@ -34,7 +34,15 @@ namespace Network
 {
 class NetworkTrigger;
 
-#define RCVBUFSIZE 8192
+#define RECV_BUFFER_SIZE 8192
+
+struct MessageRingBuffer
+{
+    uint8_t data[RECV_BUFFER_SIZE];
+    uint32_t totalBufferSize = RECV_BUFFER_SIZE;
+    uint32_t readPosition = 0;
+    uint32_t readWriteDiff = 0;
+};
 
 class TcpClient : public Kitsune::CommonThread
 {
@@ -62,7 +70,7 @@ private:
     std::string m_address = "";
     uint16_t m_port = 0;
 
-    uint8_t m_recvBuffer[RCVBUFSIZE];
+    MessageRingBuffer m_recvBuffer;
 
     int m_clientSocket = 0;
     sockaddr_in m_client;
