@@ -105,10 +105,10 @@ TcpClient::initClientSide()
     }
 
     // set TCP_NODELAY for sure
-    //int optval = 1;
-    //if(setsockopt(m_fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0) {
-    //    printf("Cannot set TCP_NODELAY option on listen socket (%s)\n", strerror(errno));
-    //}
+    int optval = 1;
+    if(setsockopt(m_clientSocket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0) {
+        printf("Cannot set TCP_NODELAY option on listen socket (%s)\n", strerror(errno));
+    }
 
     // set server-address
     memset(&server, 0, sizeof(server));
@@ -146,20 +146,38 @@ TcpClient::initClientSide()
 bool
 TcpClient::waitForMessage()
 {
+    // calulate buffer-part for recv message
+    uint32_t writePosition = (m_recvBuffer.readPosition + m_recvBuffer.readWriteDiff) % m_recvBuffer.totalBufferSize;
+    if (static_cast<uint32_t>(m_recvBuffer.totalBufferSize) == writePosition) {
+        writePosition = 0;
+    }
+
+    uint32_t spaceToEnd = 0;
+    if(writePosition < m_recvBuffer.readPosition) {
+        spaceToEnd = m_recvBuffer.readPosition - writePosition;
+    }
+    else {
+        spaceToEnd = static_cast<uint32_t>(m_recvBuffer.totalBufferSize) - writePosition;
+    }
+
+    // wait for incoming message
     long recvSize = recv(m_clientSocket,
-                         m_recvBuffer,
-                         RCVBUFSIZE,
+                         &m_recvBuffer.data[writePosition],
+                         spaceToEnd,
                          0);
 
     if(recvSize < 0 || m_abort) {
         return false;
     }
+    m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint32_t>(recvSize));
 
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
-        m_trigger[i]->runTask(m_recvBuffer, recvSize, this);
+        uint32_t readBytes = m_trigger[i]->runTask(m_recvBuffer, this);
+
+        m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes) % m_recvBuffer.totalBufferSize;
+        m_recvBuffer.readWriteDiff -= readBytes;
     }
-    memset(m_recvBuffer, 0, RCVBUFSIZE);
 
     return true;
 }

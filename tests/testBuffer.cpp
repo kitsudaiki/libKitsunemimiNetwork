@@ -1,4 +1,6 @@
 #include "testBuffer.h"
+#include <tcp/tcpClient.h>
+
 #include <buffering/commonDataBuffer.h>
 #include <buffering/commonDataBufferMethods.h>
 
@@ -18,10 +20,20 @@ TestBuffer::~TestBuffer()
     delete m_buffer;
 }
 
-void
-TestBuffer::runTask(uint8_t *buffer, const long bufferSize, TcpClient *client)
+uint32_t
+TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
+                    TcpClient *client)
 {
-    addDataToBuffer(m_buffer, buffer, static_cast<uint32_t>(bufferSize));
+    if(recvBuffer.readPosition + recvBuffer.readWriteDiff  > recvBuffer.totalBufferSize)
+    {
+        const uint32_t firstPart = ((recvBuffer.readPosition + recvBuffer.readWriteDiff) % recvBuffer.totalBufferSize) - recvBuffer.readPosition;
+        addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], firstPart);
+        addDataToBuffer(m_buffer, &recvBuffer.data[0], recvBuffer.readWriteDiff - firstPart);
+    }
+    else {
+        addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], recvBuffer.readWriteDiff);
+    }
+    return recvBuffer.readWriteDiff;
 }
 
 CommonDataBuffer*
