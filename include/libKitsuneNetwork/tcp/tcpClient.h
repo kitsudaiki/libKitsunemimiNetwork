@@ -63,6 +63,8 @@ private:
     uint16_t m_port = 0;
 
     CommonDataBuffer m_recvBuffer = CommonDataBuffer(RECV_BUFFER_BLOCKS);
+    uint32_t m_readPosition = 0;
+    uint32_t m_readWriteDiff = 0;
 
     int m_clientSocket = 0;
     sockaddr_in m_client;

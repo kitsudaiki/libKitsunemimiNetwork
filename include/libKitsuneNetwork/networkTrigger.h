@@ -24,7 +24,9 @@ class NetworkTrigger
 public:
     NetworkTrigger();
     virtual ~NetworkTrigger();
-    virtual void runTask(uint8_t* buffer, const long bufferSize, TcpClient* client) = 0;
+    virtual uint32_t runTask(uint8_t* buffer, const uint32_t bufferStart,
+                             const uint32_t bufferSize, const uint32_t totalBufferSize,
+                             TcpClient* client) = 0;
 };
 
 }

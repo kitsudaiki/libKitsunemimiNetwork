@@ -146,20 +146,42 @@ TcpClient::initClientSide()
 bool
 TcpClient::waitForMessage()
 {
+    // calulate buffer-part for recv message
+    uint32_t writePosition = (m_readPosition + m_readWriteDiff) % m_recvBuffer.totalBufferSize;
+    if (static_cast<uint32_t>(m_recvBuffer.totalBufferSize) == writePosition) {
+        writePosition = 0;
+    }
+
+    uint32_t spaceToEnd = 0;
+    if(writePosition < m_readPosition) {
+        spaceToEnd = m_readPosition - writePosition;
+    }
+    else {
+        spaceToEnd = static_cast<uint32_t>(m_recvBuffer.totalBufferSize) - writePosition;
+    }
+
+    // wait for incoming message
     long recvSize = recv(m_clientSocket,
-                         m_recvBuffer.data,
-                         m_recvBuffer.totalBufferSize,
+                         &m_recvBuffer.data[writePosition],
+                         spaceToEnd,
                          0);
 
     if(recvSize < 0 || m_abort) {
         return false;
     }
+    m_readWriteDiff = (m_readWriteDiff + static_cast<uint32_t>(recvSize));
 
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
-        m_trigger[i]->runTask(m_recvBuffer.data, recvSize, this);
+        uint32_t readBytes = m_trigger[i]->runTask(m_recvBuffer.data,
+                                                   m_readPosition,
+                                                   m_readWriteDiff,
+                                                   static_cast<uint32_t>(m_recvBuffer.totalBufferSize),
+                                                   this);
+
+        m_readPosition = (m_readPosition + readBytes) % m_recvBuffer.totalBufferSize;
+        m_readWriteDiff -= readBytes;
     }
-    memset(m_recvBuffer.data, 0, m_recvBuffer.totalBufferSize);
 
     return true;
 }

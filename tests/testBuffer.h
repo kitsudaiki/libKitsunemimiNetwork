@@ -16,7 +16,11 @@ class TestBuffer : public NetworkTrigger
 public:
     TestBuffer();
     ~TestBuffer();
-    void runTask(uint8_t* buffer, const long bufferSize, TcpClient* client);
+    uint32_t runTask(uint8_t* buffer,
+                     const uint32_t bufferStart,
+                     const uint32_t bufferSize,
+                     const uint32_t totalBufferSize,
+                     TcpClient* client);
 
     uint64_t getNumberOfWrittenBytes();
     CommonDataBuffer *getBuffer();

@@ -18,10 +18,23 @@ TestBuffer::~TestBuffer()
     delete m_buffer;
 }
 
-void
-TestBuffer::runTask(uint8_t *buffer, const long bufferSize, TcpClient *client)
+uint32_t
+TestBuffer::runTask(uint8_t *buffer,
+                    const uint32_t bufferStart,
+                    const uint32_t bufferSize,
+                    const uint32_t totalBufferSize,
+                    TcpClient *client)
 {
-    addDataToBuffer(m_buffer, buffer, static_cast<uint32_t>(bufferSize));
+    if(bufferStart + bufferSize  > totalBufferSize)
+    {
+        const uint32_t firstPart = ((bufferStart + bufferSize) % totalBufferSize) - bufferStart;
+        addDataToBuffer(m_buffer, &buffer[bufferStart], firstPart);
+        addDataToBuffer(m_buffer, &buffer[0], bufferSize - firstPart);
+    }
+    else {
+        addDataToBuffer(m_buffer, &buffer[bufferStart], bufferSize);
+    }
+    return bufferSize;
 }
 
 CommonDataBuffer*
