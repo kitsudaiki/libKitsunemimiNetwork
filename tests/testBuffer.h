@@ -10,16 +10,14 @@ class CommonDataBuffer;
 namespace Network
 {
 class TcpClient;
+struct MessageRingBuffer;
 
 class TestBuffer : public NetworkTrigger
 {
 public:
     TestBuffer();
     ~TestBuffer();
-    uint32_t runTask(uint8_t* buffer,
-                     const uint32_t bufferStart,
-                     const uint32_t bufferSize,
-                     const uint32_t totalBufferSize,
+    uint32_t runTask(const MessageRingBuffer& recvBuffer,
                      TcpClient* client);
 
     uint64_t getNumberOfWrittenBytes();

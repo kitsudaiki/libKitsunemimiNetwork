@@ -18,14 +18,14 @@ namespace Kitsune
 namespace Network
 {
 class TcpClient;
+struct MessageRingBuffer;
 
 class NetworkTrigger
 {
 public:
     NetworkTrigger();
     virtual ~NetworkTrigger();
-    virtual uint32_t runTask(uint8_t* buffer, const uint32_t bufferStart,
-                             const uint32_t bufferSize, const uint32_t totalBufferSize,
+    virtual uint32_t runTask(const MessageRingBuffer& recvBuffer,
                              TcpClient* client) = 0;
 };
 

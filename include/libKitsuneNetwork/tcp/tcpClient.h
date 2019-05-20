@@ -34,7 +34,15 @@ namespace Network
 {
 class NetworkTrigger;
 
-#define RECV_BUFFER_BLOCKS
+#define RECV_BUFFER_SIZE 8192
+
+struct MessageRingBuffer
+{
+    uint8_t data[RECV_BUFFER_SIZE];
+    uint32_t totalBufferSize = RECV_BUFFER_SIZE;
+    uint32_t readPosition = 0;
+    uint32_t readWriteDiff = 0;
+};
 
 class TcpClient : public Kitsune::CommonThread
 {
@@ -62,9 +70,7 @@ private:
     std::string m_address = "";
     uint16_t m_port = 0;
 
-    CommonDataBuffer m_recvBuffer = CommonDataBuffer(RECV_BUFFER_BLOCKS);
-    uint32_t m_readPosition = 0;
-    uint32_t m_readWriteDiff = 0;
+    MessageRingBuffer m_recvBuffer;
 
     int m_clientSocket = 0;
     sockaddr_in m_client;

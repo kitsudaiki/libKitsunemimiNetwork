@@ -1,4 +1,6 @@
 #include "testBuffer.h"
+#include <tcp/tcpClient.h>
+
 #include <buffering/commonDataBuffer.h>
 #include <buffering/commonDataBufferMethods.h>
 
@@ -19,22 +21,19 @@ TestBuffer::~TestBuffer()
 }
 
 uint32_t
-TestBuffer::runTask(uint8_t *buffer,
-                    const uint32_t bufferStart,
-                    const uint32_t bufferSize,
-                    const uint32_t totalBufferSize,
+TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
                     TcpClient *client)
 {
-    if(bufferStart + bufferSize  > totalBufferSize)
+    if(recvBuffer.readPosition + recvBuffer.readWriteDiff  > recvBuffer.totalBufferSize)
     {
-        const uint32_t firstPart = ((bufferStart + bufferSize) % totalBufferSize) - bufferStart;
-        addDataToBuffer(m_buffer, &buffer[bufferStart], firstPart);
-        addDataToBuffer(m_buffer, &buffer[0], bufferSize - firstPart);
+        const uint32_t firstPart = ((recvBuffer.readPosition + recvBuffer.readWriteDiff) % recvBuffer.totalBufferSize) - recvBuffer.readPosition;
+        addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], firstPart);
+        addDataToBuffer(m_buffer, &recvBuffer.data[0], recvBuffer.readWriteDiff - firstPart);
     }
     else {
-        addDataToBuffer(m_buffer, &buffer[bufferStart], bufferSize);
+        addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], recvBuffer.readWriteDiff);
     }
-    return bufferSize;
+    return recvBuffer.readWriteDiff;
 }
 
 CommonDataBuffer*
