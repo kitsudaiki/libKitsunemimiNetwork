@@ -105,10 +105,10 @@ TcpClient::initClientSide()
     }
 
     // set TCP_NODELAY for sure
-    //int optval = 1;
-    //if(setsockopt(m_fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0) {
-    //    printf("Cannot set TCP_NODELAY option on listen socket (%s)\n", strerror(errno));
-    //}
+    int optval = 1;
+    if(setsockopt(m_clientSocket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0) {
+        printf("Cannot set TCP_NODELAY option on listen socket (%s)\n", strerror(errno));
+    }
 
     // set server-address
     memset(&server, 0, sizeof(server));
@@ -147,8 +147,8 @@ bool
 TcpClient::waitForMessage()
 {
     long recvSize = recv(m_clientSocket,
-                         m_recvBuffer,
-                         RCVBUFSIZE,
+                         m_recvBuffer.data,
+                         m_recvBuffer.totalBufferSize,
                          0);
 
     if(recvSize < 0 || m_abort) {
@@ -157,9 +157,9 @@ TcpClient::waitForMessage()
 
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
-        m_trigger[i]->runTask(m_recvBuffer, recvSize, this);
+        m_trigger[i]->runTask(m_recvBuffer.data, recvSize, this);
     }
-    memset(m_recvBuffer, 0, RCVBUFSIZE);
+    memset(m_recvBuffer.data, 0, m_recvBuffer.totalBufferSize);
 
     return true;
 }
