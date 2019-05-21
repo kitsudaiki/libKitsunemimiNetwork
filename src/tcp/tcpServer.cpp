@@ -46,6 +46,7 @@ TcpServer::initSocket(const uint16_t port)
     if(m_serverSocket < 0) {
         return false;
     }
+
     // make the port reusable
     int enable = 1;
     if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int))) {
@@ -95,6 +96,7 @@ TcpServer::waitForIncomingConnection()
     }
     tcpClient->start();
 
+    // append new socket to the list
     mutexLock();
     m_sockets.push_back(tcpClient);
     mutexUnlock();
@@ -127,7 +129,8 @@ TcpServer::closeServer()
 
     // close all connected sockets
     mutexLock();
-    for(uint32_t i = 0; i < m_sockets.size(); i++) {
+    for(uint32_t i = 0; i < m_sockets.size(); i++)
+    {
         m_sockets[i]->closeSocket();
     }
     m_sockets.clear();
@@ -192,7 +195,8 @@ TcpServer::clearTrigger()
 void
 TcpServer::run()
 {
-    while(!m_abort) {
+    while(!m_abort)
+    {
         waitForIncomingConnection();
     }
 }
