@@ -16,12 +16,14 @@ INCLUDEPATH += $$PWD \
 HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcpServer.h \
     ../include/libKitsuneNetwork/tcp/tcpClient.h \
-    ../include/libKitsuneNetwork/networkTrigger.h
+    ../include/libKitsuneNetwork/networkTrigger.h \
+    cleanupThread.h
 
 SOURCES += \
     tcp/tcpServer.cpp \
     tcp/tcpClient.cpp \
-    networkTrigger.cpp
+    networkTrigger.cpp \
+    cleanupThread.cpp
 
 unix {
     target.path = /usr/lib

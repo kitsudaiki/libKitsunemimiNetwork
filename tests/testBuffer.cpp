@@ -26,7 +26,8 @@ TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
 {
     if(recvBuffer.readPosition + recvBuffer.readWriteDiff  > recvBuffer.totalBufferSize)
     {
-        const uint32_t firstPart = ((recvBuffer.readPosition + recvBuffer.readWriteDiff) % recvBuffer.totalBufferSize) - recvBuffer.readPosition;
+        const uint32_t firstPart = ((recvBuffer.readPosition + recvBuffer.readWriteDiff)
+                                    % recvBuffer.totalBufferSize) - recvBuffer.readPosition;
         addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], firstPart);
         addDataToBuffer(m_buffer, &recvBuffer.data[0], recvBuffer.readWriteDiff - firstPart);
     }
