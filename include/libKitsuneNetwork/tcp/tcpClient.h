@@ -28,6 +28,8 @@
 #include <threading/commonThread.h>
 #include <buffering/commonDataBuffer.h>
 
+#include <cleanupThread.h>
+
 namespace Kitsune
 {
 namespace Network
@@ -52,6 +54,10 @@ public:
     TcpClient(const int clientFd,
               struct sockaddr_in client);
     ~TcpClient();
+
+    static Kitsune::Network::CleanupThread* m_cleanup;
+
+    int getSocket() const;
 
     bool addNetworkTrigger(NetworkTrigger* trigger);
     bool removeNetworkTrigger(const uint32_t index);

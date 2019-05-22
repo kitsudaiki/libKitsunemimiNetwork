@@ -16,12 +16,19 @@ namespace Kitsune
 namespace Network
 {
 
+Kitsune::Network::CleanupThread* TcpClient::m_cleanup = nullptr;
+
 /**
  * @brief TcpClient::TcpClient
  */
 TcpClient::TcpClient(const std::string address,
                      const uint16_t port)
 {
+    if(m_cleanup == nullptr)
+    {
+        m_cleanup = new Kitsune::Network::CleanupThread();
+        m_cleanup->start();
+    }
     m_address = address;
     m_port = port;
     m_clientSide = true;
@@ -35,6 +42,11 @@ TcpClient::TcpClient(const std::string address,
  */
 TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 {
+    if(m_cleanup == nullptr)
+    {
+        m_cleanup = new Kitsune::Network::CleanupThread();
+        m_cleanup->start();
+    }
     m_clientSocket = clientFd;
     m_client = client;
     m_clientSide = false;
@@ -45,7 +57,22 @@ TcpClient::TcpClient(const int clientFd, sockaddr_in client)
  */
 TcpClient::~TcpClient()
 {
-    closeSocket();
+    if(m_clientSocket >= 0)
+    {
+        shutdown(m_clientSocket, SHUT_RDWR);
+        close(m_clientSocket);
+        m_clientSocket = 0;
+    }
+}
+
+/**
+ * @brief TcpClient::getSocket
+ * @return
+ */
+int
+TcpClient::getSocket() const
+{
+    return m_clientSocket;
 }
 
 /**
@@ -232,7 +259,8 @@ TcpClient::closeSocket()
         close(m_clientSocket);
         m_clientSocket = 0;
     }
-    stop();
+
+    TcpClient::m_cleanup->addClientForCleanup(this);
 
     return true;
 }
