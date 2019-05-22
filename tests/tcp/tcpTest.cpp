@@ -40,7 +40,7 @@ void TcpTest::checkConnectionInit()
     UNITTEST(m_server->initSocket(12345), true);
     UNITTEST(m_server->start(), true);
     m_clientClientSide = new TcpClient("127.0.0.1", 12345);
-    sleep(1);
+    usleep(10000);
 
     UNITTEST(m_server->getNumberOfSockets(), 1);
 
@@ -52,11 +52,11 @@ void TcpTest::checkConnectionInit()
 
 void TcpTest::checkLittleDataTransfer()
 {
-    sleep(1);
+    usleep(10000);
 
     std::string sendMessage("poipoipoi");
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
-    sleep(1);
+    usleep(10000);
     UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
 
 
@@ -79,7 +79,7 @@ void TcpTest::checkBigDataTransfer()
         sendMessage.append("poi");
     }
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
-    sleep(1);
+    usleep(10000);
     uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
     UNITTEST(totalIncom, sendMessage.size());
 }

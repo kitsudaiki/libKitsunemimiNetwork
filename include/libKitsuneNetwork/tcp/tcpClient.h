@@ -57,8 +57,6 @@ public:
 
     static Kitsune::Network::CleanupThread* m_cleanup;
 
-    int getSocket() const;
-
     bool addNetworkTrigger(NetworkTrigger* trigger);
     bool removeNetworkTrigger(const uint32_t index);
     void clearNetworkTrigger();

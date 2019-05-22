@@ -66,16 +66,6 @@ TcpClient::~TcpClient()
 }
 
 /**
- * @brief TcpClient::getSocket
- * @return
- */
-int
-TcpClient::getSocket() const
-{
-    return m_clientSocket;
-}
-
-/**
  * @brief TcpClient::addNetworkTrigger
  * @param trigger
  * @return
