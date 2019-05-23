@@ -29,22 +29,13 @@
 #include <buffering/commonDataBuffer.h>
 
 #include <cleanupThread.h>
+#include <messageringbuffer.h>
 
 namespace Kitsune
 {
 namespace Network
 {
 class NetworkTrigger;
-
-#define RECV_BUFFER_SIZE 8192
-
-struct MessageRingBuffer
-{
-    uint8_t data[RECV_BUFFER_SIZE];
-    uint32_t totalBufferSize = RECV_BUFFER_SIZE;
-    uint32_t readPosition = 0;
-    uint32_t readWriteDiff = 0;
-};
 
 class TcpClient : public Kitsune::CommonThread
 {

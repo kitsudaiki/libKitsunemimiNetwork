@@ -24,16 +24,9 @@ uint32_t
 TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
                     TcpClient *client)
 {
-    if(recvBuffer.readPosition + recvBuffer.readWriteDiff  > recvBuffer.totalBufferSize)
-    {
-        const uint32_t firstPart = ((recvBuffer.readPosition + recvBuffer.readWriteDiff)
-                                    % recvBuffer.totalBufferSize) - recvBuffer.readPosition;
-        addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], firstPart);
-        addDataToBuffer(m_buffer, &recvBuffer.data[0], recvBuffer.readWriteDiff - firstPart);
-    }
-    else {
-        addDataToBuffer(m_buffer, &recvBuffer.data[recvBuffer.readPosition], recvBuffer.readWriteDiff);
-    }
+    uint8_t buffer[RECV_BUFFER_SIZE];
+    const uint8_t* dataPointer = getDataPointer(recvBuffer, buffer, recvBuffer.readWriteDiff);
+    addDataToBuffer(m_buffer, dataPointer, recvBuffer.readWriteDiff);
     return recvBuffer.readWriteDiff;
 }
 
