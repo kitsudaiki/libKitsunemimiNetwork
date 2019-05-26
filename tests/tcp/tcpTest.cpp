@@ -74,14 +74,28 @@ void TcpTest::checkLittleDataTransfer()
 
 void TcpTest::checkBigDataTransfer()
 {
-    std::string sendMessage;
-    for(uint32_t i = 0; i < 100000; i++) {
-        sendMessage.append("poi");
-    }
+    std::string sendMessage = "poi";
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
+    for(uint32_t i = 0; i < 99999; i++)
+    {
+        m_clientClientSide->sendMessage(sendMessage);
+    }
     usleep(10000);
     uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
-    UNITTEST(totalIncom, sendMessage.size());
+    CommonDataBuffer* dataBuffer = m_buffer->getBuffer();
+    UNITTEST(totalIncom, 300000);
+    UNITTEST(dataBuffer->bufferPosition, 300000);
+    uint32_t numberOfPois = 0;
+    for(uint32_t i = 0; i < 300000; i=i+3)
+    {
+        if(dataBuffer->data[i] == 'p'
+                && dataBuffer->data[i+1] == 'o'
+                && dataBuffer->data[i+2] == 'i')
+        {
+            numberOfPois++;
+        }
+    }
+    UNITTEST(numberOfPois, 100000);
 }
 
 void TcpTest::cleanupTestCase()

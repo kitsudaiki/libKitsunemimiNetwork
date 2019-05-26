@@ -165,16 +165,13 @@ TcpClient::waitForMessage()
 {
     // calulate buffer-part for recv message
     uint32_t writePosition = (m_recvBuffer.readPosition + m_recvBuffer.readWriteDiff) % m_recvBuffer.totalBufferSize;
-    if (static_cast<uint32_t>(m_recvBuffer.totalBufferSize) == writePosition) {
+    if(m_recvBuffer.totalBufferSize == writePosition) {
         writePosition = 0;
     }
 
-    uint32_t spaceToEnd = 0;
+    uint32_t spaceToEnd = m_recvBuffer.totalBufferSize - writePosition;
     if(writePosition < m_recvBuffer.readPosition) {
         spaceToEnd = m_recvBuffer.readPosition - writePosition;
-    }
-    else {
-        spaceToEnd = static_cast<uint32_t>(m_recvBuffer.totalBufferSize) - writePosition;
     }
 
     // wait for incoming message
@@ -183,14 +180,16 @@ TcpClient::waitForMessage()
                          spaceToEnd,
                          0);
 
-    if(recvSize < 0 || m_abort) {
+    // handle error-cases
+    if(recvSize <= 0 || m_abort) {
         return false;
     }
+
     m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint32_t>(recvSize));
 
     for(uint32_t i = 0; i < m_trigger.size(); i++)
     {
-        uint32_t readBytes = m_trigger[i]->runTask(m_recvBuffer, this);
+        const uint32_t readBytes = m_trigger[i]->runTask(m_recvBuffer, this);
 
         m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes) % m_recvBuffer.totalBufferSize;
         m_recvBuffer.readWriteDiff -= readBytes;
@@ -218,7 +217,7 @@ TcpClient::sendMessage(const std::string &message)
  * @return
  */
 bool
-TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
+TcpClient::sendMessage(const uint8_t* message, const uint32_t numberOfBytes)
 {
     if(m_clientSocket == 0) {
         return false;

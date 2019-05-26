@@ -12,7 +12,7 @@ namespace Network
 
 TestBuffer::TestBuffer() : NetworkTrigger ()
 {
-    m_buffer = new CommonDataBuffer();
+    m_buffer = new CommonDataBuffer(1000);
 }
 
 TestBuffer::~TestBuffer()
@@ -45,7 +45,7 @@ TestBuffer::getNumberOfWrittenBytes()
 void
 TestBuffer::clearBuffer()
 {
-    resetBuffer(m_buffer);
+    resetBuffer(m_buffer, 1000);
 }
 
 }

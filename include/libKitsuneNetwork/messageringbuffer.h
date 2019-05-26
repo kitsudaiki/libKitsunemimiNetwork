@@ -20,6 +20,7 @@ struct MessageRingBuffer
     uint32_t readWriteDiff = 0;
 };
 
+
 inline const uint8_t*
 getDataPointer(const MessageRingBuffer &recvBuffer,
                uint8_t* backupPointer,
@@ -27,10 +28,10 @@ getDataPointer(const MessageRingBuffer &recvBuffer,
 {
     if(recvBuffer.readPosition + size  > recvBuffer.totalBufferSize)
     {
-        const uint32_t firstPart = ((recvBuffer.readPosition + recvBuffer.readWriteDiff)
-                                    % recvBuffer.totalBufferSize) - recvBuffer.readPosition;
+        // only copy data, when absolut necessary
+        const uint32_t firstPart = size - ((recvBuffer.readPosition + size) % recvBuffer.totalBufferSize);
         mempcpy(backupPointer, &recvBuffer.data[recvBuffer.readPosition], firstPart);
-        mempcpy(&backupPointer[firstPart], &recvBuffer.data[0], recvBuffer.readWriteDiff - firstPart);
+        mempcpy(&backupPointer[firstPart], &recvBuffer.data[0], size - firstPart);
         return backupPointer;
     }
 

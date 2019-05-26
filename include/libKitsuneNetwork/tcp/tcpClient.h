@@ -53,7 +53,7 @@ public:
     void clearNetworkTrigger();
 
     bool sendMessage(const std::string &message);
-    bool sendMessage(uint8_t* message, const uint32_t numberOfBytes);
+    bool sendMessage(const uint8_t *message, const uint32_t numberOfBytes);
 
     bool closeSocket();
 
