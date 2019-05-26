@@ -223,8 +223,11 @@ TcpClient::sendMessage(uint8_t* message, const uint32_t numberOfBytes)
     if(m_clientSocket == 0) {
         return false;
     }
-    const uint32_t successfulSended = send(m_clientSocket, message, numberOfBytes, 0);
-    if(successfulSended != numberOfBytes) {
+    const ssize_t successfulSended = send(m_clientSocket,
+                                          message,
+                                          numberOfBytes,
+                                          MSG_NOSIGNAL);
+    if(successfulSended < -1 || successfulSended != numberOfBytes) {
         return false;
     }
     return true;
