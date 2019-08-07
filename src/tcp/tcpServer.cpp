@@ -7,9 +7,9 @@
  *  MIT License
  */
 
-#include <tcp/tcpServer.h>
-#include <tcp/tcpClient.h>
-#include <networkTrigger.h>
+#include <tcp/tcpServer.hpp>
+#include <tcp/tcpClient.hpp>
+#include <networkTrigger.hpp>
 #include <iostream>
 
 namespace Kitsune
@@ -18,7 +18,7 @@ namespace Network
 {
 
 /**
- * @brief TcpServer::TcpServer
+ * constructor
  */
 TcpServer::TcpServer(NetworkTrigger* trigger)
 {
@@ -26,7 +26,7 @@ TcpServer::TcpServer(NetworkTrigger* trigger)
 }
 
 /**
- * @brief TcpServer::~TcpServer
+ * destructor
  */
 TcpServer::~TcpServer()
 {
@@ -34,9 +34,11 @@ TcpServer::~TcpServer()
 }
 
 /**
- * @brief Kitsune::Network::TcpServer::initSocket
- * @param port
- * @return
+ * creates a server on a specific port
+ *
+ * @param port port-number where the server should be listen
+ *
+ * @return false, if server creation failed, else true
  */
 bool
 TcpServer::initSocket(const uint16_t port)
@@ -73,8 +75,9 @@ TcpServer::initSocket(const uint16_t port)
 }
 
 /**
- * @brief Kitsune::Network::TcpServer::waitForMessage
- * @return
+ * wait for new incoming tcp-connections
+ *
+ * @return new tcp-client-socket-pointer for the new incoming connection
  */
 TcpClient*
 TcpServer::waitForIncomingConnection()
@@ -94,6 +97,8 @@ TcpServer::waitForIncomingConnection()
     {
         tcpClient->addNetworkTrigger(m_trigger.at(i));
     }
+
+    // start new client-thread
     tcpClient->start();
 
     // append new socket to the list
@@ -105,18 +110,21 @@ TcpServer::waitForIncomingConnection()
 }
 
 /**
- * @brief Kitsune::Network::TcpServer::closeSocket
- * @return
+ * close the tcp-server togester with all tcp-client, which are connected to the server
+ *
+ * @return false, if already closed, else true
  */
 bool
 TcpServer::closeServer()
 {
+    // precheck
     if(m_abort == true) {
         return false;
     }
 
     m_abort = true;
 
+    // close server-socket
     if(m_serverSocket >= 0)
     {   
         // close server itself
@@ -125,6 +133,7 @@ TcpServer::closeServer()
         m_serverSocket = 0;
     }
 
+    // stop thread
     stop();
 
     // close all connected sockets
@@ -140,13 +149,12 @@ TcpServer::closeServer()
 }
 
 /**
- * @brief TcpServer::getNumberOfSockets
- * @return
+ * get the number of sockets which are registered at the server
  */
-uint32_t
+uint64_t
 TcpServer::getNumberOfSockets()
 {
-    uint32_t result = 0;
+    uint64_t result = 0;
     mutexLock();
     result = m_sockets.size();
     mutexUnlock();
@@ -154,9 +162,11 @@ TcpServer::getNumberOfSockets()
 }
 
 /**
- * @brief TcpServer::getSocket
- * @param pos
- * @return
+ * get a specific tcp-socket from the server
+ *
+ * @param pos position in the list
+ *
+ * @return tcp-client-pointer
  */
 TcpClient*
 TcpServer::getSocket(const uint32_t pos)
@@ -171,8 +181,9 @@ TcpServer::getSocket(const uint32_t pos)
 }
 
 /**
- * @brief TcpServer::addAdditionalTrigger
- * @param trigger
+ * add a new trigger to the server
+ *
+ * @param trigger new trigger-object
  */
 void
 TcpServer::addAdditionalTrigger(NetworkTrigger *trigger)
@@ -181,7 +192,7 @@ TcpServer::addAdditionalTrigger(NetworkTrigger *trigger)
 }
 
 /**
- * @brief TcpServer::clearTrigger
+ * delete all trigger-objects from the server
  */
 void
 TcpServer::clearTrigger()
@@ -190,7 +201,7 @@ TcpServer::clearTrigger()
 }
 
 /**
- * @brief TcpServer::run
+ * run-method for the thread-class
  */
 void
 TcpServer::run()
@@ -201,5 +212,5 @@ TcpServer::run()
     }
 }
 
-}
-}
+} // namespace Network
+} // namespace Kitsune

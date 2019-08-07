@@ -1,5 +1,5 @@
 /**
- *  @file    tcpServer.h
+ *  @file    tcpServer.hpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef TCPSERVER_H
-#define TCPSERVER_H
+#ifndef TCPSERVER_HPP
+#define TCPSERVER_HPP
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +25,7 @@
 
 #include <string>
 #include <vector>
-#include <threading/commonThread.h>
+#include <threading/commonThread.hpp>
 
 namespace Kitsune
 {
@@ -42,12 +42,14 @@ public:
 
     bool initSocket(const uint16_t port);
     TcpClient* waitForIncomingConnection();
-    bool sendMessage(const std::string &message, int clientSocket);
     bool closeServer();
 
-    uint32_t getNumberOfSockets();
+    bool sendMessage(const std::string &message, int clientSocket);
+
+    uint64_t getNumberOfSockets();
     TcpClient* getSocket(const uint32_t pos);
 
+    // trigger-control
     void addAdditionalTrigger(NetworkTrigger* trigger);
     void clearTrigger();
 
@@ -61,7 +63,7 @@ private:
     struct sockaddr_in m_server;
 };
 
-}
-}
+} // namespace Network
+} // namespace Kitsune
 
-#endif // TCPSERVER_H
+#endif // TCPSERVER_HPP

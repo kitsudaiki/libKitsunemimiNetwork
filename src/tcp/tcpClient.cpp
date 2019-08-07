@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#include <tcp/tcpClient.h>
-#include <networkTrigger.h>
+#include <tcp/tcpClient.hpp>
+#include <networkTrigger.hpp>
 #include <iostream>
 
 namespace Kitsune
@@ -19,7 +19,10 @@ namespace Network
 Kitsune::Network::CleanupThread* TcpClient::m_cleanup = nullptr;
 
 /**
- * @brief TcpClient::TcpClient
+ * constructor for the client-side of the tcp-connection
+ *
+ * @param address ipv4-adress of the server
+ * @param port port where the server is listen
  */
 TcpClient::TcpClient(const std::string address,
                      const uint16_t port)
@@ -36,9 +39,11 @@ TcpClient::TcpClient(const std::string address,
 }
 
 /**
- * @brief TcpClient::TcpClient
- * @param clientFd
- * @param client
+ * constructor for the server-side of the tcp-connection, which is called by the
+ * tcp-server for each incoming connection
+ *
+ * @param clientFd file-descriptor of the client-socket
+ * @param client address for the client
  */
 TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 {
@@ -53,22 +58,19 @@ TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 }
 
 /**
- * @brief TcpClient::~TcpClient
+ * destructor
  */
 TcpClient::~TcpClient()
 {
-    if(m_clientSocket >= 0)
-    {
-        shutdown(m_clientSocket, SHUT_RDWR);
-        close(m_clientSocket);
-        m_clientSocket = 0;
-    }
+    closeSocket();
 }
 
 /**
- * @brief TcpClient::addNetworkTrigger
- * @param trigger
- * @return
+ * add new trigger-object for incoming messages
+ *
+ * @param trigger new trigger-object
+ *
+ * @return false, if object was nullptr, else true
  */
 bool
 TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
@@ -76,14 +78,18 @@ TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
     if(trigger == nullptr) {
         return false;
     }
+
     m_trigger.push_back(trigger);
+
     return true;
 }
 
 /**
- * @brief TcpClient::removeNetworkTrigger
- * @param index
- * @return
+ * remove a specific trigger from the client
+ *
+ * @param index index of the trigger in the list
+ *
+ * @return false, if index too high, else tru
  */
 bool
 TcpClient::removeNetworkTrigger(const uint32_t index)
@@ -91,12 +97,14 @@ TcpClient::removeNetworkTrigger(const uint32_t index)
     if(m_trigger.size() <= index) {
         return false;
     }
+
     m_trigger.erase(m_trigger.begin() + index);
+
     return true;
 }
 
 /**
- * @brief TcpClient::clearNetworkTrigger
+ * delete all trigger-objects from the client
  */
 void
 TcpClient::clearNetworkTrigger()
@@ -105,8 +113,9 @@ TcpClient::clearNetworkTrigger()
 }
 
 /**
- * @brief TcpClient::init
- * @return
+ * init tcp-socket and connect to the server
+ *
+ * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
 TcpClient::initClientSide()
@@ -149,6 +158,7 @@ TcpClient::initClientSide()
     // create connection
     if(connect(m_clientSocket, (struct sockaddr*)&server, sizeof(server)) < 0)
     {
+        // TODO: correctly close socket
         m_clientSocket = 0;
         return false;
     }
@@ -157,19 +167,26 @@ TcpClient::initClientSide()
 }
 
 /**
- * @brief TcpClient::waitForMessage
- * @return
+ * wait for new incoming messages
+ *
+ * @return false, if receive failed or client is aborted, else true
  */
 bool
 TcpClient::waitForMessage()
 {
+    // precheck
+    if(m_abort) {
+        return false;
+    }
+
     // calulate buffer-part for recv message
-    uint32_t writePosition = (m_recvBuffer.readPosition + m_recvBuffer.readWriteDiff) % m_recvBuffer.totalBufferSize;
+    uint64_t writePosition = (m_recvBuffer.readPosition + m_recvBuffer.readWriteDiff)
+                             % m_recvBuffer.totalBufferSize;
     if(m_recvBuffer.totalBufferSize == writePosition) {
         writePosition = 0;
     }
 
-    uint32_t spaceToEnd = m_recvBuffer.totalBufferSize - writePosition;
+    uint64_t spaceToEnd = m_recvBuffer.totalBufferSize - writePosition;
     if(writePosition < m_recvBuffer.readPosition) {
         spaceToEnd = m_recvBuffer.readPosition - writePosition;
     }
@@ -181,17 +198,22 @@ TcpClient::waitForMessage()
                          0);
 
     // handle error-cases
-    if(recvSize <= 0 || m_abort) {
+    if(recvSize <= 0
+            || m_abort)
+    {
         return false;
     }
 
-    m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint32_t>(recvSize));
+    // increase the
+    m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint64_t>(recvSize));
 
-    for(uint32_t i = 0; i < m_trigger.size(); i++)
+    // add all trigger to the new socket
+    for(uint64_t i = 0; i < m_trigger.size(); i++)
     {
-        const uint32_t readBytes = m_trigger[i]->runTask(m_recvBuffer, this);
+        const uint64_t readBytes = m_trigger[i]->runTask(m_recvBuffer, this);
 
-        m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes) % m_recvBuffer.totalBufferSize;
+        m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes)
+                                    % m_recvBuffer.totalBufferSize;
         m_recvBuffer.readWriteDiff -= readBytes;
     }
 
@@ -199,42 +221,55 @@ TcpClient::waitForMessage()
 }
 
 /**
- * @brief TcpClient::sendMessage
- * @param message
- * @return
+ * send a text-message over the socket
+ *
+ * @param message message to send
+ *
+ * @return false, if send failed or send was incomplete, else true
  */
 bool
 TcpClient::sendMessage(const std::string &message)
 {
-    const uint32_t messageLength = message.length();
+    const uint64_t messageLength = message.length();
     return sendMessage((uint8_t*)message.c_str(), messageLength);
 }
 
 /**
- * @brief TcpClient::sendMessage
- * @param message
- * @param numberOfBytes
- * @return
+ * send a byte-buffer over the tcp-socket
+ *
+ * @param message byte-buffer to send
+ * @param numberOfBytes number of bytes to send
+ *
+ * @return false, if send failed or send was incomplete, else true
  */
 bool
-TcpClient::sendMessage(const uint8_t* message, const uint32_t numberOfBytes)
+TcpClient::sendMessage(const uint8_t* message,
+                       const uint64_t numberOfBytes)
 {
+    // precheck if client is connected
     if(m_clientSocket == 0) {
         return false;
     }
+
+    // send message
     const ssize_t successfulSended = send(m_clientSocket,
                                           message,
                                           numberOfBytes,
                                           MSG_NOSIGNAL);
-    if(successfulSended < -1 || successfulSended != numberOfBytes) {
+
+    // check if the message was completely send
+    if(successfulSended < -1
+            || successfulSended != static_cast<long>(numberOfBytes))
+    {
         return false;
     }
     return true;
 }
 
 /**
- * @brief TcpClient::closeSocket
- * @return
+ * close the socket and schedule the deletion of the thread
+ *
+ * @return false, if already closed, else true
  */
 bool
 TcpClient::closeSocket()
@@ -245,6 +280,7 @@ TcpClient::closeSocket()
 
     m_abort = true;
 
+    // close socket if connected
     if(m_clientSocket >= 0)
     {
         shutdown(m_clientSocket, SHUT_RDWR);
@@ -252,21 +288,26 @@ TcpClient::closeSocket()
         m_clientSocket = 0;
     }
 
+    // add socket-thread to the cleanup-thread, because if the client triggers the close by itself,
+    // when the other side of the connection triggers the close-process,
+    // the thread would try to close itself, which would result into a deadlock.
+    // That is the reason, why another thread sould process the delete of the client-thread.
     TcpClient::m_cleanup->addClientForCleanup(this);
 
     return true;
 }
 
 /**
- * @brief TcpClient::run
+ * run-method for the thread-class
  */
 void
 TcpClient::run()
 {
-    while(!m_abort) {
+    while(!m_abort)
+    {
         waitForMessage();
     }
 }
 
-}
-}
+} // namespace Network
+} // namespace Kitsune

@@ -2,8 +2,8 @@ QT       -= qt core gui
 
 TARGET = KitsuneNetwork
 TEMPLATE = lib
-# CONFIG += staticlib
 CONFIG += c++14
+VERSION = 0.1.0
 
 LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
@@ -14,19 +14,14 @@ INCLUDEPATH += $$PWD \
                $$PWD/../include/libKitsuneNetwork
 
 HEADERS += \
-    ../include/libKitsuneNetwork/tcp/tcpServer.h \
-    ../include/libKitsuneNetwork/tcp/tcpClient.h \
-    ../include/libKitsuneNetwork/networkTrigger.h \
-    ../include/libKitsuneNetwork/cleanupThread.h \
-    ../include/libKitsuneNetwork/messageringbuffer.h
+    ../include/libKitsuneNetwork/tcp/tcpClient.hpp \
+    ../include/libKitsuneNetwork/tcp/tcpServer.hpp \
+    ../include/libKitsuneNetwork/networkTrigger.hpp \
+    cleanupThread.hpp \
+    messageRingBuffer.hpp
 
 SOURCES += \
     tcp/tcpServer.cpp \
     tcp/tcpClient.cpp \
     networkTrigger.cpp \
     cleanupThread.cpp
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
