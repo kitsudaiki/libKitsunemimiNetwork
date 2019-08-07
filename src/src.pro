@@ -16,9 +16,9 @@ INCLUDEPATH += $$PWD \
 HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcpClient.hpp \
     ../include/libKitsuneNetwork/tcp/tcpServer.hpp \
-    ../include/libKitsuneNetwork/cleanupThread.hpp \
     ../include/libKitsuneNetwork/networkTrigger.hpp \
-    ../include/libKitsuneNetwork/messageRingBuffer.hpp
+    ../libKitsuneNetwork/cleanupThread.hpp \
+    ../libKitsuneNetwork/messageRingBuffer.hpp
 
 SOURCES += \
     tcp/tcpServer.cpp \

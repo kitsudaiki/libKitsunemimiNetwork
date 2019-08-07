@@ -36,6 +36,7 @@ namespace Kitsune
 namespace Network
 {
 class NetworkTrigger;
+class CleanupThread;
 
 class TcpClient : public Kitsune::CommonThread
 {
