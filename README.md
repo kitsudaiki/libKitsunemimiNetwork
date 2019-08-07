@@ -6,8 +6,6 @@ MIT License
 
 ## Requirements
 
-### Tools
-
 ### Kitsune-Repositories
 
 Repository-Name | Version-Tag | Download-Path

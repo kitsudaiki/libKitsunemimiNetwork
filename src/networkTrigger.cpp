@@ -7,22 +7,16 @@
  *  MIT License
  */
 
-#include <networkTrigger.h>
+#include <networkTrigger.hpp>
 
 namespace Kitsune
 {
 namespace Network
 {
 
-NetworkTrigger::NetworkTrigger()
-{
+NetworkTrigger::NetworkTrigger() {}
 
-}
+NetworkTrigger::~NetworkTrigger() {}
 
-NetworkTrigger::~NetworkTrigger()
-{
-
-}
-
-}
-}
+} // namespace Network
+} // namespace Kitsune
