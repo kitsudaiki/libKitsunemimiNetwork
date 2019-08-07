@@ -1,4 +1,13 @@
-#include "cleanupThread.h"
+/**
+ *  @file    cleanupThread.cpp
+ *
+ *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
+ *
+ *  MIT License
+ */
+
+#include "cleanupThread.hpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -9,7 +18,7 @@
 #include <cinttypes>
 #include <unistd.h>
 
-#include <tcp/tcpClient.h>
+#include <tcp/tcpClient.hpp>
 #include <iostream>
 
 namespace Kitsune
@@ -17,10 +26,10 @@ namespace Kitsune
 namespace Network
 {
 
-CleanupThread::CleanupThread()
-{
-
-}
+/**
+ * constructor
+ */
+CleanupThread::CleanupThread() {}
 
 /**
  * @brief CleanupThread::addClientForCleanup
@@ -56,5 +65,5 @@ CleanupThread::run()
     }
 }
 
-}
-}
+} // namespace Network
+} // namespace Kitsune

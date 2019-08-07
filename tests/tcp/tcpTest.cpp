@@ -9,10 +9,10 @@
 
 #include "tcpTest.h"
 #include <iostream>
-#include <buffering/commonDataBuffer.h>
+#include <buffering/commonDataBuffer.hpp>
 
-#include <tcp/tcpServer.h>
-#include <tcp/tcpClient.h>
+#include <tcp/tcpServer.hpp>
+#include <tcp/tcpClient.hpp>
 #include <testBuffer.h>
 
 namespace Kitsune
@@ -88,9 +88,10 @@ void TcpTest::checkBigDataTransfer()
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)
     {
-        if(dataBuffer->data[i] == 'p'
-                && dataBuffer->data[i+1] == 'o'
-                && dataBuffer->data[i+2] == 'i')
+        uint8_t* dataBufferData = static_cast<uint8_t*>(dataBuffer->data);
+        if(dataBufferData[i] == 'p'
+                && dataBufferData[i+1] == 'o'
+                && dataBufferData[i+2] == 'i')
         {
             numberOfPois++;
         }

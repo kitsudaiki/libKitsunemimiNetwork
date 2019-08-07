@@ -16,7 +16,7 @@ build:
     - cd /builds/build
     - mkdir libKitsuneNetwork
     - cd libKitsuneNetwork
-    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/kitsune_libs/libKitsuneNetwork/libKitsuneNetwork.pro -spec linux-g++ CONFIG+=debug CONFIG+=c++14
+    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/kitsune/KyoukoMind/KyoukoMind.pro -spec linux-g++ "QMAKE_CXXFLAGS += -DRUN_UNIT_TEST" CONFIG+=debug CONFIG+=c++14
     - /usr/bin/make
 
     - cd tests

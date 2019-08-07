@@ -1,5 +1,5 @@
 /**
- *  @file    networkTrigger.h
+ *  @file    networkTrigger.hpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef NETWORKTRIGGER_H
-#define NETWORKTRIGGER_H
+#ifndef NETWORKTRIGGER_HPP
+#define NETWORKTRIGGER_HPP
 
 #include <cstdio>
 #include <cinttypes>
@@ -25,11 +25,12 @@ class NetworkTrigger
 public:
     NetworkTrigger();
     virtual ~NetworkTrigger();
-    virtual uint32_t runTask(const MessageRingBuffer& recvBuffer,
+
+    virtual uint64_t runTask(const MessageRingBuffer& recvBuffer,
                              TcpClient* client) = 0;
 };
 
-}
-}
+} // namespace Network
+} // namespace Kitsune
 
-#endif // NETWORKTRIGGER_H
+#endif // NETWORKTRIGGER_HPP

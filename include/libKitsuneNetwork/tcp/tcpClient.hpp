@@ -1,5 +1,5 @@
 /**
- *  @file    tcpClient.h
+ *  @file    tcpClient.hpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef TCPCLIENT_H
-#define TCPCLIENT_H
+#ifndef TCPCLIENT_HPP
+#define TCPCLIENT_HPP
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,11 +25,11 @@
 #include <string>
 #include <vector>
 
-#include <threading/commonThread.h>
-#include <buffering/commonDataBuffer.h>
+#include <threading/commonThread.hpp>
+#include <buffering/commonDataBuffer.hpp>
 
-#include <cleanupThread.h>
-#include <messageringbuffer.h>
+#include <cleanupThread.hpp>
+#include <messageRingBuffer.hpp>
 
 namespace Kitsune
 {
@@ -48,12 +48,15 @@ public:
 
     static Kitsune::Network::CleanupThread* m_cleanup;
 
+    // trigger-control
     bool addNetworkTrigger(NetworkTrigger* trigger);
     bool removeNetworkTrigger(const uint32_t index);
     void clearNetworkTrigger();
 
+    // send
     bool sendMessage(const std::string &message);
-    bool sendMessage(const uint8_t *message, const uint32_t numberOfBytes);
+    bool sendMessage(const uint8_t *message,
+                     const uint64_t numberOfBytes);
 
     bool closeSocket();
 
@@ -64,19 +67,17 @@ private:
     bool m_clientSide = false;
     std::string m_address = "";
     uint16_t m_port = 0;
-
-    MessageRingBuffer m_recvBuffer;
-
     int m_clientSocket = 0;
     sockaddr_in m_client;
 
+    MessageRingBuffer m_recvBuffer;
     std::vector<NetworkTrigger*> m_trigger;
 
     bool initClientSide();
     bool waitForMessage();
 };
 
-}
-}
+} // namespace Network
+} // namespace Kitsune
 
-#endif // TCPCLIENT_H
+#endif // TCPCLIENT_HPP

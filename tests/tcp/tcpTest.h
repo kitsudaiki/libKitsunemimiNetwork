@@ -10,7 +10,7 @@
 #ifndef TCPTEST_H
 #define TCPTEST_H
 
-#include <testing/commonTest.h>
+#include <testing/commonTest.hpp>
 
 namespace Kitsune
 {

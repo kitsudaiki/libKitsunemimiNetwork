@@ -1,8 +1,8 @@
 #include "testBuffer.h"
-#include <tcp/tcpClient.h>
+#include <tcp/tcpClient.hpp>
 
-#include <buffering/commonDataBuffer.h>
-#include <buffering/commonDataBufferMethods.h>
+#include <buffering/commonDataBuffer.hpp>
+#include <buffering/commonDataBufferMethods.hpp>
 
 namespace Kitsune
 {
@@ -20,8 +20,7 @@ TestBuffer::~TestBuffer()
     delete m_buffer;
 }
 
-uint32_t
-TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
+uint64_t TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
                     TcpClient *client)
 {
     uint8_t buffer[RECV_BUFFER_SIZE];

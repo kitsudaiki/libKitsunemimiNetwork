@@ -1,7 +1,7 @@
 #ifndef TESTBUFFER_H
 #define TESTBUFFER_H
 
-#include <networkTrigger.h>
+#include <networkTrigger.hpp>
 
 namespace Kitsune
 {
@@ -17,7 +17,7 @@ class TestBuffer : public NetworkTrigger
 public:
     TestBuffer();
     ~TestBuffer();
-    uint32_t runTask(const MessageRingBuffer& recvBuffer,
+    uint64_t runTask(const MessageRingBuffer& recvBuffer,
                      TcpClient* client);
 
     uint64_t getNumberOfWrittenBytes();
