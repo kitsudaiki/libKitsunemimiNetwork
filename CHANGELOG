@@ -1,0 +1,9 @@
+# Changelog
+
+
+## [0.1.0] - 2019-08-07
+
+### Added
+- tcp-client and tcp-server
+- ring-buffer for incoming messages
+- cleanup-thread for closing connections

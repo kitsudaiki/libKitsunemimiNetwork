@@ -1,4 +1,13 @@
-#include "testBuffer.h"
+/**
+ *  @file    dummyBuffer.cpp
+ *
+ *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
+ *
+ *  MIT License
+ */
+
+#include "dummyBuffer.hpp"
 #include <tcp/tcpClient.hpp>
 
 #include <buffering/commonDataBuffer.hpp>
@@ -9,19 +18,29 @@ namespace Kitsune
 namespace Network
 {
 
-
-TestBuffer::TestBuffer() : NetworkTrigger ()
+/**
+ * constructor
+ */
+DummyBuffer::DummyBuffer()
+    : NetworkTrigger ()
 {
     m_buffer = new CommonDataBuffer(1000);
 }
 
-TestBuffer::~TestBuffer()
+/**
+ * destructor
+ */
+DummyBuffer::~DummyBuffer()
 {
     delete m_buffer;
 }
 
-uint64_t TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
-                    TcpClient *client)
+/**
+ * runTask
+ */
+uint64_t
+DummyBuffer::runTask(const MessageRingBuffer &recvBuffer,
+                     TcpClient *client)
 {
     uint8_t buffer[RECV_BUFFER_SIZE];
     const uint8_t* dataPointer = getDataPointer(recvBuffer, buffer, recvBuffer.readWriteDiff);
@@ -29,20 +48,29 @@ uint64_t TestBuffer::runTask(const MessageRingBuffer &recvBuffer,
     return recvBuffer.readWriteDiff;
 }
 
+/**
+ * getBuffer
+ */
 CommonDataBuffer*
-TestBuffer::getBuffer()
+DummyBuffer::getBuffer()
 {
     return m_buffer;
 }
 
+/**
+ * getNumberOfWrittenBytes
+ */
 uint64_t
-TestBuffer::getNumberOfWrittenBytes()
+DummyBuffer::getNumberOfWrittenBytes()
 {
     return m_buffer->bufferPosition;
 }
 
+/**
+ * clearBuffer
+ */
 void
-TestBuffer::clearBuffer()
+DummyBuffer::clearBuffer()
 {
     resetBuffer(m_buffer, 1000);
 }

@@ -17,16 +17,11 @@ HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcpClient.hpp \
     ../include/libKitsuneNetwork/tcp/tcpServer.hpp \
     ../include/libKitsuneNetwork/networkTrigger.hpp \
-    ../libKitsuneNetwork/cleanupThread.hpp \
-    ../libKitsuneNetwork/messageRingBuffer.hpp
+    cleanupThread.hpp \
+    messageRingBuffer.hpp
 
 SOURCES += \
     tcp/tcpServer.cpp \
     tcp/tcpClient.cpp \
     networkTrigger.cpp \
     cleanupThread.cpp
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}

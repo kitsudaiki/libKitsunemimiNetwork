@@ -11,15 +11,15 @@ LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
 INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
 
 INCLUDEPATH += $$PWD \
-            $$PWD/../include/libKitsuneNetwork
+               $$PWD/../include/libKitsuneNetwork
 
 LIBS += -L../src -lKitsuneNetwork
 
 HEADERS += \
-    tcp/tcpTest.h \
-    testBuffer.h
+    dummyBuffer.hpp \
+    libKitsuneNetwork/tcp/tcpClient_tcpServer_test.hpp
 
 SOURCES += \
-    tcp/tcpTest.cpp \
     main.cpp \
-    testBuffer.cpp
+    dummyBuffer.cpp \
+    libKitsuneNetwork/tcp/tcpClient_tcpServer_test.cpp

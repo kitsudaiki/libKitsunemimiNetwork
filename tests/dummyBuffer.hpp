@@ -1,5 +1,14 @@
-#ifndef TESTBUFFER_H
-#define TESTBUFFER_H
+/**
+ *  @file    dummyBuffer.hpp
+ *
+ *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
+ *
+ *  MIT License
+ */
+
+#ifndef DUMMYBUFFER_HPP
+#define DUMMYBUFFER_HPP
 
 #include <networkTrigger.hpp>
 
@@ -12,11 +21,11 @@ namespace Network
 class TcpClient;
 struct MessageRingBuffer;
 
-class TestBuffer : public NetworkTrigger
+class DummyBuffer : public NetworkTrigger
 {
 public:
-    TestBuffer();
-    ~TestBuffer();
+    DummyBuffer();
+    ~DummyBuffer();
     uint64_t runTask(const MessageRingBuffer& recvBuffer,
                      TcpClient* client);
 
@@ -32,4 +41,4 @@ private:
 }
 }
 
-#endif // TESTBUFFER_H
+#endif // DUMMYBUFFER_HPP

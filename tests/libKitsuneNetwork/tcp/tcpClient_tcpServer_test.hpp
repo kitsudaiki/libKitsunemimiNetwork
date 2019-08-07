@@ -1,5 +1,5 @@
 /**
- *  @file    tcpTest.h
+ *  @file    tcpClient_tcpServer_test.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef TCPTEST_H
-#define TCPTEST_H
+#ifndef TCPCLIENT_TCPSERVER_TEST_HPP
+#define TCPCLIENT_TCPSERVER_TEST_HPP
 
 #include <testing/commonTest.hpp>
 
@@ -19,12 +19,12 @@ namespace Network
 
 class TcpServer;
 class TcpClient;
-class TestBuffer;
+class DummyBuffer;
 
-class TcpTest : public Kitsune::CommonTest
+class TcpClient_TcpServer_Test : public Kitsune::CommonTest
 {
 public:
-    TcpTest();
+    TcpClient_TcpServer_Test();
 
 private:
     void initTestCase();
@@ -36,10 +36,10 @@ private:
     TcpServer* m_server = nullptr;
     TcpClient* m_clientClientSide = nullptr;
     TcpClient* m_clientServerSide = nullptr;
-    TestBuffer* m_buffer = nullptr;
+    DummyBuffer* m_buffer = nullptr;
 };
 
 }
 }
 
-#endif // TCPTEST_H
+#endif // TCPCLIENT_TCPSERVER_TEST_HPP

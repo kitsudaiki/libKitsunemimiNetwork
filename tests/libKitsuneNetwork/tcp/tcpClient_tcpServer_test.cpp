@@ -1,5 +1,5 @@
 /**
- *  @file    tcpTest.cpp
+ *  @file    tcpClient_tcpServer_test.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,20 +7,20 @@
  *  MIT License
  */
 
-#include "tcpTest.h"
-#include <iostream>
+#include "tcpClient_tcpServer_test.hpp"
 #include <buffering/commonDataBuffer.hpp>
 
 #include <tcp/tcpServer.hpp>
 #include <tcp/tcpClient.hpp>
-#include <testBuffer.h>
+#include <dummyBuffer.hpp>
 
 namespace Kitsune
 {
 namespace Network
 {
 
-TcpTest::TcpTest() : Kitsune::CommonTest("TcpTest")
+TcpClient_TcpServer_Test::TcpClient_TcpServer_Test() :
+    Kitsune::CommonTest("TcpClient_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -29,13 +29,21 @@ TcpTest::TcpTest() : Kitsune::CommonTest("TcpTest")
     cleanupTestCase();
 }
 
-void TcpTest::initTestCase()
+/**
+ * initTestCase
+ */
+void
+TcpClient_TcpServer_Test::initTestCase()
 {
-    m_buffer = new TestBuffer();
+    m_buffer = new DummyBuffer();
     m_server = new TcpServer(m_buffer);
 }
 
-void TcpTest::checkConnectionInit()
+/**
+ * checkConnectionInit
+ */
+void
+TcpClient_TcpServer_Test::checkConnectionInit()
 {
     UNITTEST(m_server->initSocket(12345), true);
     UNITTEST(m_server->start(), true);
@@ -50,7 +58,11 @@ void TcpTest::checkConnectionInit()
     }
 }
 
-void TcpTest::checkLittleDataTransfer()
+/**
+ * checkLittleDataTransfer
+ */
+void
+TcpClient_TcpServer_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
@@ -72,7 +84,11 @@ void TcpTest::checkLittleDataTransfer()
     }
 }
 
-void TcpTest::checkBigDataTransfer()
+/**
+ * checkBigDataTransfer
+ */
+void
+TcpClient_TcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
@@ -99,7 +115,11 @@ void TcpTest::checkBigDataTransfer()
     UNITTEST(numberOfPois, 100000);
 }
 
-void TcpTest::cleanupTestCase()
+/**
+ * cleanupTestCase
+ */
+void
+TcpClient_TcpServer_Test::cleanupTestCase()
 {
     UNITTEST(m_clientServerSide->closeSocket(), true);
     m_clientServerSide->closeSocket();
