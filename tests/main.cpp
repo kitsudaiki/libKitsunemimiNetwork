@@ -7,7 +7,7 @@
  *  MIT License
  */
 
-#include <libKitsuneNetwork/tcp/tcpClient_tcpServer_test.hpp>
+#include <libKitsuneNetwork/tcp/tcp_client_tcp_server_test.h>
 
 int main()
 {

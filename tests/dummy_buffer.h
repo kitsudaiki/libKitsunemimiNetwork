@@ -1,5 +1,5 @@
 /**
- *  @file    dummyBuffer.hpp
+ *  @file    dummy_buffer.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,14 +7,17 @@
  *  MIT License
  */
 
-#ifndef DUMMYBUFFER_HPP
-#define DUMMYBUFFER_HPP
+#ifndef DUMMYBUFFER_H
+#define DUMMYBUFFER_H
 
-#include <networkTrigger.hpp>
+#include <network_trigger.h>
 
 namespace Kitsune
 {
-class CommonDataBuffer;
+namespace Common
+{
+class DataBuffer;
+}
 
 namespace Network
 {
@@ -30,15 +33,15 @@ public:
                      TcpClient* client);
 
     uint64_t getNumberOfWrittenBytes();
-    CommonDataBuffer *getBuffer();
+    Common::DataBuffer* getBuffer();
 
     void clearBuffer();
 
 private:
-    CommonDataBuffer* m_buffer = nullptr;
+    Common::DataBuffer* m_buffer = nullptr;
 };
 
 }
 }
 
-#endif // DUMMYBUFFER_HPP
+#endif // DUMMYBUFFER_H

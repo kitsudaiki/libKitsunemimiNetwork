@@ -1,5 +1,5 @@
 /**
- *  @file    tcpClient.cpp
+ *  @file    tcp_client.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#include <tcp/tcpClient.hpp>
-#include <networkTrigger.hpp>
+#include <tcp/tcp_client.h>
+#include <network_trigger.h>
 #include <iostream>
 
 namespace Kitsune

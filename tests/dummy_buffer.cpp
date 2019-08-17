@@ -1,5 +1,5 @@
 /**
- *  @file    dummyBuffer.cpp
+ *  @file    dummy_buffer.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,11 +7,11 @@
  *  MIT License
  */
 
-#include "dummyBuffer.hpp"
-#include <tcp/tcpClient.hpp>
+#include "dummy_buffer.h"
+#include <tcp/tcp_client.h>
 
-#include <buffering/commonDataBuffer.hpp>
-#include <buffering/commonDataBufferMethods.hpp>
+#include <buffering/data_buffer.h>
+#include <buffering/data_buffer_methods.h>
 
 namespace Kitsune
 {
@@ -24,7 +24,7 @@ namespace Network
 DummyBuffer::DummyBuffer()
     : NetworkTrigger ()
 {
-    m_buffer = new CommonDataBuffer(1000);
+    m_buffer = new Common::DataBuffer(1000);
 }
 
 /**
@@ -51,7 +51,7 @@ DummyBuffer::runTask(const MessageRingBuffer &recvBuffer,
 /**
  * getBuffer
  */
-CommonDataBuffer*
+Common::DataBuffer*
 DummyBuffer::getBuffer()
 {
     return m_buffer;

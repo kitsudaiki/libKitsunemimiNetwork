@@ -1,5 +1,5 @@
 /**
- *  @file    cleanupThread.hpp
+ *  @file    cleanup_thread.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,12 +7,12 @@
  *  MIT License
  */
 
-#ifndef CLEANUPTHREAD_HPP
-#define CLEANUPTHREAD_HPP
+#ifndef CLEANUP_THREAD_H
+#define CLEANUP_THREAD_H
 
 #include <queue>
 
-#include <threading/commonThread.hpp>
+#include <threading/thread.h>
 
 namespace Kitsune
 {
@@ -20,7 +20,7 @@ namespace Network
 {
 class TcpClient;
 
-class CleanupThread : public Kitsune::CommonThread
+class CleanupThread : public Kitsune::Common::Thread
 {
 public:
     CleanupThread();
@@ -37,4 +37,4 @@ private:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // CLEANUPTHREAD_HPP
+#endif // CLEANUP_THREAD_H

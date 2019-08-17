@@ -1,5 +1,5 @@
 /**
- *  @file    tcpClient_tcpServer_test.cpp
+ *  @file    tcp_client_tcp_server_test.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,12 +7,12 @@
  *  MIT License
  */
 
-#include "tcpClient_tcpServer_test.hpp"
-#include <buffering/commonDataBuffer.hpp>
+#include "tcp_client_tcp_server_test.h"
+#include <buffering/data_buffer.h>
 
-#include <tcp/tcpServer.hpp>
-#include <tcp/tcpClient.hpp>
-#include <dummyBuffer.hpp>
+#include <tcp/tcp_server.h>
+#include <tcp/tcp_client.h>
+#include <dummy_buffer.h>
 
 namespace Kitsune
 {
@@ -20,7 +20,7 @@ namespace Network
 {
 
 TcpClient_TcpServer_Test::TcpClient_TcpServer_Test() :
-    Kitsune::CommonTest("TcpClient_TcpServer_Test")
+    Kitsune::Common::Test("TcpClient_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -74,7 +74,7 @@ TcpClient_TcpServer_Test::checkLittleDataTransfer()
 
     if(m_buffer->getNumberOfWrittenBytes() == 9)
     {
-        CommonDataBuffer* buffer = m_buffer->getBuffer();
+        Common::DataBuffer* buffer = m_buffer->getBuffer();
         uint64_t bufferSize = buffer->bufferPosition;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
@@ -98,7 +98,7 @@ TcpClient_TcpServer_Test::checkBigDataTransfer()
     }
     usleep(10000);
     uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
-    CommonDataBuffer* dataBuffer = m_buffer->getBuffer();
+    Common::DataBuffer* dataBuffer = m_buffer->getBuffer();
     UNITTEST(totalIncom, 300000);
     UNITTEST(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;

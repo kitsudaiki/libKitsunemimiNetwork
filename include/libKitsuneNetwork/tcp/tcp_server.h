@@ -1,5 +1,5 @@
 /**
- *  @file    tcpServer.hpp
+ *  @file    tcp_server.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef TCPSERVER_HPP
-#define TCPSERVER_HPP
+#ifndef TCP_SERVER_H
+#define TCP_SERVER_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +25,7 @@
 
 #include <string>
 #include <vector>
-#include <threading/commonThread.hpp>
+#include <threading/thread.h>
 
 namespace Kitsune
 {
@@ -34,7 +34,7 @@ namespace Network
 class NetworkTrigger;
 class TcpClient;
 
-class TcpServer : public Kitsune::CommonThread
+class TcpServer : public Kitsune::Common::Thread
 {
 public:
     TcpServer(NetworkTrigger* trigger = nullptr);
@@ -66,4 +66,4 @@ private:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // TCPSERVER_HPP
+#endif // TCP_SERVER_H
