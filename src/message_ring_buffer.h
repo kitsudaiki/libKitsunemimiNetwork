@@ -1,5 +1,5 @@
 /**
- *  @file    messageRingBuffer.hpp
+ *  @file    message_ring_buffer.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef MESSAGERINGBUFFER_HPP
-#define MESSAGERINGBUFFER_HPP
+#ifndef MESSAGE_RING_BUFFER_H
+#define MESSAGE_RING_BUFFER_H
 
 #include <cinttypes>
 #include <string.h>
@@ -65,4 +65,4 @@ getDataPointer(const MessageRingBuffer &recvBuffer,
 } // namespace Network
 } // namespace Kitsune
 
-#endif // MESSAGERINGBUFFER_HPP
+#endif // MESSAGE_RING_BUFFER_H

@@ -16,10 +16,10 @@ INCLUDEPATH += $$PWD \
 LIBS += -L../src -lKitsuneNetwork
 
 HEADERS += \
-    dummyBuffer.hpp \
-    libKitsuneNetwork/tcp/tcpClient_tcpServer_test.hpp
+    libKitsuneNetwork/tcp/tcp_client_tcp_server_test.h \
+    dummy_buffer.h
 
 SOURCES += \
     main.cpp \
-    dummyBuffer.cpp \
-    libKitsuneNetwork/tcp/tcpClient_tcpServer_test.cpp
+    dummy_buffer.cpp \
+    libKitsuneNetwork/tcp/tcp_client_tcp_server_test.cpp

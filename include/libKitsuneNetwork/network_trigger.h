@@ -1,5 +1,5 @@
 /**
- *  @file    networkTrigger.hpp
+ *  @file    network_trigger.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef NETWORKTRIGGER_HPP
-#define NETWORKTRIGGER_HPP
+#ifndef NETWORK_TRIGGER_H
+#define NETWORK_TRIGGER_H
 
 #include <cstdio>
 #include <cinttypes>
@@ -33,4 +33,4 @@ public:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // NETWORKTRIGGER_HPP
+#endif // NETWORK_TRIGGER_H

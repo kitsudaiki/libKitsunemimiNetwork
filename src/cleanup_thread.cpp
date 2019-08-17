@@ -1,5 +1,5 @@
 /**
- *  @file    cleanupThread.cpp
+ *  @file    cleanup_thread.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,7 +7,7 @@
  *  MIT License
  */
 
-#include "cleanupThread.hpp"
+#include "cleanup_thread.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -18,7 +18,7 @@
 #include <cinttypes>
 #include <unistd.h>
 
-#include <tcp/tcpClient.hpp>
+#include <tcp/tcp_client.h>
 #include <iostream>
 
 namespace Kitsune

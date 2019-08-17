@@ -14,14 +14,14 @@ INCLUDEPATH += $$PWD \
                $$PWD/../include/libKitsuneNetwork
 
 HEADERS += \
-    ../include/libKitsuneNetwork/tcp/tcpClient.hpp \
-    ../include/libKitsuneNetwork/tcp/tcpServer.hpp \
-    ../include/libKitsuneNetwork/networkTrigger.hpp \
-    cleanupThread.hpp \
-    messageRingBuffer.hpp
+    ../include/libKitsuneNetwork/tcp/tcp_client.h \
+    ../include/libKitsuneNetwork/tcp/tcp_server.h \
+    ../include/libKitsuneNetwork/network_trigger.h \
+    message_ring_buffer.h \
+    cleanup_thread.h
 
 SOURCES += \
-    tcp/tcpServer.cpp \
-    tcp/tcpClient.cpp \
-    networkTrigger.cpp \
-    cleanupThread.cpp
+    network_trigger.cpp \
+    cleanup_thread.cpp \
+    tcp/tcp_server.cpp \
+    tcp/tcp_client.cpp

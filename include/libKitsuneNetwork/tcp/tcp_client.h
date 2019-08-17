@@ -1,5 +1,5 @@
 /**
- *  @file    tcpClient.hpp
+ *  @file    tcp_client.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef TCPCLIENT_HPP
-#define TCPCLIENT_HPP
+#ifndef TCP_CLIENT_H
+#define TCP_CLIENT_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,11 +25,11 @@
 #include <string>
 #include <vector>
 
-#include <threading/commonThread.hpp>
-#include <buffering/commonDataBuffer.hpp>
+#include <threading/thread.h>
+#include <buffering/data_buffer.h>
 
-#include <cleanupThread.hpp>
-#include <messageRingBuffer.hpp>
+#include <cleanup_thread.h>
+#include <message_ring_buffer.h>
 
 namespace Kitsune
 {
@@ -38,7 +38,7 @@ namespace Network
 class NetworkTrigger;
 class CleanupThread;
 
-class TcpClient : public Kitsune::CommonThread
+class TcpClient : public Kitsune::Common::Thread
 {
 public:
     TcpClient(const std::string address,
@@ -81,4 +81,4 @@ private:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // TCPCLIENT_HPP
+#endif // TCP_CLIENT_H
