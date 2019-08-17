@@ -3,7 +3,7 @@ QT       -= qt core gui
 TARGET = KitsuneNetwork
 TEMPLATE = lib
 CONFIG += c++14
-VERSION = 0.1.0
+VERSION = 0.2.0
 
 LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
