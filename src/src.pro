@@ -17,7 +17,7 @@ HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcp_client.h \
     ../include/libKitsuneNetwork/tcp/tcp_server.h \
     ../include/libKitsuneNetwork/network_trigger.h \
-    message_ring_buffer.h \
+    ../include/message_ring_buffer.h \
     cleanup_thread.h
 
 SOURCES += \

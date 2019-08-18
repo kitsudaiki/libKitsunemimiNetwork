@@ -9,6 +9,7 @@
 
 #include <tcp/tcp_client.h>
 #include <network_trigger.h>
+#include <cleanup_thread.h>
 #include <iostream>
 
 namespace Kitsune

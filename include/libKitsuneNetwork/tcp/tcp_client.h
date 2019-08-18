@@ -28,7 +28,6 @@
 #include <threading/thread.h>
 #include <buffering/data_buffer.h>
 
-#include <cleanup_thread.h>
 #include <message_ring_buffer.h>
 
 namespace Kitsune
