@@ -1,10 +1,9 @@
 /**
  *  @file    tcp_client_tcp_server_test.cpp
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #include "tcp_client_tcp_server_test.h"
@@ -129,5 +128,5 @@ TcpClient_TcpServer_Test::cleanupTestCase()
     delete m_buffer;
 }
 
-}
-}
+} // namespace Network
+} // namespace Kitsune

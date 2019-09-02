@@ -1,10 +1,9 @@
 /**
  *  @file    dummy_buffer.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #ifndef DUMMYBUFFER_H
@@ -41,7 +40,7 @@ private:
     Common::DataBuffer* m_buffer = nullptr;
 };
 
-}
-}
+} // namespace Network
+} // namespace Kitsune
 
 #endif // DUMMYBUFFER_H

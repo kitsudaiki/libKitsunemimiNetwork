@@ -1,10 +1,9 @@
 /**
  *  @file    message_ring_buffer.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #ifndef MESSAGE_RING_BUFFER_H

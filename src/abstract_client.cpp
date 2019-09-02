@@ -1,3 +1,11 @@
+/**
+ *  @file    abstract_client.cpp
+ *
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *
+ *  @copyright MIT License
+ */
+
 #include "abstract_client.h"
 
 #include <cleanup_thread.h>
@@ -27,7 +35,7 @@ AbstractClient::AbstractClient()
  */
 AbstractClient::~AbstractClient()
 {
-
+    clearNetworkTrigger();
 }
 
 /**

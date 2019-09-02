@@ -1,3 +1,11 @@
+/**
+ *  @file    abstract_server.h
+ *
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *
+ *  @copyright MIT License
+ */
+
 #ifndef ABSTRACT_SERVER_H
 #define ABSTRACT_SERVER_H
 

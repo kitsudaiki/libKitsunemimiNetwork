@@ -1,5 +1,12 @@
 #ifndef ABSTRACT_CLIENT_H
 #define ABSTRACT_CLIENT_H
+/**
+ *  @file    abstract_client.h
+ *
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *
+ *  @copyright MIT License
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

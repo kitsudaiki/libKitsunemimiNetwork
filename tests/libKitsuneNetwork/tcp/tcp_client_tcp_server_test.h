@@ -1,10 +1,9 @@
 /**
  *  @file    tcp_client_tcp_server_test.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #ifndef TCPCLIENT_TCPSERVER_TEST_H
@@ -39,7 +38,7 @@ private:
     DummyBuffer* m_buffer = nullptr;
 };
 
-}
-}
+} // namespace Network
+} // namespace Kitsune
 
 #endif // TCPCLIENT_TCPSERVER_TEST_H

@@ -1,3 +1,11 @@
+/**
+ *  @file    abstract_server.cpp
+ *
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *
+ *  @copyright MIT License
+ */
+
 #include "abstract_server.h"
 
 namespace Kitsune
@@ -18,7 +26,7 @@ AbstractServer::AbstractServer()
  */
 AbstractServer::~AbstractServer()
 {
-
+    clearTrigger();
 }
 
 /**
