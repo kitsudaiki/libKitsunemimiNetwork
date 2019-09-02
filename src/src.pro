@@ -17,11 +17,15 @@ HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcp_client.h \
     ../include/libKitsuneNetwork/tcp/tcp_server.h \
     ../include/libKitsuneNetwork/network_trigger.h \
-    ../include/message_ring_buffer.h \
-    cleanup_thread.h
+    ../include/libKitsuneNetwork/message_ring_buffer.h \
+    cleanup_thread.h \
+    ../include/libKitsuneNetwork/abstract_client.h \
+    ../include/libKitsuneNetwork/abstract_server.h
 
 SOURCES += \
     network_trigger.cpp \
     cleanup_thread.cpp \
     tcp/tcp_server.cpp \
-    tcp/tcp_client.cpp
+    tcp/tcp_client.cpp \
+    abstract_server.cpp \
+    abstract_client.cpp

@@ -22,44 +22,27 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
-#include <string>
 #include <vector>
-#include <threading/thread.h>
+
+#include <abstract_server.h>
 
 namespace Kitsune
 {
 namespace Network
 {
-class NetworkTrigger;
 class TcpClient;
 
-class TcpServer : public Kitsune::Common::Thread
+class TcpServer : public AbstractServer
 {
 public:
     TcpServer(NetworkTrigger* trigger = nullptr);
     ~TcpServer();
 
     bool initSocket(const uint16_t port);
-    TcpClient* waitForIncomingConnection();
+    AbstractClient* waitForIncomingConnection();
     bool closeServer();
 
-    bool sendMessage(const std::string &message, int clientSocket);
-
-    uint64_t getNumberOfSockets();
-    TcpClient* getSocket(const uint32_t pos);
-
-    // trigger-control
-    void addAdditionalTrigger(NetworkTrigger* trigger);
-    void clearTrigger();
-
-protected:
-    void run();
-
 private:
-    int m_serverSocket = 0;
-    std::vector<NetworkTrigger*> m_trigger;
-    std::vector<TcpClient*> m_sockets;
     struct sockaddr_in m_server;
 };
 

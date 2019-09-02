@@ -10,7 +10,7 @@
 #ifndef TCPCLIENT_TCPSERVER_TEST_H
 #define TCPCLIENT_TCPSERVER_TEST_H
 
-#include <testing/test.h>
+#include <testing/unit_test.h>
 
 namespace Kitsune
 {
@@ -21,7 +21,7 @@ class TcpServer;
 class TcpClient;
 class DummyBuffer;
 
-class TcpClient_TcpServer_Test : public Kitsune::Common::Test
+class TcpClient_TcpServer_Test : public Kitsune::Common::UnitTest
 {
 public:
     TcpClient_TcpServer_Test();

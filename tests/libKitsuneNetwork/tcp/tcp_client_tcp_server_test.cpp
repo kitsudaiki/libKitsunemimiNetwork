@@ -20,7 +20,7 @@ namespace Network
 {
 
 TcpClient_TcpServer_Test::TcpClient_TcpServer_Test() :
-    Kitsune::Common::Test("TcpClient_TcpServer_Test")
+    Kitsune::Common::UnitTest("TcpClient_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -54,7 +54,7 @@ TcpClient_TcpServer_Test::checkConnectionInit()
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_clientServerSide = m_server->getSocket(0);
+        m_clientServerSide = static_cast<TcpClient*>(m_server->getSocket(0));
     }
 }
 

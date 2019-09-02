@@ -8,16 +8,14 @@
  */
 
 #include <tcp/tcp_client.h>
+#include <iostream>
 #include <network_trigger.h>
 #include <cleanup_thread.h>
-#include <iostream>
 
 namespace Kitsune
 {
 namespace Network
 {
-
-Kitsune::Network::CleanupThread* TcpClient::m_cleanup = nullptr;
 
 /**
  * constructor for the client-side of the tcp-connection
@@ -27,12 +25,8 @@ Kitsune::Network::CleanupThread* TcpClient::m_cleanup = nullptr;
  */
 TcpClient::TcpClient(const std::string address,
                      const uint16_t port)
+    : AbstractClient ()
 {
-    if(m_cleanup == nullptr)
-    {
-        m_cleanup = new Kitsune::Network::CleanupThread();
-        m_cleanup->start();
-    }
     m_address = address;
     m_port = port;
     m_clientSide = true;
@@ -47,12 +41,8 @@ TcpClient::TcpClient(const std::string address,
  * @param client address for the client
  */
 TcpClient::TcpClient(const int clientFd, sockaddr_in client)
+    : AbstractClient ()
 {
-    if(m_cleanup == nullptr)
-    {
-        m_cleanup = new Kitsune::Network::CleanupThread();
-        m_cleanup->start();
-    }
     m_clientSocket = clientFd;
     m_client = client;
     m_clientSide = false;
@@ -64,53 +54,6 @@ TcpClient::TcpClient(const int clientFd, sockaddr_in client)
 TcpClient::~TcpClient()
 {
     closeSocket();
-}
-
-/**
- * add new trigger-object for incoming messages
- *
- * @param trigger new trigger-object
- *
- * @return false, if object was nullptr, else true
- */
-bool
-TcpClient::addNetworkTrigger(NetworkTrigger *trigger)
-{
-    if(trigger == nullptr) {
-        return false;
-    }
-
-    m_trigger.push_back(trigger);
-
-    return true;
-}
-
-/**
- * remove a specific trigger from the client
- *
- * @param index index of the trigger in the list
- *
- * @return false, if index too high, else tru
- */
-bool
-TcpClient::removeNetworkTrigger(const uint32_t index)
-{
-    if(m_trigger.size() <= index) {
-        return false;
-    }
-
-    m_trigger.erase(m_trigger.begin() + index);
-
-    return true;
-}
-
-/**
- * delete all trigger-objects from the client
- */
-void
-TcpClient::clearNetworkTrigger()
-{
-    m_trigger.clear();
 }
 
 /**
@@ -293,21 +236,9 @@ TcpClient::closeSocket()
     // when the other side of the connection triggers the close-process,
     // the thread would try to close itself, which would result into a deadlock.
     // That is the reason, why another thread sould process the delete of the client-thread.
-    TcpClient::m_cleanup->addClientForCleanup(this);
+    AbstractClient::m_cleanup->addClientForCleanup(this);
 
     return true;
-}
-
-/**
- * run-method for the thread-class
- */
-void
-TcpClient::run()
-{
-    while(!m_abort)
-    {
-        waitForMessage();
-    }
 }
 
 } // namespace Network
