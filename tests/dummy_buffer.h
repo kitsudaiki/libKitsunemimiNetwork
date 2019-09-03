@@ -28,8 +28,7 @@ class DummyBuffer : public NetworkTrigger
 public:
     DummyBuffer();
     ~DummyBuffer();
-    uint64_t runTask(const MessageRingBuffer& recvBuffer,
-                     AbstractClient *client);
+    uint64_t runTask(const MessageRingBuffer& recvBuffer, AbstractClient*);
 
     uint64_t getNumberOfWrittenBytes();
     Common::DataBuffer* getBuffer();
