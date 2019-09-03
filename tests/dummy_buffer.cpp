@@ -38,11 +38,10 @@ DummyBuffer::~DummyBuffer()
  * runTask
  */
 uint64_t
-DummyBuffer::runTask(const MessageRingBuffer &recvBuffer,
+DummyBuffer::runTask(MessageRingBuffer &recvBuffer,
                      AbstractClient*)
 {
-    uint8_t buffer[RECV_BUFFER_SIZE];
-    const uint8_t* dataPointer = getDataPointer(recvBuffer, buffer, recvBuffer.readWriteDiff);
+    const uint8_t* dataPointer = getDataPointer(recvBuffer, recvBuffer.readWriteDiff);
     addDataToBuffer(m_buffer, dataPointer, recvBuffer.readWriteDiff);
     return recvBuffer.readWriteDiff;
 }

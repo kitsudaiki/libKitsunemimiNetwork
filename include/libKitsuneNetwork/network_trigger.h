@@ -25,7 +25,7 @@ public:
     NetworkTrigger();
     virtual ~NetworkTrigger();
 
-    virtual uint64_t runTask(const MessageRingBuffer& recvBuffer,
+    virtual uint64_t runTask(MessageRingBuffer& recvBuffer,
                              AbstractClient* client) = 0;
 };
 
