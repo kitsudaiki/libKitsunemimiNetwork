@@ -39,7 +39,7 @@ DummyBuffer::~DummyBuffer()
  */
 uint64_t
 DummyBuffer::runTask(const MessageRingBuffer &recvBuffer,
-                     AbstractClient *client)
+                     AbstractClient*)
 {
     uint8_t buffer[RECV_BUFFER_SIZE];
     const uint8_t* dataPointer = getDataPointer(recvBuffer, buffer, recvBuffer.readWriteDiff);

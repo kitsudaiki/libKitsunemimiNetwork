@@ -3,26 +3,14 @@ image: registry.gitlab.com/kitsune_other/kitsune_docker_unittest:0.1.0
 build:
   script:
     - echo Working on branch $CI_COMMIT_REF_NAME
-    - mkdir /builds/build
 
-    - git clone --branch 0.5.0 git@gitlab.com:tobiasanker/LibKitsuneCommon.git /builds/tobiasanker/libKitsuneCommon
+    - apt-get install -y libboost-filesystem-dev libsqlite3-dev
 
-    - cd /builds/build
-    - mkdir libKitsuneCommon
-    - cd libKitsuneCommon
-    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/tobiasanker/libKitsuneCommon/libKitsuneCommon.pro -spec linux-g++
-    - /usr/bin/make
+    - cd /builds/tobiasanker/libKitsuneNetwork
+    - ./build.sh
 
-    - cd /builds/build
-    - mkdir libKitsuneNetwork
-    - cd libKitsuneNetwork
-    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/tobiasanker/libKitsuneNetwork/libKitsuneNetwork.pro -spec linux-g++
-    - /usr/bin/make
-
-    - cd tests
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsuneCommon/src'
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsuneNetwork/src'
-    - ./tests
+    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/tobiasanker/result'
+    - /builds/tobiasanker/build/libKitsuneNetwork/tests/tests
 
   tags:
     - docker
