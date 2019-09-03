@@ -1,10 +1,9 @@
 /**
  *  @file    dummy_buffer.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #ifndef DUMMYBUFFER_H
@@ -21,7 +20,7 @@ class DataBuffer;
 
 namespace Network
 {
-class TcpClient;
+class AbstractClient;
 struct MessageRingBuffer;
 
 class DummyBuffer : public NetworkTrigger
@@ -30,7 +29,7 @@ public:
     DummyBuffer();
     ~DummyBuffer();
     uint64_t runTask(const MessageRingBuffer& recvBuffer,
-                     TcpClient* client);
+                     AbstractClient *client);
 
     uint64_t getNumberOfWrittenBytes();
     Common::DataBuffer* getBuffer();
@@ -41,7 +40,7 @@ private:
     Common::DataBuffer* m_buffer = nullptr;
 };
 
-}
-}
+} // namespace Network
+} // namespace Kitsune
 
 #endif // DUMMYBUFFER_H

@@ -1,10 +1,9 @@
 /**
  *  @file    dummy_buffer.cpp
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #include "dummy_buffer.h"
@@ -40,7 +39,7 @@ DummyBuffer::~DummyBuffer()
  */
 uint64_t
 DummyBuffer::runTask(const MessageRingBuffer &recvBuffer,
-                     TcpClient *client)
+                     AbstractClient *client)
 {
     uint8_t buffer[RECV_BUFFER_SIZE];
     const uint8_t* dataPointer = getDataPointer(recvBuffer, buffer, recvBuffer.readWriteDiff);
@@ -75,5 +74,5 @@ DummyBuffer::clearBuffer()
     resetBuffer(m_buffer, 1000);
 }
 
-}
-}
+} // namespace Network
+} // namespace Kitsune

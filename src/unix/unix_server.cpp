@@ -1,13 +1,13 @@
 /**
- *  @file    tcp_server.cpp
+ *  @file    unix_server.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include <tcp/tcp_server.h>
-#include <tcp/tcp_client.h>
+#include <unix/unix_client.h>
+#include <unix/unix_server.h>
 #include <network_trigger.h>
 #include <iostream>
 
@@ -19,7 +19,7 @@ namespace Network
 /**
  * constructor
  */
-TcpServer::TcpServer(NetworkTrigger* trigger)
+UnixServer::UnixServer(NetworkTrigger* trigger)
 {
     m_trigger.push_back(trigger);
 }
@@ -27,7 +27,7 @@ TcpServer::TcpServer(NetworkTrigger* trigger)
 /**
  * destructor
  */
-TcpServer::~TcpServer()
+UnixServer::~UnixServer()
 {
     closeServer();
 }
@@ -40,25 +40,17 @@ TcpServer::~TcpServer()
  * @return false, if server creation failed, else true
  */
 bool
-TcpServer::initSocket(const uint16_t port)
+UnixServer::initSocket(const std::string socketFile)
 {
     // create socket
-    m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if(m_serverSocket < 0) {
         return false;
     }
 
-    // make the port reusable
-    int enable = 1;
-    if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int))) {
-        return false;
-    }
-
-    // set server-settings
-    memset(&m_server, 0, sizeof (m_server));
-    m_server.sin_family = AF_INET;
-    m_server.sin_addr.s_addr = htonl(INADDR_ANY);
-    m_server.sin_port = htons(port);
+    unlink(socketFile.c_str());
+    m_server.sun_family = AF_LOCAL;
+    strncpy(m_server.sun_path, socketFile.c_str(), socketFile.size());
 
     // bind to port
     if(bind(m_serverSocket, (struct sockaddr*)&m_server, sizeof(m_server)) < 0) {
@@ -74,13 +66,14 @@ TcpServer::initSocket(const uint16_t port)
 }
 
 /**
- * wait for new incoming tcp-connections
+ * wait for new incoming unix-socket-connections
  *
- * @return new tcp-client-socket-pointer for the new incoming connection
+ * @return new unix-client-socket-pointer for the new incoming connection
  */
-AbstractClient* TcpServer::waitForIncomingConnection()
+AbstractClient*
+UnixServer::waitForIncomingConnection()
 {
-    struct sockaddr_in client;
+    struct sockaddr_un client;
     uint32_t length = sizeof(client);
 
     //make new connection
@@ -90,22 +83,23 @@ AbstractClient* TcpServer::waitForIncomingConnection()
     }
 
     // create new client-object from file-descriptor
-    TcpClient* tcpClient = new TcpClient(fd, client);
+    UnixClient* unixClient = new UnixClient(fd, client);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
-        tcpClient->addNetworkTrigger(m_trigger.at(i));
+        unixClient->addNetworkTrigger(m_trigger.at(i));
     }
 
     // start new client-thread
-    tcpClient->start();
+    unixClient->start();
 
     // append new socket to the list
     mutexLock();
-    m_sockets.push_back(tcpClient);
+    m_sockets.push_back(unixClient);
     mutexUnlock();
 
-    return tcpClient;
+    return unixClient;
 }
 
 } // namespace Network
 } // namespace Kitsune
+

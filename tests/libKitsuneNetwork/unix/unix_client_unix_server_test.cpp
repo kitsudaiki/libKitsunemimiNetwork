@@ -1,16 +1,16 @@
 /**
- *  @file    tcp_client_tcp_server_test.cpp
+ *  @file    unix_client_unix_server_test.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include "tcp_client_tcp_server_test.h"
+#include "unix_client_unix_server_test.h"
 #include <buffering/data_buffer.h>
 
-#include <tcp/tcp_server.h>
-#include <tcp/tcp_client.h>
+#include <unix/unix_client.h>
+#include <unix/unix_server.h>
 #include <dummy_buffer.h>
 
 namespace Kitsune
@@ -18,8 +18,8 @@ namespace Kitsune
 namespace Network
 {
 
-TcpClient_TcpServer_Test::TcpClient_TcpServer_Test() :
-    Kitsune::Common::UnitTest("TcpClient_TcpServer_Test")
+UnixClient_UnixServer_Test::UnixClient_UnixServer_Test() :
+    Kitsune::Common::UnitTest("UnixClient_UnixServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -32,28 +32,28 @@ TcpClient_TcpServer_Test::TcpClient_TcpServer_Test() :
  * initTestCase
  */
 void
-TcpClient_TcpServer_Test::initTestCase()
+UnixClient_UnixServer_Test::initTestCase()
 {
     m_buffer = new DummyBuffer();
-    m_server = new TcpServer(m_buffer);
+    m_server = new UnixServer(m_buffer);
 }
 
 /**
  * checkConnectionInit
  */
 void
-TcpClient_TcpServer_Test::checkConnectionInit()
+UnixClient_UnixServer_Test::checkConnectionInit()
 {
-    UNITTEST(m_server->initSocket(12345), true);
+    UNITTEST(m_server->initSocket("/tmp/sock.uds"), true);
     UNITTEST(m_server->start(), true);
-    m_clientClientSide = new TcpClient("127.0.0.1", 12345);
+    m_clientClientSide = new UnixClient("/tmp/sock.uds");
     usleep(10000);
 
     UNITTEST(m_server->getNumberOfSockets(), 1);
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_clientServerSide = static_cast<TcpClient*>(m_server->getSocket(0));
+        m_clientServerSide = static_cast<UnixClient*>(m_server->getSocket(0));
     }
 }
 
@@ -61,7 +61,7 @@ TcpClient_TcpServer_Test::checkConnectionInit()
  * checkLittleDataTransfer
  */
 void
-TcpClient_TcpServer_Test::checkLittleDataTransfer()
+UnixClient_UnixServer_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
@@ -87,7 +87,7 @@ TcpClient_TcpServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-TcpClient_TcpServer_Test::checkBigDataTransfer()
+UnixClient_UnixServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
@@ -118,7 +118,7 @@ TcpClient_TcpServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-TcpClient_TcpServer_Test::cleanupTestCase()
+UnixClient_UnixServer_Test::cleanupTestCase()
 {
     UNITTEST(m_clientServerSide->closeSocket(), true);
     m_clientServerSide->closeSocket();

@@ -1,10 +1,9 @@
 /**
  *  @file    network_trigger.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #ifndef NETWORK_TRIGGER_H
@@ -17,7 +16,7 @@ namespace Kitsune
 {
 namespace Network
 {
-class TcpClient;
+class AbstractClient;
 struct MessageRingBuffer;
 
 class NetworkTrigger
@@ -27,7 +26,7 @@ public:
     virtual ~NetworkTrigger();
 
     virtual uint64_t runTask(const MessageRingBuffer& recvBuffer,
-                             TcpClient* client) = 0;
+                             AbstractClient* client) = 0;
 };
 
 } // namespace Network

@@ -17,9 +17,11 @@ LIBS += -L../src -lKitsuneNetwork
 
 HEADERS += \
     libKitsuneNetwork/tcp/tcp_client_tcp_server_test.h \
-    dummy_buffer.h
+    dummy_buffer.h \
+    libKitsuneNetwork/unix/unix_client_unix_server_test.h
 
 SOURCES += \
     main.cpp \
     dummy_buffer.cpp \
-    libKitsuneNetwork/tcp/tcp_client_tcp_server_test.cpp
+    libKitsuneNetwork/tcp/tcp_client_tcp_server_test.cpp \
+    libKitsuneNetwork/unix/unix_client_unix_server_test.cpp
