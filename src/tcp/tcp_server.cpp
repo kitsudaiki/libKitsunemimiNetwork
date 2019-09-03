@@ -107,44 +107,5 @@ AbstractClient* TcpServer::waitForIncomingConnection()
     return tcpClient;
 }
 
-/**
- * close the tcp-server togester with all tcp-client, which are connected to the server
- *
- * @return false, if already closed, else true
- */
-bool
-TcpServer::closeServer()
-{
-    // precheck
-    if(m_abort == true) {
-        return false;
-    }
-
-    m_abort = true;
-
-    // close server-socket
-    if(m_serverSocket >= 0)
-    {   
-        // close server itself
-        shutdown(m_serverSocket, SHUT_RDWR);
-        close(m_serverSocket);
-        m_serverSocket = 0;
-    }
-
-    // stop thread
-    stop();
-
-    // close all connected sockets
-    mutexLock();
-    for(uint32_t i = 0; i < m_sockets.size(); i++)
-    {
-        m_sockets[i]->closeSocket();
-    }
-    m_sockets.clear();
-    mutexUnlock();
-
-    return true;
-}
-
 } // namespace Network
 } // namespace Kitsune

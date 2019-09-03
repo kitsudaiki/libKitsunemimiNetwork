@@ -9,9 +9,16 @@
 #ifndef ABSTRACT_SERVER_H
 #define ABSTRACT_SERVER_H
 
-#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <vector>
 
 #include <threading/thread.h>
 
@@ -29,7 +36,7 @@ public:
     ~AbstractServer();
 
     virtual AbstractClient* waitForIncomingConnection() = 0;
-    virtual bool closeServer() = 0;
+    bool closeServer();
 
     uint64_t getNumberOfSockets();
     AbstractClient* getSocket(const uint32_t pos);

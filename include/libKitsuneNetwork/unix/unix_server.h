@@ -9,17 +9,6 @@
 #ifndef UNIX_SERVER_H
 #define UNIX_SERVER_H
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <vector>
-
 #include <abstract_server.h>
 
 namespace Kitsune
@@ -36,7 +25,6 @@ public:
 
     bool initSocket(const std::string socketFile);
     AbstractClient* waitForIncomingConnection();
-    bool closeServer();
 
 private:
     struct sockaddr_un m_server;

@@ -8,9 +8,19 @@
  *  @copyright MIT License
  */
 
-#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <cinttypes>
+#include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#include <string>
+#include <vector>
+#include <errno.h>
 
 #include <buffering/data_buffer.h>
 #include <message_ring_buffer.h>
@@ -36,15 +46,16 @@ public:
     bool removeNetworkTrigger(const uint32_t index);
     void clearNetworkTrigger();
 
+    bool sendMessage(const std::string &message);
+    bool sendMessage(const uint8_t *message,
+                     const uint64_t numberOfBytes);
 
-    virtual bool sendMessage(const std::string &message) = 0;
-    virtual bool sendMessage(const uint8_t *message,
-                             const uint64_t numberOfBytes) = 0;
-
-    virtual bool closeSocket() = 0;
+    bool closeSocket();
 
 protected:
     bool m_clientSide = false;
+    int m_clientSocket = 0;
+
     MessageRingBuffer m_recvBuffer;
     std::vector<NetworkTrigger*> m_trigger;
 
@@ -52,7 +63,7 @@ protected:
 
 private:
     virtual bool initClientSide() = 0;
-    virtual bool waitForMessage() = 0;
+    bool waitForMessage();
 };
 
 } // namespace Network
