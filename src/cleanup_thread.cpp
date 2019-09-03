@@ -35,7 +35,7 @@ CleanupThread::CleanupThread() {}
  * @param client
  */
 void
-CleanupThread::addClientForCleanup(TcpClient *client)
+CleanupThread::addClientForCleanup(AbstractClient *client)
 {
     mutexLock();
     m_cleanupQueue.push(client);
@@ -55,7 +55,7 @@ CleanupThread::run()
         mutexLock();
         if(m_cleanupQueue.size() > 0)
         {
-            TcpClient* client = m_cleanupQueue.front();
+            AbstractClient* client = m_cleanupQueue.front();
             m_cleanupQueue.pop();
             client->stop();
             delete client;

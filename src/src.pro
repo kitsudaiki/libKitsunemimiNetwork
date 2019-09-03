@@ -20,7 +20,9 @@ HEADERS += \
     ../include/libKitsuneNetwork/message_ring_buffer.h \
     cleanup_thread.h \
     ../include/libKitsuneNetwork/abstract_client.h \
-    ../include/libKitsuneNetwork/abstract_server.h
+    ../include/libKitsuneNetwork/abstract_server.h \
+    ../include/libKitsuneNetwork/unix/unix_server.h \
+    ../include/libKitsuneNetwork/unix/unix_client.h
 
 SOURCES += \
     network_trigger.cpp \
@@ -28,4 +30,6 @@ SOURCES += \
     tcp/tcp_server.cpp \
     tcp/tcp_client.cpp \
     abstract_server.cpp \
-    abstract_client.cpp
+    abstract_client.cpp \
+    unix/unix_server.cpp \
+    unix/unix_client.cpp
