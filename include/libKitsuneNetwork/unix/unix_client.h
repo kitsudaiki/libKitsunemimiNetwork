@@ -28,6 +28,9 @@ private:
     sockaddr_un m_client;
 
     bool initClientSide();
+
+    long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags);
+    ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags);
 };
 
 } // namespace Network

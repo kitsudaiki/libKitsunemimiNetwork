@@ -17,7 +17,7 @@ mkdir -p $RESULT_DIR
 # clone libKitsuneCommon
 git clone  git@gitlab.com:tobiasanker/libKitsuneCommon.git "$PARENT_DIR/libKitsuneCommon"
 cd "$PARENT_DIR/libKitsuneCommon"
-git chekcout c33cfafdf2db5a3d3c5d4f78ab54dad389af7929
+git checkout c33cfafdf2db5a3d3c5d4f78ab54dad389af7929
 
 # create build directory for libKitsuneCommon and go into this directory
 LIB_KITSUNE_COMMON_DIR="$BUILD_DIR/libKitsuneCommon"
@@ -31,6 +31,26 @@ cd $LIB_KITSUNE_COMMON_DIR
 # copy build-result and include-files into the result-directory
 cp "$LIB_KITSUNE_COMMON_DIR/src/libKitsuneCommon.so.0.5.0" "$RESULT_DIR/"
 cp -r "$PARENT_DIR/libKitsuneCommon/include" "$RESULT_DIR/"
+
+#-----------------------------------------------------------------------------------------------------------------
+
+# clone libKitsunePersistence
+git clone  git@gitlab.com:tobiasanker/libKitsunePersistence.git "$PARENT_DIR/libKitsunePersistence"
+cd "$PARENT_DIR/libKitsunePersistence"
+git checkout 9ea1f096dc53307668fdc3d6e8d8f2891bfae68d
+
+# create build directory for libKitsunePersistence and go into this directory
+LIB_KITSUNE_PERSISTENCE_DIR="$BUILD_DIR/libKitsunePersistence"
+mkdir -p $LIB_KITSUNE_PERSISTENCE_DIR
+cd $LIB_KITSUNE_PERSISTENCE_DIR
+
+# build libKitsunePersistence library with qmake
+/usr/lib/x86_64-linux-gnu/qt5/bin/qmake "$PARENT_DIR/libKitsunePersistence/libKitsunePersistence.pro" -spec linux-g++ "CONFIG += optimize_full"
+/usr/bin/make -j4
+
+# copy build-result and include-files into the result-directory
+cp "$LIB_KITSUNE_PERSISTENCE_DIR/src/libKitsunePersistence.so.0.2.0" "$RESULT_DIR/"
+cp -r "$PARENT_DIR/libKitsunePersistence/include" "$RESULT_DIR/"
 
 #-----------------------------------------------------------------------------------------------------------------
 
@@ -54,6 +74,10 @@ cd "$RESULT_DIR/"
 ln -s libKitsuneCommon.so.0.5.0 libKitsuneCommon.so.0.5
 ln -s libKitsuneCommon.so.0.5.0 libKitsuneCommon.so.0
 ln -s libKitsuneCommon.so.0.5.0 libKitsuneCommon.so
+
+ln -s libKitsunePersistence.so.0.2.0 libKitsunePersistence.so.0.2
+ln -s libKitsunePersistence.so.0.2.0 libKitsunePersistence.so.0
+ln -s libKitsunePersistence.so.0.2.0 libKitsunePersistence.so
 
 ln -s libKitsuneNetwork.so.0.2.0 libKitsuneNetwork.so.0.2
 ln -s libKitsuneNetwork.so.0.2.0 libKitsuneNetwork.so.0

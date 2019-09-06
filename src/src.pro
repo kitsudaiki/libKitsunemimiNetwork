@@ -10,6 +10,8 @@ LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
 INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
 
+LIBS +=  -lssl -lcrypt
+
 INCLUDEPATH += $$PWD \
                $$PWD/../include/libKitsuneNetwork
 
@@ -22,7 +24,9 @@ HEADERS += \
     ../include/libKitsuneNetwork/abstract_client.h \
     ../include/libKitsuneNetwork/abstract_server.h \
     ../include/libKitsuneNetwork/unix/unix_server.h \
-    ../include/libKitsuneNetwork/unix/unix_client.h
+    ../include/libKitsuneNetwork/unix/unix_client.h \
+    ../include/libKitsuneNetwork/tls_tcp/tls_tcp_server.h \
+    ../include/libKitsuneNetwork/tls_tcp/tls_tcp_client.h
 
 SOURCES += \
     network_trigger.cpp \
@@ -32,4 +36,6 @@ SOURCES += \
     abstract_server.cpp \
     abstract_client.cpp \
     unix/unix_server.cpp \
-    unix/unix_client.cpp
+    unix/unix_client.cpp \
+    tls_tcp/tls_tcp_server.cpp \
+    tls_tcp/tls_tcp_client.cpp

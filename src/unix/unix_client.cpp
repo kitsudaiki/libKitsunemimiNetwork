@@ -76,5 +76,27 @@ UnixClient::initClientSide()
     return true;
 }
 
+/**
+ * @brief UnixClient::recvData
+ *
+ * @return
+ */
+long
+UnixClient::recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags)
+{
+    return recv(socket, bufferPosition, bufferSize, flags);
+}
+
+/**
+ * @brief UnixClient::sendData
+ *
+ * @return
+ */
+ssize_t
+UnixClient::sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags)
+{
+    return send(socket, bufferPosition, bufferSize, flags);
+}
+
 } // namespace Network
 } // namespace Kitsune
