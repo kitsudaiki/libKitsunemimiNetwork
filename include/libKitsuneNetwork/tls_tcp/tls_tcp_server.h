@@ -1,5 +1,5 @@
 /**
- *  @file    tls_tcp_client.h
+ *  @file    tls_tcp_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
@@ -28,7 +28,7 @@ public:
     ~TlsTcpServer();
 
     bool initSocket(const uint16_t port);
-    AbstractClient* waitForIncomingConnection();
+    AbstractSocket* waitForIncomingConnection();
 
 private:
     struct sockaddr_in m_server;

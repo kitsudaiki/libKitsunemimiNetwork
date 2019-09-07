@@ -21,15 +21,15 @@ INCLUDEPATH += $$PWD \
 LIBS += -L../src -lKitsuneNetwork
 
 HEADERS += \
-    libKitsuneNetwork/tcp/tcp_client_tcp_server_test.h \
     dummy_buffer.h \
-    libKitsuneNetwork/unix/unix_client_unix_server_test.h \
-    libKitsuneNetwork/tls_tcp/tls_tcp_client_tls_tcp_server_test.h \
-    cert_init.h
+    cert_init.h \
+    libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.h \
+    libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h \
+    libKitsuneNetwork/unix/unix_socket_unix_server_test.h
 
 SOURCES += \
     main.cpp \
     dummy_buffer.cpp \
-    libKitsuneNetwork/tcp/tcp_client_tcp_server_test.cpp \
-    libKitsuneNetwork/unix/unix_client_unix_server_test.cpp \
-    libKitsuneNetwork/tls_tcp/tls_tcp_client_tls_tcp_server_test.cpp
+    libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.cpp \
+    libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.cpp \
+    libKitsuneNetwork/unix/unix_socket_unix_server_test.cpp

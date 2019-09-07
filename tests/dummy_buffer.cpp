@@ -7,7 +7,7 @@
  */
 
 #include "dummy_buffer.h"
-#include <tcp/tcp_client.h>
+#include <tcp/tcp_socket.h>
 
 #include <buffering/data_buffer.h>
 #include <buffering/data_buffer_methods.h>
@@ -39,7 +39,7 @@ DummyBuffer::~DummyBuffer()
  */
 uint64_t
 DummyBuffer::runTask(MessageRingBuffer &recvBuffer,
-                     AbstractClient*)
+                     AbstractSocket*)
 {
     const uint8_t* dataPointer = getDataPointer(recvBuffer, recvBuffer.readWriteDiff);
     addDataToBuffer(m_buffer, dataPointer, recvBuffer.readWriteDiff);

@@ -7,7 +7,7 @@
  */
 
 #include "abstract_server.h"
-#include <abstract_client.h>
+#include <abstract_socket.h>
 
 namespace Kitsune
 {
@@ -48,12 +48,12 @@ AbstractServer::getNumberOfSockets()
  *
  * @param pos position in the list
  *
- * @return tcp-client-pointer
+ * @return tcp-socket-pointer
  */
-AbstractClient*
+AbstractSocket*
 AbstractServer::getSocket(const uint32_t pos)
 {
-    AbstractClient* result = nullptr;
+    AbstractSocket* result = nullptr;
     mutexLock();
     if(pos < m_sockets.size()) {
         result = m_sockets.at(pos);
@@ -84,7 +84,7 @@ AbstractServer::clearTrigger()
 
 
 /**
- * close the tcp-server togester with all tcp-client, which are connected to the server
+ * close the tcp-server togester with all tcp-socket, which are connected to the server
  *
  * @return false, if already closed, else true
  */

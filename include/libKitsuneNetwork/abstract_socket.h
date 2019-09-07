@@ -1,12 +1,13 @@
-#ifndef ABSTRACT_CLIENT_H
-#define ABSTRACT_CLIENT_H
 /**
- *  @file    abstract_client.h
+ *  @file    abstract_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
+
+#ifndef ABSTRACT_SOCKET_H
+#define ABSTRACT_SOCKET_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -33,11 +34,11 @@ namespace Network
 class NetworkTrigger;
 class CleanupThread;
 
-class AbstractClient : public Kitsune::Common::Thread
+class AbstractSocket : public Kitsune::Common::Thread
 {
 public:
-    AbstractClient();
-    ~AbstractClient();
+    AbstractSocket();
+    ~AbstractSocket();
 
     static Kitsune::Network::CleanupThread* m_cleanup;
 
@@ -47,14 +48,14 @@ public:
     void clearNetworkTrigger();
 
     bool sendMessage(const std::string &message);
-    bool sendMessage(const uint8_t *message,
+    bool sendMessage(const void *message,
                      const uint64_t numberOfBytes);
 
     bool closeSocket();
 
 protected:
     bool m_clientSide = false;
-    int m_clientSocket = 0;
+    int m_socket = 0;
 
     MessageRingBuffer m_recvBuffer;
     std::vector<NetworkTrigger*> m_trigger;
@@ -63,12 +64,18 @@ protected:
     bool waitForMessage();
 
 private:
-    virtual bool initClientSide() = 0;
-    virtual long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags) = 0;
-    virtual ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags) = 0;
+    virtual bool initSocketSide() = 0;
+    virtual long recvData(int socket,
+                          void* bufferPosition,
+                          const size_t bufferSize,
+                          int flags) = 0;
+    virtual ssize_t sendData(int socket,
+                             const void* bufferPosition,
+                             const size_t bufferSize,
+                             int flags) = 0;
 };
 
 } // namespace Network
 } // namespace Kitsune
 
-#endif // ABSTRACT_CLIENT_H
+#endif // ABSTRACT_SOCKET_H

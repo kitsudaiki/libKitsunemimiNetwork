@@ -22,7 +22,7 @@ public:
     ~TcpServer();
 
     bool initSocket(const uint16_t port);
-    AbstractClient* waitForIncomingConnection();
+    AbstractSocket* waitForIncomingConnection();
 
 private:
     struct sockaddr_in m_server;

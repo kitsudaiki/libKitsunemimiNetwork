@@ -1,33 +1,33 @@
 /**
- *  @file    unix_client.h
+ *  @file    unix_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef UNIX_CLIENT_H
-#define UNIX_CLIENT_H
+#ifndef UNIX_SOCKET_H
+#define UNIX_SOCKET_H
 
-#include <abstract_client.h>
+#include <abstract_socket.h>
 
 namespace Kitsune
 {
 namespace Network
 {
 
-class UnixClient : public AbstractClient
+class UnixSocket : public AbstractSocket
 {
 public:
-    UnixClient(const std::string socketFile);
-    UnixClient(const int clientFd,
-               sockaddr_un client);
+    UnixSocket(const std::string socketFile);
+    UnixSocket(const int socketFd,
+               sockaddr_un socket);
 
 private:
     std::string m_socketFile = "";
-    sockaddr_un m_client;
+    sockaddr_un m_socketAddr;
 
-    bool initClientSide();
+    bool initSocketSide();
 
     long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags);
     ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags);
@@ -36,4 +36,4 @@ private:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // UNIX_CLIENT_H
+#endif // UNIX_SOCKET_H
