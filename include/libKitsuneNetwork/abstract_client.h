@@ -60,10 +60,12 @@ protected:
     std::vector<NetworkTrigger*> m_trigger;
 
     void run();
+    bool waitForMessage();
 
 private:
     virtual bool initClientSide() = 0;
-    bool waitForMessage();
+    virtual long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags) = 0;
+    virtual ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags) = 0;
 };
 
 } // namespace Network

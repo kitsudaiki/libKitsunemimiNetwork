@@ -29,6 +29,7 @@ TcpClient::TcpClient(const std::string address,
     m_address = address;
     m_port = port;
     m_clientSide = true;
+
     initClientSide();
 }
 
@@ -99,6 +100,28 @@ TcpClient::initClientSide()
     }
 
     return true;
+}
+
+/**
+ * @brief TcpClient::recvData
+ *
+ * @return
+ */
+long
+TcpClient::recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags)
+{
+    return recv(socket, bufferPosition, bufferSize, flags);
+}
+
+/**
+ * @brief TcpClient::sendData
+ *
+ * @return
+ */
+ssize_t
+TcpClient::sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags)
+{
+    return send(socket, bufferPosition, bufferSize, flags);
 }
 
 } // namespace Network

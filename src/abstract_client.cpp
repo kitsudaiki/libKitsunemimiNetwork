@@ -119,10 +119,10 @@ AbstractClient::sendMessage(const uint8_t* message,
     }
 
     // send message
-    const ssize_t successfulSended = send(m_clientSocket,
-                                          message,
-                                          numberOfBytes,
-                                          MSG_NOSIGNAL);
+    const ssize_t successfulSended = sendData(m_clientSocket,
+                                              message,
+                                              numberOfBytes,
+                                              MSG_NOSIGNAL);
 
     // check if the message was completely send
     if(successfulSended < -1
@@ -159,10 +159,10 @@ AbstractClient::waitForMessage()
     }
 
     // wait for incoming message
-    long recvSize = recv(m_clientSocket,
-                         &m_recvBuffer.data[writePosition],
-                         spaceToEnd,
-                         0);
+    long recvSize = recvData(m_clientSocket,
+                             &m_recvBuffer.data[writePosition],
+                             spaceToEnd,
+                             0);
 
     // handle error-cases
     if(recvSize <= 0

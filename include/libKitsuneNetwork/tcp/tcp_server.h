@@ -15,8 +15,6 @@ namespace Kitsune
 {
 namespace Network
 {
-class TcpClient;
-
 class TcpServer : public AbstractServer
 {
 public:
