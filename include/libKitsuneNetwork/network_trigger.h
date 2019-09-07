@@ -16,7 +16,7 @@ namespace Kitsune
 {
 namespace Network
 {
-class AbstractClient;
+class AbstractSocket;
 struct MessageRingBuffer;
 
 class NetworkTrigger
@@ -26,7 +26,7 @@ public:
     virtual ~NetworkTrigger();
 
     virtual uint64_t runTask(MessageRingBuffer& recvBuffer,
-                             AbstractClient* client) = 0;
+                             AbstractSocket* socket) = 0;
 };
 
 } // namespace Network

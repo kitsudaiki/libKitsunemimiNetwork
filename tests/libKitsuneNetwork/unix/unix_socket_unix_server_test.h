@@ -1,13 +1,13 @@
 /**
- *  @file    tls_tcp_client_tls_tcp_server_test.h
+ *  @file    unix_socket_unix_server_test.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef TLSTCPCLIENT_TLSTCPSERVER_TEST_H
-#define TLSTCPCLIENT_TLSTCPSERVER_TEST_H
+#ifndef UNIX_SOCKET_UNIX_SERVER_TEST_H
+#define UNIX_SOCKET_UNIX_SERVER_TEST_H
 
 #include <testing/unit_test.h>
 
@@ -16,14 +16,14 @@ namespace Kitsune
 namespace Network
 {
 
-class TlsTcpServer;
-class TlsTcpClient;
+class UnixServer;
+class UnixSocket;
 class DummyBuffer;
 
-class TlsTcpClient_TcpServer_Test : public Kitsune::Common::UnitTest
+class UnixSocket_UnixServer_Test : public Kitsune::Common::UnitTest
 {
 public:
-    TlsTcpClient_TcpServer_Test();
+    UnixSocket_UnixServer_Test();
 
 private:
     void initTestCase();
@@ -32,13 +32,13 @@ private:
     void checkBigDataTransfer();
     void cleanupTestCase();
 
-    TlsTcpServer* m_server = nullptr;
-    TlsTcpClient* m_clientClientSide = nullptr;
-    TlsTcpClient* m_clientServerSide = nullptr;
+    UnixServer* m_server = nullptr;
+    UnixSocket* m_socketSocketSide = nullptr;
+    UnixSocket* m_socketServerSide = nullptr;
     DummyBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network
 } // namespace Kitsune
 
-#endif // TLSTCPCLIENT_TLSTCPSERVER_TEST_H
+#endif // UNIX_SOCKET_UNIX_SERVER_TEST_H

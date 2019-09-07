@@ -15,7 +15,7 @@ namespace Kitsune
 {
 namespace Network
 {
-class UnixClient;
+class UnixSocket;
 
 class UnixServer : public AbstractServer
 {
@@ -24,7 +24,7 @@ public:
     ~UnixServer();
 
     bool initSocket(const std::string socketFile);
-    AbstractClient* waitForIncomingConnection();
+    AbstractSocket* waitForIncomingConnection();
 
 private:
     struct sockaddr_un m_server;

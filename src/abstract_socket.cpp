@@ -1,12 +1,12 @@
 /**
- *  @file    abstract_client.cpp
+ *  @file    abstract_socket.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include "abstract_client.h"
+#include "abstract_socket.h"
 
 #include <cleanup_thread.h>
 #include <network_trigger.h>
@@ -16,12 +16,12 @@ namespace Kitsune
 namespace Network
 {
 
-Kitsune::Network::CleanupThread* AbstractClient::m_cleanup = nullptr;
+Kitsune::Network::CleanupThread* AbstractSocket::m_cleanup = nullptr;
 
 /**
- * @brief AbstractClient::AbstractClient
+ * @brief AbstractSocket::AbstractSocket
  */
-AbstractClient::AbstractClient()
+AbstractSocket::AbstractSocket()
 {
     if(m_cleanup == nullptr)
     {
@@ -31,9 +31,9 @@ AbstractClient::AbstractClient()
 }
 
 /**
- * @brief AbstractClient::~AbstractClient
+ * @brief AbstractSocket::~AbstractSocket
  */
-AbstractClient::~AbstractClient()
+AbstractSocket::~AbstractSocket()
 {
     closeSocket();
     clearNetworkTrigger();
@@ -47,7 +47,7 @@ AbstractClient::~AbstractClient()
  * @return false, if object was nullptr, else true
  */
 bool
-AbstractClient::addNetworkTrigger(NetworkTrigger *trigger)
+AbstractSocket::addNetworkTrigger(NetworkTrigger *trigger)
 {
     if(trigger == nullptr) {
         return false;
@@ -59,14 +59,14 @@ AbstractClient::addNetworkTrigger(NetworkTrigger *trigger)
 }
 
 /**
- * remove a specific trigger from the client
+ * remove a specific trigger from the socket
  *
  * @param index index of the trigger in the list
  *
  * @return false, if index too high, else tru
  */
 bool
-AbstractClient::removeNetworkTrigger(const uint32_t index)
+AbstractSocket::removeNetworkTrigger(const uint32_t index)
 {
     if(m_trigger.size() <= index) {
         return false;
@@ -78,14 +78,13 @@ AbstractClient::removeNetworkTrigger(const uint32_t index)
 }
 
 /**
- * delete all trigger-objects from the client
+ * delete all trigger-objects from the socket
  */
 void
-AbstractClient::clearNetworkTrigger()
+AbstractSocket::clearNetworkTrigger()
 {
     m_trigger.clear();
 }
-
 
 /**
  * send a text-message over the socket
@@ -95,10 +94,10 @@ AbstractClient::clearNetworkTrigger()
  * @return false, if send failed or send was incomplete, else true
  */
 bool
-AbstractClient::sendMessage(const std::string &message)
+AbstractSocket::sendMessage(const std::string &message)
 {
     const uint64_t messageLength = message.length();
-    return sendMessage((uint8_t*)message.c_str(), messageLength);
+    return sendMessage(static_cast<const void*>(message.c_str()), messageLength);
 }
 
 /**
@@ -110,16 +109,16 @@ AbstractClient::sendMessage(const std::string &message)
  * @return false, if send failed or send was incomplete, else true
  */
 bool
-AbstractClient::sendMessage(const uint8_t* message,
+AbstractSocket::sendMessage(const void* message,
                             const uint64_t numberOfBytes)
 {
-    // precheck if client is connected
-    if(m_clientSocket == 0) {
+    // precheck if socket is connected
+    if(m_socket == 0) {
         return false;
     }
 
     // send message
-    const ssize_t successfulSended = sendData(m_clientSocket,
+    const ssize_t successfulSended = sendData(m_socket,
                                               message,
                                               numberOfBytes,
                                               MSG_NOSIGNAL);
@@ -130,16 +129,17 @@ AbstractClient::sendMessage(const uint8_t* message,
     {
         return false;
     }
+
     return true;
 }
 
 /**
  * wait for new incoming messages
  *
- * @return false, if receive failed or client is aborted, else true
+ * @return false, if receive failed or socket is aborted, else true
  */
 bool
-AbstractClient::waitForMessage()
+AbstractSocket::waitForMessage()
 {
     // precheck
     if(m_abort) {
@@ -159,7 +159,7 @@ AbstractClient::waitForMessage()
     }
 
     // wait for incoming message
-    long recvSize = recvData(m_clientSocket,
+    long recvSize = recvData(m_socket,
                              &m_recvBuffer.data[writePosition],
                              spaceToEnd,
                              0);
@@ -193,7 +193,7 @@ AbstractClient::waitForMessage()
  * @return false, if already closed, else true
  */
 bool
-AbstractClient::closeSocket()
+AbstractSocket::closeSocket()
 {
     if(m_abort == true) {
         return false;
@@ -202,18 +202,18 @@ AbstractClient::closeSocket()
     m_abort = true;
 
     // close socket if connected
-    if(m_clientSocket >= 0)
+    if(m_socket >= 0)
     {
-        shutdown(m_clientSocket, SHUT_RDWR);
-        close(m_clientSocket);
-        m_clientSocket = 0;
+        shutdown(m_socket, SHUT_RDWR);
+        close(m_socket);
+        m_socket = 0;
     }
 
-    // add socket-thread to the cleanup-thread, because if the client triggers the close by itself,
+    // add socket-thread to the cleanup-thread, because if the socket triggers the close by itself,
     // when the other side of the connection triggers the close-process,
     // the thread would try to close itself, which would result into a deadlock.
-    // That is the reason, why another thread sould process the delete of the client-thread.
-    AbstractClient::m_cleanup->addClientForCleanup(this);
+    // That is the reason, why another thread sould process the delete of the socket-thread.
+    AbstractSocket::m_cleanup->addSocketForCleanup(this);
 
     return true;
 }
@@ -222,7 +222,7 @@ AbstractClient::closeSocket()
  * run-method for the thread-class
  */
 void
-AbstractClient::run()
+AbstractSocket::run()
 {
     while(!m_abort)
     {

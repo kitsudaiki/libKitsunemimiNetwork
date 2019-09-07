@@ -6,7 +6,7 @@
  *  @copyright MIT License
  */
 
-#include <unix/unix_client.h>
+#include <unix/unix_socket.h>
 #include <unix/unix_server.h>
 #include <network_trigger.h>
 #include <iostream>
@@ -68,36 +68,36 @@ UnixServer::initSocket(const std::string socketFile)
 /**
  * wait for new incoming unix-socket-connections
  *
- * @return new unix-client-socket-pointer for the new incoming connection
+ * @return new unix-socket-socket-pointer for the new incoming connection
  */
-AbstractClient*
+AbstractSocket*
 UnixServer::waitForIncomingConnection()
 {
-    struct sockaddr_un client;
-    uint32_t length = sizeof(client);
+    struct sockaddr_un socket;
+    uint32_t length = sizeof(socket);
 
     //make new connection
-    int fd = accept(m_serverSocket, (struct sockaddr*)&client, &length);
+    int fd = accept(m_serverSocket, (struct sockaddr*)&socket, &length);
     if(fd < 0) {
         return nullptr;
     }
 
-    // create new client-object from file-descriptor
-    UnixClient* unixClient = new UnixClient(fd, client);
+    // create new socket-object from file-descriptor
+    UnixSocket* unixSocket = new UnixSocket(fd, socket);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
-        unixClient->addNetworkTrigger(m_trigger.at(i));
+        unixSocket->addNetworkTrigger(m_trigger.at(i));
     }
 
-    // start new client-thread
-    unixClient->start();
+    // start new socket-thread
+    unixSocket->start();
 
     // append new socket to the list
     mutexLock();
-    m_sockets.push_back(unixClient);
+    m_sockets.push_back(unixSocket);
     mutexUnlock();
 
-    return unixClient;
+    return unixSocket;
 }
 
 } // namespace Network

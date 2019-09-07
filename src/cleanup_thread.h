@@ -17,20 +17,20 @@ namespace Kitsune
 {
 namespace Network
 {
-class AbstractClient;
+class AbstractSocket;
 
 class CleanupThread : public Kitsune::Common::Thread
 {
 public:
     CleanupThread();
 
-    void addClientForCleanup(AbstractClient *client);
+    void addSocketForCleanup(AbstractSocket *socket);
 
 protected:
     void run();
 
 private:
-    std::queue<AbstractClient*> m_cleanupQueue;
+    std::queue<AbstractSocket*> m_cleanupQueue;
 };
 
 } // namespace Network

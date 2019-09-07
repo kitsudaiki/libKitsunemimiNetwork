@@ -1,25 +1,26 @@
 /**
- *  @file    unix_client_unix_server_test.cpp
+ *  @file    tls_tcp_socket_tls_tcp_server_test.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include "unix_client_unix_server_test.h"
+#include "tls_tcp_socket_tls_tcp_server_test.h"
 #include <buffering/data_buffer.h>
 
-#include <unix/unix_client.h>
-#include <unix/unix_server.h>
+#include <tls_tcp/tls_tcp_server.h>
+#include <tls_tcp/tls_tcp_socket.h>
 #include <dummy_buffer.h>
+#include <cert_init.h>
 
 namespace Kitsune
 {
 namespace Network
 {
 
-UnixClient_UnixServer_Test::UnixClient_UnixServer_Test() :
-    Kitsune::Common::UnitTest("UnixClient_UnixServer_Test")
+TlsTcpSocket_TcpServer_Test::TlsTcpSocket_TcpServer_Test() :
+    Kitsune::Common::UnitTest("TlsTcpSocket_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -32,28 +33,35 @@ UnixClient_UnixServer_Test::UnixClient_UnixServer_Test() :
  * initTestCase
  */
 void
-UnixClient_UnixServer_Test::initTestCase()
+TlsTcpSocket_TcpServer_Test::initTestCase()
 {
+    writeTestCerts();
+
     m_buffer = new DummyBuffer();
-    m_server = new UnixServer(m_buffer);
+    m_server = new TlsTcpServer(std::string("/tmp/cert.pem"),
+                                std::string("/tmp/key.pem"),
+                                m_buffer);
 }
 
 /**
  * checkConnectionInit
  */
 void
-UnixClient_UnixServer_Test::checkConnectionInit()
+TlsTcpSocket_TcpServer_Test::checkConnectionInit()
 {
-    UNITTEST(m_server->initSocket("/tmp/sock.uds"), true);
+    UNITTEST(m_server->initSocket(12345), true);
     UNITTEST(m_server->start(), true);
-    m_clientClientSide = new UnixClient("/tmp/sock.uds");
+    m_socketSocketSide = new TlsTcpSocket("127.0.0.1",
+                                          12345,
+                                          "/tmp/cert.pem",
+                                          "/tmp/key.pem");
     usleep(10000);
 
     UNITTEST(m_server->getNumberOfSockets(), 1);
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_clientServerSide = static_cast<UnixClient*>(m_server->getSocket(0));
+        m_socketServerSide = static_cast<TlsTcpSocket*>(m_server->getSocket(0));
     }
 }
 
@@ -61,12 +69,12 @@ UnixClient_UnixServer_Test::checkConnectionInit()
  * checkLittleDataTransfer
  */
 void
-UnixClient_UnixServer_Test::checkLittleDataTransfer()
+TlsTcpSocket_TcpServer_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
     std::string sendMessage("poipoipoi");
-    UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
+    UNITTEST(m_socketSocketSide->sendMessage(sendMessage), true);
     usleep(10000);
     UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
 
@@ -87,15 +95,15 @@ UnixClient_UnixServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-UnixClient_UnixServer_Test::checkBigDataTransfer()
+TlsTcpSocket_TcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
-    UNITTEST(m_clientClientSide->sendMessage(sendMessage), true);
+    UNITTEST(m_socketSocketSide->sendMessage(sendMessage), true);
     for(uint32_t i = 0; i < 99999; i++)
     {
-        m_clientClientSide->sendMessage(sendMessage);
+        m_socketSocketSide->sendMessage(sendMessage);
     }
-    usleep(10000);
+    usleep(100000);
     uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
     Common::DataBuffer* dataBuffer = m_buffer->getBuffer();
     UNITTEST(totalIncom, 300000);
@@ -118,10 +126,10 @@ UnixClient_UnixServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-UnixClient_UnixServer_Test::cleanupTestCase()
+TlsTcpSocket_TcpServer_Test::cleanupTestCase()
 {
-    UNITTEST(m_clientServerSide->closeSocket(), true);
-    m_clientServerSide->closeSocket();
+    UNITTEST(m_socketServerSide->closeSocket(), true);
+    m_socketServerSide->closeSocket();
     UNITTEST(m_server->closeServer(), true);
 
     delete m_server;

@@ -7,7 +7,7 @@
  */
 
 #include <tcp/tcp_server.h>
-#include <tcp/tcp_client.h>
+#include <tcp/tcp_socket.h>
 #include <network_trigger.h>
 #include <iostream>
 
@@ -76,35 +76,35 @@ TcpServer::initSocket(const uint16_t port)
 /**
  * wait for new incoming tcp-connections
  *
- * @return new tcp-client-socket-pointer for the new incoming connection
+ * @return new tcp-socket-socket-pointer for the new incoming connection
  */
-AbstractClient* TcpServer::waitForIncomingConnection()
+AbstractSocket* TcpServer::waitForIncomingConnection()
 {
-    struct sockaddr_in client;
-    uint32_t length = sizeof(client);
+    struct sockaddr_in socket;
+    uint32_t length = sizeof(socket);
 
     //make new connection
-    int fd = accept(m_serverSocket, (struct sockaddr*)&client, &length);
+    int fd = accept(m_serverSocket, (struct sockaddr*)&socket, &length);
     if(fd < 0) {
         return nullptr;
     }
 
-    // create new client-object from file-descriptor
-    TcpClient* tcpClient = new TcpClient(fd, client);
+    // create new socket-object from file-descriptor
+    TcpSocket* tcpSocket = new TcpSocket(fd, socket);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
-        tcpClient->addNetworkTrigger(m_trigger.at(i));
+        tcpSocket->addNetworkTrigger(m_trigger.at(i));
     }
 
-    // start new client-thread
-    tcpClient->start();
+    // start new socket-thread
+    tcpSocket->start();
 
     // append new socket to the list
     mutexLock();
-    m_sockets.push_back(tcpClient);
+    m_sockets.push_back(tcpSocket);
     mutexUnlock();
 
-    return tcpClient;
+    return tcpSocket;
 }
 
 } // namespace Network

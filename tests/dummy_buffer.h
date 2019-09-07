@@ -20,7 +20,7 @@ class DataBuffer;
 
 namespace Network
 {
-class AbstractClient;
+class AbstractSocket;
 struct MessageRingBuffer;
 
 class DummyBuffer : public NetworkTrigger
@@ -28,7 +28,7 @@ class DummyBuffer : public NetworkTrigger
 public:
     DummyBuffer();
     ~DummyBuffer();
-    uint64_t runTask(MessageRingBuffer &recvBuffer, AbstractClient*);
+    uint64_t runTask(MessageRingBuffer &recvBuffer, AbstractSocket*);
 
     uint64_t getNumberOfWrittenBytes();
     Common::DataBuffer* getBuffer();

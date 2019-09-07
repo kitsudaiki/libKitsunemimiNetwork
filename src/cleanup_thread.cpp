@@ -17,7 +17,7 @@
 #include <cinttypes>
 #include <unistd.h>
 
-#include <tcp/tcp_client.h>
+#include <tcp/tcp_socket.h>
 #include <iostream>
 
 namespace Kitsune
@@ -31,14 +31,14 @@ namespace Network
 CleanupThread::CleanupThread() {}
 
 /**
- * @brief CleanupThread::addClientForCleanup
- * @param client
+ * @brief CleanupThread::addSocketForCleanup
+ * @param socket
  */
 void
-CleanupThread::addClientForCleanup(AbstractClient *client)
+CleanupThread::addSocketForCleanup(AbstractSocket *socket)
 {
     mutexLock();
-    m_cleanupQueue.push(client);
+    m_cleanupQueue.push(socket);
     mutexUnlock();
 }
 
@@ -55,10 +55,10 @@ CleanupThread::run()
         mutexLock();
         if(m_cleanupQueue.size() > 0)
         {
-            AbstractClient* client = m_cleanupQueue.front();
+            AbstractSocket* socket = m_cleanupQueue.front();
             m_cleanupQueue.pop();
-            client->stop();
-            delete client;
+            socket->stop();
+            delete socket;
         }
         mutexUnlock();
     }
