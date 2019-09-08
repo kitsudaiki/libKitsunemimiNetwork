@@ -27,7 +27,7 @@ UnixSocket::UnixSocket(const std::string socketFile)
 {
     m_socketFile = socketFile;
     m_clientSide = true;
-    initSocketSide();
+    initSocket();
 }
 
 /**
@@ -51,7 +51,7 @@ UnixSocket::UnixSocket(const int socketFd, sockaddr_un socket)
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-UnixSocket::initSocketSide()
+UnixSocket::initSocket()
 {
     struct sockaddr_un address;
 

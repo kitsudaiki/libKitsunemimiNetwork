@@ -35,7 +35,7 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
     m_certFile = certFile;
     m_keyFile = keyFile;
 
-    initSocketSide();
+    initSocket();
 }
 
 /**
@@ -96,7 +96,7 @@ TlsTcpSocket::~TlsTcpSocket()
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-TlsTcpSocket::initSocketSide()
+TlsTcpSocket::initSocket()
 {
     struct sockaddr_in address;
     struct hostent* hostInfo;

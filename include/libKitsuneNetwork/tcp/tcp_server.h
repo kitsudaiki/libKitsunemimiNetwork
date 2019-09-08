@@ -21,7 +21,7 @@ public:
     TcpServer(NetworkTrigger* trigger = nullptr);
     ~TcpServer();
 
-    bool initSocket(const uint16_t port);
+    bool initServer(const uint16_t port);
     AbstractSocket* waitForIncomingConnection();
 
 private:

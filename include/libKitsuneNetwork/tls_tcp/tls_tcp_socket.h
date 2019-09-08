@@ -46,7 +46,7 @@ private:
     std::string m_certFile = "";
     std::string m_keyFile = "";
 
-    bool initSocketSide();
+    bool initSocket();
     long recvData(int, void* bufferPosition, const size_t bufferSize, int);
     ssize_t sendData(int, const void* bufferPosition, const size_t bufferSize, int);
 

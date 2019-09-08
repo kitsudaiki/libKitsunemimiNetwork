@@ -23,7 +23,7 @@ public:
     UnixServer(NetworkTrigger* trigger = nullptr);
     ~UnixServer();
 
-    bool initSocket(const std::string socketFile);
+    bool initServer(const std::string socketFile);
     AbstractSocket* waitForIncomingConnection();
 
 private:

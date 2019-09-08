@@ -27,7 +27,7 @@ private:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
 
-    bool initSocketSide();
+    bool initSocket();
 
     long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags);
     ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags);

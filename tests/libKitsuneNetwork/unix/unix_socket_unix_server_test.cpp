@@ -44,7 +44,7 @@ UnixSocket_UnixServer_Test::initTestCase()
 void
 UnixSocket_UnixServer_Test::checkConnectionInit()
 {
-    UNITTEST(m_server->initSocket("/tmp/sock.uds"), true);
+    UNITTEST(m_server->initServer("/tmp/sock.uds"), true);
     UNITTEST(m_server->start(), true);
     m_socketSocketSide = new UnixSocket("/tmp/sock.uds");
     usleep(10000);

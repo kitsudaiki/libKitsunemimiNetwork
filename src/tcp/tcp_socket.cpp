@@ -30,7 +30,7 @@ TcpSocket::TcpSocket(const std::string address,
     m_port = port;
     m_clientSide = true;
 
-    initSocketSide();
+    initSocket();
 }
 
 /**
@@ -54,7 +54,7 @@ TcpSocket::TcpSocket(const int socketFd, sockaddr_in socket)
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-TcpSocket::initSocketSide()
+TcpSocket::initSocket()
 {
     struct sockaddr_in address;
     struct hostent* hostInfo;

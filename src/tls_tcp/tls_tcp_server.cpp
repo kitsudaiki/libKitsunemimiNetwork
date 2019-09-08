@@ -46,7 +46,7 @@ TlsTcpServer::~TlsTcpServer()
  * @return false, if server creation failed, else true
  */
 bool
-TlsTcpServer::initSocket(const uint16_t port)
+TlsTcpServer::initServer(const uint16_t port)
 {
     // create socket
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);

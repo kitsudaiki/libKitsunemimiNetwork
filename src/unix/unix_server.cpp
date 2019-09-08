@@ -40,7 +40,7 @@ UnixServer::~UnixServer()
  * @return false, if server creation failed, else true
  */
 bool
-UnixServer::initSocket(const std::string socketFile)
+UnixServer::initServer(const std::string socketFile)
 {
     // create socket
     m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);

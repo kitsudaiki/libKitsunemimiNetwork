@@ -44,7 +44,7 @@ TcpSocket_TcpServer_Test::initTestCase()
 void
 TcpSocket_TcpServer_Test::checkConnectionInit()
 {
-    UNITTEST(m_server->initSocket(12345), true);
+    UNITTEST(m_server->initServer(12345), true);
     UNITTEST(m_server->start(), true);
     m_socketSocketSide = new TcpSocket("127.0.0.1", 12345);
     usleep(10000);
