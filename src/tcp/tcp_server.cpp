@@ -61,7 +61,7 @@ TcpServer::initServer(const uint16_t port)
     m_server.sin_port = htons(port);
 
     // bind to port
-    if(bind(m_serverSocket, (struct sockaddr*)&m_server, sizeof(m_server)) < 0) {
+    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0) {
         return false;
     }
 
@@ -84,7 +84,7 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
     uint32_t length = sizeof(socket);
 
     //make new connection
-    int fd = accept(m_serverSocket, (struct sockaddr*)&socket, &length);
+    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
     if(fd < 0) {
         return nullptr;
     }

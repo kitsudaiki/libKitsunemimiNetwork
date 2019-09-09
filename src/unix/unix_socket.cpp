@@ -66,7 +66,7 @@ UnixSocket::initSocket()
     strncpy(address.sun_path, m_socketFile.c_str(), m_socketFile.size());
 
     // create connection
-    if(connect(m_socket, (struct sockaddr*)&address, sizeof(address)) < 0)
+    if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         // TODO: correctly close socket
         m_socket = 0;

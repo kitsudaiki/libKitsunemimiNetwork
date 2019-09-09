@@ -75,7 +75,7 @@ TcpSocket::initSocket()
     // set server-address
     memset(&address, 0, sizeof(address));
     if((addr = inet_addr(m_address.c_str())) != INADDR_NONE) {
-        memcpy((char*)&address.sin_addr, &addr, sizeof(addr));
+        memcpy(reinterpret_cast<char*>(&address.sin_addr), &addr, sizeof(addr));
     }
     else
     {
@@ -84,7 +84,9 @@ TcpSocket::initSocket()
         if(hostInfo == nullptr) {
             return false;
         }
-        memcpy((char*)&address.sin_addr, hostInfo->h_addr, hostInfo->h_length);
+        memcpy(reinterpret_cast<char*>(&address.sin_addr),
+               hostInfo->h_addr,
+               static_cast<size_t>(hostInfo->h_length));
     }
 
     // set other informations
@@ -92,7 +94,7 @@ TcpSocket::initSocket()
     address.sin_port = htons(m_port);
 
     // create connection
-    if(connect(m_socket, (struct sockaddr*)&address, sizeof(address)) < 0)
+    if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         // TODO: correctly close socket
         m_socket = 0;
