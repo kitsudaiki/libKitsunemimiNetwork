@@ -64,7 +64,7 @@ cd $LIB_KITSUNE_NETWORK_DIR
 /usr/bin/make -j4
 
 # copy build-result and include-files into the result-directory
-cp "$LIB_KITSUNE_NETWORK_DIR/src/libKitsuneNetwork.so.0.2.0" "$RESULT_DIR/"
+cp "$LIB_KITSUNE_NETWORK_DIR/src/libKitsuneNetwork.so.0.3.0" "$RESULT_DIR/"
 cp -r "$PARENT_DIR/libKitsuneNetwork/include" "$RESULT_DIR/"
 
 #-----------------------------------------------------------------------------------------------------------------
@@ -79,6 +79,6 @@ ln -s libKitsunePersistence.so.0.3.0 libKitsunePersistence.so.0.3
 ln -s libKitsunePersistence.so.0.3.0 libKitsunePersistence.so.0
 ln -s libKitsunePersistence.so.0.3.0 libKitsunePersistence.so
 
-ln -s libKitsuneNetwork.so.0.2.0 libKitsuneNetwork.so.0.2
-ln -s libKitsuneNetwork.so.0.2.0 libKitsuneNetwork.so.0
-ln -s libKitsuneNetwork.so.0.2.0 libKitsuneNetwork.so
+ln -s libKitsuneNetwork.so.0.3.0 libKitsuneNetwork.so.0.3
+ln -s libKitsuneNetwork.so.0.3.0 libKitsuneNetwork.so.0
+ln -s libKitsuneNetwork.so.0.3.0 libKitsuneNetwork.so
