@@ -35,13 +35,11 @@ UnixSocket::UnixSocket(const std::string socketFile)
  * unix-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
- * @param socket address for the socket
  */
-UnixSocket::UnixSocket(const int socketFd, sockaddr_un socket)
+UnixSocket::UnixSocket(const int socketFd)
     : AbstractSocket ()
 {
     m_socket = socketFd;
-    m_socketAddr = socket;
     m_clientSide = false;
 }
 

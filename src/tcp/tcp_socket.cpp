@@ -38,13 +38,11 @@ TcpSocket::TcpSocket(const std::string address,
  * tcp-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
- * @param socket address for the socket
  */
-TcpSocket::TcpSocket(const int socketFd, sockaddr_in socket)
+TcpSocket::TcpSocket(const int socketFd)
     : AbstractSocket ()
 {
     m_socket = socketFd;
-    m_socketAddr = socket;
     m_clientSide = false;
 }
 

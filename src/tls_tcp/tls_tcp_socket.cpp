@@ -50,10 +50,9 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
  * @param socket address for the socket
  */
 TlsTcpSocket::TlsTcpSocket(const int socketFd,
-                           sockaddr_in socket,
                            const std::string certFile,
                            const std::string keyFile)
-    : TcpSocket(socketFd, socket)
+    : TcpSocket(socketFd)
 {
     m_certFile = certFile;
     m_keyFile = keyFile;

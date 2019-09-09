@@ -80,8 +80,7 @@ TcpServer::initServer(const uint16_t port)
  */
 AbstractSocket* TcpServer::waitForIncomingConnection()
 {
-    struct sockaddr_in socket;
-    uint32_t length = sizeof(socket);
+    uint32_t length = sizeof(struct sockaddr_in);
 
     //make new connection
     int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
@@ -90,7 +89,7 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
     }
 
     // create new socket-object from file-descriptor
-    TcpSocket* tcpSocket = new TcpSocket(fd, socket);
+    TcpSocket* tcpSocket = new TcpSocket(fd);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
         tcpSocket->addNetworkTrigger(m_trigger.at(i));

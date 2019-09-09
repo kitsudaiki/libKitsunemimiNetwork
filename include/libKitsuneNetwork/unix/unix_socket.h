@@ -20,8 +20,7 @@ class UnixSocket : public AbstractSocket
 {
 public:
     UnixSocket(const std::string socketFile);
-    UnixSocket(const int socketFd,
-               sockaddr_un socket);
+    UnixSocket(const int socketFd);
 
 protected:
     std::string m_socketFile = "";

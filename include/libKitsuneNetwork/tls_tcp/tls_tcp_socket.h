@@ -31,7 +31,6 @@ public:
                  const std::string certFile,
                  const std::string keyFile);
     TlsTcpSocket(const int socketFd,
-                 struct sockaddr_in socket,
                  const std::string certFile,
                  const std::string keyFile);
     ~TlsTcpSocket();

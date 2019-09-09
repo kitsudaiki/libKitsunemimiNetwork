@@ -25,8 +25,7 @@ class TcpSocket : public AbstractSocket
 public:
     TcpSocket(const std::string address,
               const uint16_t port);
-    TcpSocket(const int socketFd,
-              struct sockaddr_in socket);
+    TcpSocket(const int socketFd);
 
 protected:
     std::string m_address = "";

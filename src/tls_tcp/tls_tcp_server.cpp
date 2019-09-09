@@ -46,18 +46,16 @@ TlsTcpServer::~TlsTcpServer()
 AbstractSocket*
 TlsTcpServer::waitForIncomingConnection()
 {
-    struct sockaddr_in socket;
-    uint32_t length = sizeof(socket);
+    uint32_t length = sizeof(struct sockaddr_in);
 
     //make new connection
-    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&socket), &length);
+    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
     if(fd < 0) {
         return nullptr;
     }
 
     // create new socket-object from file-descriptor
     TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
-                                               socket,
                                                m_certFile,
                                                m_keyFile);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 

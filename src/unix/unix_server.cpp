@@ -73,8 +73,7 @@ UnixServer::initServer(const std::string socketFile)
 AbstractSocket*
 UnixServer::waitForIncomingConnection()
 {
-    struct sockaddr_un socket;
-    uint32_t length = sizeof(socket);
+    uint32_t length = sizeof(struct sockaddr_un);
 
     //make new connection
     int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
@@ -83,7 +82,7 @@ UnixServer::waitForIncomingConnection()
     }
 
     // create new socket-object from file-descriptor
-    UnixSocket* unixSocket = new UnixSocket(fd, socket);
+    UnixSocket* unixSocket = new UnixSocket(fd);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
         unixSocket->addNetworkTrigger(m_trigger.at(i));
