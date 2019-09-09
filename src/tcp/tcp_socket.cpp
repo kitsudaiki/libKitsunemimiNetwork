@@ -105,23 +105,29 @@ TcpSocket::initSocket()
 }
 
 /**
- * @brief TcpSocket::recvData
+ * @brief receive data
  *
- * @return
+ * @return number of read bytes
  */
 long
-TcpSocket::recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags)
+TcpSocket::recvData(int socket,
+                    void* bufferPosition,
+                    const size_t bufferSize,
+                    int flags)
 {
     return recv(socket, bufferPosition, bufferSize, flags);
 }
 
 /**
- * @brief TcpSocket::sendData
+ * @brief send data
  *
- * @return
+ * @return number of written bytes
  */
 ssize_t
-TcpSocket::sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags)
+TcpSocket::sendData(int socket,
+                    const void* bufferPosition,
+                    const size_t bufferSize,
+                    int flags)
 {
     return send(socket, bufferPosition, bufferSize, flags);
 }

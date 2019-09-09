@@ -21,6 +21,8 @@ namespace Network
  *
  * @param address ipv4-adress of the server
  * @param port port where the server is listen
+ * @param certFile path to certificate-file
+ * @param keyFile path to key-file
  */
 TlsTcpSocket::TlsTcpSocket(const std::string address,
                            const uint16_t port,
@@ -47,7 +49,8 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
  * tcp-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
- * @param socket address for the socket
+ * @param certFile path to certificate-file
+ * @param keyFile path to key-file
  */
 TlsTcpSocket::TlsTcpSocket(const int socketFd,
                            const std::string certFile,
@@ -68,7 +71,7 @@ TlsTcpSocket::TlsTcpSocket(const int socketFd,
 }
 
 /**
- * @brief TlsTcpSocket::~TlsTcpSocket
+ * @brief destructor
  */
 TlsTcpSocket::~TlsTcpSocket()
 {
@@ -129,29 +132,35 @@ TlsTcpSocket::initOpenssl()
 }
 
 /**
- * @brief TlsTcpSocket::recvData
+ * @brief receive data
  *
- * @return
+ * @return number of read bytes
  */
 long
-TlsTcpSocket::recvData(int, void* bufferPosition, const size_t bufferSize, int)
+TlsTcpSocket::recvData(int,
+                       void* bufferPosition,
+                       const size_t bufferSize,
+                       int)
 {
     return SSL_read(m_ssl, bufferPosition, static_cast<int>(bufferSize));
 }
 
 /**
- * @brief TlsTcpSocket::sendData
+ * @brief send data
  *
- * @return
+ * @return number of written bytes
  */
 ssize_t
-TlsTcpSocket::sendData(int, const void* bufferPosition, const size_t bufferSize, int)
+TlsTcpSocket::sendData(int,
+                       const void* bufferPosition,
+                       const size_t bufferSize,
+                       int)
 {
     return SSL_write(m_ssl, bufferPosition, static_cast<int>(bufferSize));
 }
 
 /**
- * @brief TlsTcpSocket::cleanup_openssl
+ * @brief cleanup openssl
  */
 void
 TlsTcpSocket::cleanupOpenssl()
