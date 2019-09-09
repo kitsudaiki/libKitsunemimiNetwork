@@ -23,7 +23,7 @@ public:
     UnixSocket(const int socketFd,
                sockaddr_un socket);
 
-private:
+protected:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
 

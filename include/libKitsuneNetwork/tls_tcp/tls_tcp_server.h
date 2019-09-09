@@ -12,14 +12,14 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#include <abstract_server.h>
+#include <tcp/tcp_server.h>
 
 namespace Kitsune
 {
 namespace Network
 {
 
-class TlsTcpServer : public AbstractServer
+class TlsTcpServer : public TcpServer
 {
 public:
     TlsTcpServer(const std::string certFile,
@@ -27,7 +27,6 @@ public:
                  NetworkTrigger* trigger = nullptr);
     ~TlsTcpServer();
 
-    bool initServer(const uint16_t port);
     AbstractSocket* waitForIncomingConnection();
 
 private:

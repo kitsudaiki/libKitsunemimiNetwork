@@ -28,7 +28,7 @@ public:
     TcpSocket(const int socketFd,
               struct sockaddr_in socket);
 
-private:
+protected:
     std::string m_address = "";
     uint16_t m_port = 0;
     sockaddr_in m_socketAddr;
