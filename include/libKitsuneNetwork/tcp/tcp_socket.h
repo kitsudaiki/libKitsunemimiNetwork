@@ -33,8 +33,14 @@ protected:
     sockaddr_in m_socketAddr;
 
     bool initSocket();
-    long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags);
-    ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags);
+    long recvData(int socket,
+                  void* bufferPosition,
+                  const size_t bufferSize,
+                  int flags);
+    ssize_t sendData(int socket,
+                     const void* bufferPosition,
+                     const size_t bufferSize,
+                     int flags);
 };
 
 } // namespace Network

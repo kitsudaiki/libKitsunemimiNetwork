@@ -77,23 +77,29 @@ UnixSocket::initSocket()
 }
 
 /**
- * @brief UnixSocket::recvData
+ * @brief receive data
  *
- * @return
+ * @return number of read bytes
  */
 long
-UnixSocket::recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags)
+UnixSocket::recvData(int socket,
+                     void* bufferPosition,
+                     const size_t bufferSize,
+                     int flags)
 {
     return recv(socket, bufferPosition, bufferSize, flags);
 }
 
 /**
- * @brief UnixSocket::sendData
+ * @brief send data
  *
- * @return
+ * @return number of written bytes
  */
 ssize_t
-UnixSocket::sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags)
+UnixSocket::sendData(int socket,
+                     const void* bufferPosition,
+                     const size_t bufferSize,
+                     int flags)
 {
     return send(socket, bufferPosition, bufferSize, flags);
 }

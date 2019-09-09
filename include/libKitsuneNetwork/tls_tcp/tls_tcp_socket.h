@@ -41,8 +41,14 @@ protected:
     std::string m_certFile = "";
     std::string m_keyFile = "";
 
-    long recvData(int, void* bufferPosition, const size_t bufferSize, int);
-    ssize_t sendData(int, const void* bufferPosition, const size_t bufferSize, int);
+    long recvData(int,
+                  void* bufferPosition,
+                  const size_t bufferSize,
+                  int);
+    ssize_t sendData(int,
+                     const void* bufferPosition,
+                     const size_t bufferSize,
+                     int);
 
     bool initOpenssl();
     void cleanupOpenssl();
