@@ -27,7 +27,7 @@ UnixSocket::UnixSocket(const std::string socketFile)
 {
     m_socketFile = socketFile;
     m_clientSide = true;
-    initSocketSide();
+    initSocket();
 }
 
 /**
@@ -35,13 +35,11 @@ UnixSocket::UnixSocket(const std::string socketFile)
  * unix-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
- * @param socket address for the socket
  */
-UnixSocket::UnixSocket(const int socketFd, sockaddr_un socket)
+UnixSocket::UnixSocket(const int socketFd)
     : AbstractSocket ()
 {
     m_socket = socketFd;
-    m_socketAddr = socket;
     m_clientSide = false;
 }
 
@@ -51,7 +49,7 @@ UnixSocket::UnixSocket(const int socketFd, sockaddr_un socket)
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-UnixSocket::initSocketSide()
+UnixSocket::initSocket()
 {
     struct sockaddr_un address;
 
@@ -66,7 +64,7 @@ UnixSocket::initSocketSide()
     strncpy(address.sun_path, m_socketFile.c_str(), m_socketFile.size());
 
     // create connection
-    if(connect(m_socket, (struct sockaddr*)&address, sizeof(address)) < 0)
+    if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         // TODO: correctly close socket
         m_socket = 0;

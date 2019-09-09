@@ -49,7 +49,7 @@ TlsTcpSocket_TcpServer_Test::initTestCase()
 void
 TlsTcpSocket_TcpServer_Test::checkConnectionInit()
 {
-    UNITTEST(m_server->initSocket(12345), true);
+    UNITTEST(m_server->initServer(12345), true);
     UNITTEST(m_server->start(), true);
     m_socketSocketSide = new TlsTcpSocket("127.0.0.1",
                                           12345,

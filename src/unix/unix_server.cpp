@@ -40,7 +40,7 @@ UnixServer::~UnixServer()
  * @return false, if server creation failed, else true
  */
 bool
-UnixServer::initSocket(const std::string socketFile)
+UnixServer::initServer(const std::string socketFile)
 {
     // create socket
     m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
@@ -53,7 +53,7 @@ UnixServer::initSocket(const std::string socketFile)
     strncpy(m_server.sun_path, socketFile.c_str(), socketFile.size());
 
     // bind to port
-    if(bind(m_serverSocket, (struct sockaddr*)&m_server, sizeof(m_server)) < 0) {
+    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0) {
         return false;
     }
 
@@ -73,17 +73,16 @@ UnixServer::initSocket(const std::string socketFile)
 AbstractSocket*
 UnixServer::waitForIncomingConnection()
 {
-    struct sockaddr_un socket;
-    uint32_t length = sizeof(socket);
+    uint32_t length = sizeof(struct sockaddr_un);
 
     //make new connection
-    int fd = accept(m_serverSocket, (struct sockaddr*)&socket, &length);
+    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
     if(fd < 0) {
         return nullptr;
     }
 
     // create new socket-object from file-descriptor
-    UnixSocket* unixSocket = new UnixSocket(fd, socket);
+    UnixSocket* unixSocket = new UnixSocket(fd);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
         unixSocket->addNetworkTrigger(m_trigger.at(i));

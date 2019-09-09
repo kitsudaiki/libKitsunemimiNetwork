@@ -30,7 +30,7 @@ TcpSocket::TcpSocket(const std::string address,
     m_port = port;
     m_clientSide = true;
 
-    initSocketSide();
+    initSocket();
 }
 
 /**
@@ -38,13 +38,11 @@ TcpSocket::TcpSocket(const std::string address,
  * tcp-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
- * @param socket address for the socket
  */
-TcpSocket::TcpSocket(const int socketFd, sockaddr_in socket)
+TcpSocket::TcpSocket(const int socketFd)
     : AbstractSocket ()
 {
     m_socket = socketFd;
-    m_socketAddr = socket;
     m_clientSide = false;
 }
 
@@ -54,7 +52,7 @@ TcpSocket::TcpSocket(const int socketFd, sockaddr_in socket)
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-TcpSocket::initSocketSide()
+TcpSocket::initSocket()
 {
     struct sockaddr_in address;
     struct hostent* hostInfo;
@@ -75,7 +73,7 @@ TcpSocket::initSocketSide()
     // set server-address
     memset(&address, 0, sizeof(address));
     if((addr = inet_addr(m_address.c_str())) != INADDR_NONE) {
-        memcpy((char*)&address.sin_addr, &addr, sizeof(addr));
+        memcpy(reinterpret_cast<char*>(&address.sin_addr), &addr, sizeof(addr));
     }
     else
     {
@@ -84,7 +82,9 @@ TcpSocket::initSocketSide()
         if(hostInfo == nullptr) {
             return false;
         }
-        memcpy((char*)&address.sin_addr, hostInfo->h_addr, hostInfo->h_length);
+        memcpy(reinterpret_cast<char*>(&address.sin_addr),
+               hostInfo->h_addr,
+               static_cast<size_t>(hostInfo->h_length));
     }
 
     // set other informations
@@ -92,7 +92,7 @@ TcpSocket::initSocketSide()
     address.sin_port = htons(m_port);
 
     // create connection
-    if(connect(m_socket, (struct sockaddr*)&address, sizeof(address)) < 0)
+    if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         // TODO: correctly close socket
         m_socket = 0;

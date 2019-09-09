@@ -25,15 +25,14 @@ class TcpSocket : public AbstractSocket
 public:
     TcpSocket(const std::string address,
               const uint16_t port);
-    TcpSocket(const int socketFd,
-              struct sockaddr_in socket);
+    TcpSocket(const int socketFd);
 
-private:
+protected:
     std::string m_address = "";
     uint16_t m_port = 0;
     sockaddr_in m_socketAddr;
 
-    bool initSocketSide();
+    bool initSocket();
     long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags);
     ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags);
 };

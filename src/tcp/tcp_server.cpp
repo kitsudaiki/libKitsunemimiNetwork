@@ -40,7 +40,7 @@ TcpServer::~TcpServer()
  * @return false, if server creation failed, else true
  */
 bool
-TcpServer::initSocket(const uint16_t port)
+TcpServer::initServer(const uint16_t port)
 {
     // create socket
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -61,7 +61,7 @@ TcpServer::initSocket(const uint16_t port)
     m_server.sin_port = htons(port);
 
     // bind to port
-    if(bind(m_serverSocket, (struct sockaddr*)&m_server, sizeof(m_server)) < 0) {
+    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0) {
         return false;
     }
 
@@ -80,17 +80,16 @@ TcpServer::initSocket(const uint16_t port)
  */
 AbstractSocket* TcpServer::waitForIncomingConnection()
 {
-    struct sockaddr_in socket;
-    uint32_t length = sizeof(socket);
+    uint32_t length = sizeof(struct sockaddr_in);
 
     //make new connection
-    int fd = accept(m_serverSocket, (struct sockaddr*)&socket, &length);
+    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
     if(fd < 0) {
         return nullptr;
     }
 
     // create new socket-object from file-descriptor
-    TcpSocket* tcpSocket = new TcpSocket(fd, socket);
+    TcpSocket* tcpSocket = new TcpSocket(fd);
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
         tcpSocket->addNetworkTrigger(m_trigger.at(i));

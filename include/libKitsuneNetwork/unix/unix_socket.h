@@ -20,14 +20,13 @@ class UnixSocket : public AbstractSocket
 {
 public:
     UnixSocket(const std::string socketFile);
-    UnixSocket(const int socketFd,
-               sockaddr_un socket);
+    UnixSocket(const int socketFd);
 
-private:
+protected:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
 
-    bool initSocketSide();
+    bool initSocket();
 
     long recvData(int socket, void* bufferPosition, const size_t bufferSize, int flags);
     ssize_t sendData(int socket, const void* bufferPosition, const size_t bufferSize, int flags);

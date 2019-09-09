@@ -63,8 +63,7 @@ protected:
     void run();
     bool waitForMessage();
 
-private:
-    virtual bool initSocketSide() = 0;
+    virtual bool initSocket() = 0;
     virtual long recvData(int socket,
                           void* bufferPosition,
                           const size_t bufferSize,
