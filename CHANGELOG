@@ -1,9 +1,25 @@
 # Changelog
 
+
+## [0.3.0] - 2019-09-1
+
+### Added
+- unix-sockets and -server
+- ssl encrypted tcp-socket and -server
+- readme-file
+- build-script
+
+### Changed
+- renamed clients to sockets
+- usage of inheritance internally
+
+### Fixed
+- removed warnings
+
+
 ## [0.2.1] - 2019-08-19
 
 ### Fixed
-
 - fixed include-paths to be usable in other projects
 
 
