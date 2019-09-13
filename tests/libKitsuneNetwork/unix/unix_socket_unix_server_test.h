@@ -33,7 +33,7 @@ private:
     void cleanupTestCase();
 
     UnixServer* m_server = nullptr;
-    UnixSocket* m_socketSocketSide = nullptr;
+    UnixSocket* m_socketClientSide = nullptr;
     UnixSocket* m_socketServerSide = nullptr;
     DummyBuffer* m_buffer = nullptr;
 };

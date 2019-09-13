@@ -22,11 +22,11 @@ public:
     UnixSocket(const std::string socketFile);
     UnixSocket(const int socketFd);
 
+    bool initSocket();
+
 protected:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
-
-    bool initSocket();
 
     long recvData(int socket,
                   void* bufferPosition,

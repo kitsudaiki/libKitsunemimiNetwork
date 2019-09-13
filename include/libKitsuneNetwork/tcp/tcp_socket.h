@@ -26,13 +26,13 @@ public:
     TcpSocket(const std::string address,
               const uint16_t port);
     TcpSocket(const int socketFd);
+    bool initSocket();
 
 protected:
     std::string m_address = "";
     uint16_t m_port = 0;
     sockaddr_in m_socketAddr;
 
-    bool initSocket();
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,

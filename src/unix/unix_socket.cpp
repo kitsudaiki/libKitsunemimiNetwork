@@ -27,7 +27,6 @@ UnixSocket::UnixSocket(const std::string socketFile)
 {
     m_socketFile = socketFile;
     m_clientSide = true;
-    initSocket();
 }
 
 /**

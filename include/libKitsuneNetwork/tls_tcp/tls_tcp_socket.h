@@ -35,6 +35,8 @@ public:
                  const std::string keyFile);
     ~TlsTcpSocket();
 
+    bool initOpenssl();
+
 protected:
     SSL_CTX* m_ctx;
     SSL* m_ssl;
@@ -50,7 +52,6 @@ protected:
                      const size_t bufferSize,
                      int);
 
-    bool initOpenssl();
     void cleanupOpenssl();
 };
 
