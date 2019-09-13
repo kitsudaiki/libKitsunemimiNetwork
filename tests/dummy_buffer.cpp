@@ -42,6 +42,11 @@ DummyBuffer::runTask(MessageRingBuffer &recvBuffer,
                      AbstractSocket*)
 {
     const uint8_t* dataPointer = getDataPointer(recvBuffer, recvBuffer.readWriteDiff);
+
+    if(dataPointer == nullptr) {
+        return 0;
+    }
+
     addDataToBuffer(m_buffer, dataPointer, recvBuffer.readWriteDiff);
     return recvBuffer.readWriteDiff;
 }
