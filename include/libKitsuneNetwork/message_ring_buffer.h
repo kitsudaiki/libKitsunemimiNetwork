@@ -37,16 +37,19 @@ struct MessageRingBuffer
  *
  * @param recvBuffer ring-buffer-object with the complete data
  * @param size size of the requested block
- * @param offset offset position from the current read-position
  *
- * @return pointer to the beginning of the requested datablock
+ * @return pointer to the beginning of the requested datablock, or nullptr if the requested
+ *         block is too big
  */
 inline const uint8_t*
 getDataPointer(MessageRingBuffer &recvBuffer,
-               const uint64_t size,
-               const uint64_t offset = 0)
+               const uint64_t size)
 {
-    const uint64_t startPosition = (recvBuffer.readPosition + offset) % recvBuffer.totalBufferSize;
+    if(recvBuffer.readWriteDiff > size) {
+        return nullptr;
+    }
+
+    const uint64_t startPosition = recvBuffer.readPosition % recvBuffer.totalBufferSize;
 
     // check if requested datablock is splitet
     if(startPosition + size > recvBuffer.totalBufferSize)
