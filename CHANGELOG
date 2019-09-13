@@ -1,5 +1,10 @@
 # Changelog
 
+[Unreleased]
+
+### Changed
+- socket on client-side have to be init manually to get return value
+
 
 ## [0.3.0] - 2019-09-09
 

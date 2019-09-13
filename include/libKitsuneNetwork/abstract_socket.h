@@ -40,7 +40,7 @@ public:
     AbstractSocket();
     ~AbstractSocket();
 
-    static Kitsune::Network::CleanupThread* m_cleanup;
+    virtual bool initSocket() = 0;
 
     // trigger-control
     bool addNetworkTrigger(NetworkTrigger* trigger);
@@ -53,6 +53,8 @@ public:
 
     bool closeSocket();
 
+    static Kitsune::Network::CleanupThread* m_cleanup;
+
 protected:
     bool m_clientSide = false;
     int m_socket = 0;
@@ -63,7 +65,6 @@ protected:
     void run();
     bool waitForMessage();
 
-    virtual bool initSocket() = 0;
     virtual long recvData(int socket,
                           void* bufferPosition,
                           const size_t bufferSize,

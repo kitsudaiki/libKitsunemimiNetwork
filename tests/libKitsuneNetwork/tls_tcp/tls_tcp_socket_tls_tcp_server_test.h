@@ -33,7 +33,7 @@ private:
     void cleanupTestCase();
 
     TlsTcpServer* m_server = nullptr;
-    TlsTcpSocket* m_socketSocketSide = nullptr;
+    TlsTcpSocket* m_socketClientSide = nullptr;
     TlsTcpSocket* m_socketServerSide = nullptr;
     DummyBuffer* m_buffer = nullptr;
 };

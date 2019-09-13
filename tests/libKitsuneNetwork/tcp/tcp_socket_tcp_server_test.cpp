@@ -44,9 +44,14 @@ TcpSocket_TcpServer_Test::initTestCase()
 void
 TcpSocket_TcpServer_Test::checkConnectionInit()
 {
+    // init server
     UNITTEST(m_server->initServer(12345), true);
     UNITTEST(m_server->start(), true);
-    m_socketSocketSide = new TcpSocket("127.0.0.1", 12345);
+
+    // init client
+    m_socketClientSide = new TcpSocket("127.0.0.1", 12345);
+    UNITTEST(m_socketClientSide->initSocket(), true);
+
     usleep(10000);
 
     UNITTEST(m_server->getNumberOfSockets(), 1);
@@ -66,7 +71,7 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
     usleep(10000);
 
     std::string sendMessage("poipoipoi");
-    UNITTEST(m_socketSocketSide->sendMessage(sendMessage), true);
+    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
     UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
 
@@ -90,10 +95,10 @@ void
 TcpSocket_TcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
-    UNITTEST(m_socketSocketSide->sendMessage(sendMessage), true);
+    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
     for(uint32_t i = 0; i < 99999; i++)
     {
-        m_socketSocketSide->sendMessage(sendMessage);
+        m_socketClientSide->sendMessage(sendMessage);
     }
     usleep(10000);
     uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();

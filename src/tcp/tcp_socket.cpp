@@ -29,8 +29,6 @@ TcpSocket::TcpSocket(const std::string address,
     m_address = address;
     m_port = port;
     m_clientSide = true;
-
-    initSocket();
 }
 
 /**

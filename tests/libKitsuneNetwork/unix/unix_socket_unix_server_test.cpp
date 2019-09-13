@@ -44,9 +44,14 @@ UnixSocket_UnixServer_Test::initTestCase()
 void
 UnixSocket_UnixServer_Test::checkConnectionInit()
 {
+    // init server
     UNITTEST(m_server->initServer("/tmp/sock.uds"), true);
     UNITTEST(m_server->start(), true);
-    m_socketSocketSide = new UnixSocket("/tmp/sock.uds");
+
+    // init client
+    m_socketClientSide = new UnixSocket("/tmp/sock.uds");
+    UNITTEST(m_socketClientSide->initSocket(), true);
+
     usleep(10000);
 
     UNITTEST(m_server->getNumberOfSockets(), 1);
@@ -66,7 +71,7 @@ UnixSocket_UnixServer_Test::checkLittleDataTransfer()
     usleep(10000);
 
     std::string sendMessage("poipoipoi");
-    UNITTEST(m_socketSocketSide->sendMessage(sendMessage), true);
+    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
     UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
 
@@ -90,10 +95,10 @@ void
 UnixSocket_UnixServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
-    UNITTEST(m_socketSocketSide->sendMessage(sendMessage), true);
+    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
     for(uint32_t i = 0; i < 99999; i++)
     {
-        m_socketSocketSide->sendMessage(sendMessage);
+        m_socketClientSide->sendMessage(sendMessage);
     }
     usleep(10000);
     uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();

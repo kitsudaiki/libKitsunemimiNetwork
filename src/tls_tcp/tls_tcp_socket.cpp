@@ -32,16 +32,6 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
-
-    // init ssl
-    initOpenssl();
-
-    // try to connect to server
-    const int result = SSL_connect(m_ssl);
-    if(result <= 0) {
-        ERR_print_errors_fp(stderr);
-    }
-
 }
 
 /**
@@ -59,15 +49,6 @@ TlsTcpSocket::TlsTcpSocket(const int socketFd,
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
-
-    // init ssl
-    initOpenssl();
-
-    // try to accept incoming ssl-connection
-    int result = SSL_accept(m_ssl);
-    if(result <= 0) {
-        ERR_print_errors_fp(stderr);
-    }
 }
 
 /**
@@ -127,6 +108,26 @@ TlsTcpSocket::initOpenssl()
         return false;
     }
     SSL_set_fd(m_ssl, m_socket);
+
+    // process tls-handshake
+    if(m_clientSide)
+    {
+        // try to connect to server
+        result = SSL_connect(m_ssl);
+        if(result <= 0)
+        {
+            ERR_print_errors_fp(stderr);
+            return false;
+        }
+    }
+    else
+    {
+        // try to accept incoming ssl-connection
+        int result = SSL_accept(m_ssl);
+        if(result <= 0) {
+            ERR_print_errors_fp(stderr);
+        }
+    }
 
     return true;
 }

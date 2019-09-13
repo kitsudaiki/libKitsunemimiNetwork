@@ -58,6 +58,7 @@ TlsTcpServer::waitForIncomingConnection()
     TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
                                                m_certFile,
                                                m_keyFile);
+    tcpSocket->initOpenssl();
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
         tcpSocket->addNetworkTrigger(m_trigger.at(i));
