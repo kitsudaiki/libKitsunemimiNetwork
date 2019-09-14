@@ -8,6 +8,9 @@
 
 #include "abstract_server.h"
 #include <abstract_socket.h>
+#include <logger/logger.h>
+
+using namespace Kitsune::Persistence;
 
 namespace Kitsune
 {
@@ -118,6 +121,8 @@ AbstractServer::closeServer()
     }
     m_sockets.clear();
     mutexUnlock();
+
+    LOG_info("Successfully closed server");
 
     return true;
 }

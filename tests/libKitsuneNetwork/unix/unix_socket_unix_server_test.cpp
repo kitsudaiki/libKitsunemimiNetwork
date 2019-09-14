@@ -50,7 +50,7 @@ UnixSocket_UnixServer_Test::checkConnectionInit()
 
     // init client
     m_socketClientSide = new UnixSocket("/tmp/sock.uds");
-    UNITTEST(m_socketClientSide->initSocket(), true);
+    UNITTEST(m_socketClientSide->initClientSide(), true);
 
     usleep(10000);
 

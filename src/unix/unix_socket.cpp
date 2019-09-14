@@ -10,6 +10,9 @@
 #include <iostream>
 #include <network_trigger.h>
 #include <cleanup_thread.h>
+#include <logger/logger.h>
+
+using namespace Kitsune::Persistence;
 
 namespace Kitsune
 {
@@ -27,6 +30,24 @@ UnixSocket::UnixSocket(const std::string socketFile)
 {
     m_socketFile = socketFile;
     m_clientSide = true;
+}
+
+/**
+ * @brief init socket on client-side
+ *
+ * @return true, if successful, else false
+ */
+bool
+UnixSocket::initClientSide()
+{
+    bool result = initSocket();
+    if(result == false) {
+        return false;
+    }
+
+    LOG_info("Successfully initialized unix-socket client to targe: " + m_socketFile);
+
+    return true;
 }
 
 /**
@@ -54,7 +75,9 @@ UnixSocket::initSocket()
 
     // create socket
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
-    if(m_socket < 0) {
+    if(m_socket < 0)
+    {
+        LOG_error("Failed to create a unix-socket");
         return false;
     }
 
@@ -65,8 +88,7 @@ UnixSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        // TODO: correctly close socket
-        m_socket = 0;
+        LOG_error("Failed to connect unix-socket to server with addresse: " + m_socketFile);
         return false;
     }
 

@@ -9,7 +9,9 @@
 #include <tcp/tcp_server.h>
 #include <tcp/tcp_socket.h>
 #include <network_trigger.h>
-#include <iostream>
+#include <logger/logger.h>
+
+using namespace Kitsune::Persistence;
 
 namespace Kitsune
 {
@@ -42,15 +44,21 @@ TcpServer::~TcpServer()
 bool
 TcpServer::initServer(const uint16_t port)
 {
+    m_port = port;
+
     // create socket
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if(m_serverSocket < 0) {
+    if(m_serverSocket < 0)
+    {
+        LOG_error("Failed to create a tcp-socket");
         return false;
     }
 
     // make the port reusable
     int enable = 1;
-    if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int))) {
+    if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)))
+    {
+        LOG_error("Failed set socket-options for tcp-server on port: " + std::to_string(m_port));
         return false;
     }
 
@@ -58,17 +66,23 @@ TcpServer::initServer(const uint16_t port)
     memset(&m_server, 0, sizeof (m_server));
     m_server.sin_family = AF_INET;
     m_server.sin_addr.s_addr = htonl(INADDR_ANY);
-    m_server.sin_port = htons(port);
+    m_server.sin_port = htons(m_port);
 
     // bind to port
-    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0) {
+    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
+    {
+        LOG_error("Failed to bind tcp-socket to port: " + std::to_string(m_port));
         return false;
     }
 
     // start listening for incoming connections
-    if(listen(m_serverSocket, 5) == -1) {
+    if(listen(m_serverSocket, 5) == -1)
+    {
+        LOG_error("Failed listen on tcp-socket on port: " + std::to_string(m_port));
         return false;
     }
+
+    LOG_info("Successfully initialized tcp-socket server on port: " + std::to_string(m_port));
 
     return true;
 }
@@ -84,9 +98,15 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
 
     //make new connection
     int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
-    if(fd < 0) {
+    if(fd < 0)
+    {
+        LOG_error("Failed accept incoming connection on tcp-server with "
+                  "port: " + std::to_string(m_port));
         return nullptr;
     }
+
+    LOG_info("Successfully accepted incoming connection on tcp-socket server with "
+             "port : " + std::to_string(m_port));
 
     // create new socket-object from file-descriptor
     TcpSocket* tcpSocket = new TcpSocket(fd);

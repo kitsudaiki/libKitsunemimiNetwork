@@ -24,7 +24,8 @@ public:
     bool initServer(const uint16_t port);
     AbstractSocket* waitForIncomingConnection();
 
-private:
+protected:
+    uint16_t m_port = 0;
     struct sockaddr_in m_server;
 };
 
