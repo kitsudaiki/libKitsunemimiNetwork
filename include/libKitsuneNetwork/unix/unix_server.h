@@ -27,6 +27,7 @@ public:
     AbstractSocket* waitForIncomingConnection();
 
 private:
+    std::string m_socketFile = "";
     struct sockaddr_un m_server;
 };
 

@@ -40,7 +40,7 @@ public:
     AbstractSocket();
     ~AbstractSocket();
 
-    virtual bool initSocket() = 0;
+    virtual bool initClientSide() = 0;
 
     // trigger-control
     bool addNetworkTrigger(NetworkTrigger* trigger);
@@ -65,6 +65,7 @@ protected:
     void run();
     bool waitForMessage();
 
+    virtual bool initSocket() = 0;
     virtual long recvData(int socket,
                           void* bufferPosition,
                           const size_t bufferSize,

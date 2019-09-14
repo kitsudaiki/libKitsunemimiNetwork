@@ -9,7 +9,9 @@
 #include <tls_tcp/tls_tcp_server.h>
 #include <tls_tcp/tls_tcp_socket.h>
 #include <network_trigger.h>
-#include <iostream>
+#include <logger/logger.h>
+
+using namespace Kitsune::Persistence;
 
 namespace Kitsune
 {
@@ -50,7 +52,10 @@ TlsTcpServer::waitForIncomingConnection()
 
     //make new connection
     int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
-    if(fd < 0) {
+    if(fd < 0)
+    {
+        LOG_error("Failed accept incoming connection on encrypted tcp-server with "
+                  "port: " + std::to_string(m_port));
         return nullptr;
     }
 
@@ -58,7 +63,15 @@ TlsTcpServer::waitForIncomingConnection()
     TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
                                                m_certFile,
                                                m_keyFile);
-    tcpSocket->initOpenssl();
+    if(tcpSocket->initOpenssl() == false)
+    {
+        delete tcpSocket;
+        return nullptr;
+    }
+
+    LOG_info("Successfully accepted incoming connection on encrypted tcp-socket server with "
+             "port : " + std::to_string(m_port));
+
     for(uint32_t i = 0; i < m_trigger.size(); i++) 
     {
         tcpSocket->addNetworkTrigger(m_trigger.at(i));

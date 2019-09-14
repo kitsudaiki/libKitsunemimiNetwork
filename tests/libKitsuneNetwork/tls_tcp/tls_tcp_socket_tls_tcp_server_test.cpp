@@ -58,8 +58,7 @@ TlsTcpSocket_TcpServer_Test::checkConnectionInit()
                                           12345,
                                           "/tmp/cert.pem",
                                           "/tmp/key.pem");
-    UNITTEST(m_socketClientSide->initSocket(), true);
-    UNITTEST(m_socketClientSide->initOpenssl(), true);
+    UNITTEST(m_socketClientSide->initClientSide(), true);
 
     usleep(10000);
 

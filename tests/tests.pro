@@ -15,6 +15,8 @@ LIBS += -L../../libKitsunePersistence/src/debug -lKitsunePersistence
 LIBS += -L../../libKitsunePersistence/src/release -lKitsunePersistence
 INCLUDEPATH += ../../libKitsunePersistence/include/libKitsunePersistence
 
+LIBS +=  -lboost_filesystem -lboost_system
+
 INCLUDEPATH += $$PWD \
                $$PWD/../include/libKitsuneNetwork
 

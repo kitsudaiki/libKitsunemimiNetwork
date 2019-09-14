@@ -43,7 +43,7 @@ IMPORTANT: All my projects are only tested on Linux.
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
 libKitsuneCommon | 0.5.1 |  https://github.com/tobiasanker/libKitsuneCommon.git
-libKitsunePersistence | 0.3.0 |  https://github.com/tobiasanker/libKitsunePersistence.git
+libKitsunePersistence | 0.4.0 |  https://github.com/tobiasanker/libKitsunePersistence.git
 
 ### build library
 

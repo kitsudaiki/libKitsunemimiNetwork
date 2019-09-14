@@ -19,20 +19,26 @@ namespace Kitsune
 {
 namespace Network
 {
+class TcpServer;
 
 class TcpSocket : public AbstractSocket
 {
+    friend class TcpServer;
+
 public:
     TcpSocket(const std::string address,
               const uint16_t port);
-    TcpSocket(const int socketFd);
-    bool initSocket();
+
+    bool initClientSide();
 
 protected:
     std::string m_address = "";
     uint16_t m_port = 0;
     sockaddr_in m_socketAddr;
 
+    TcpSocket(const int socketFd);
+
+    bool initSocket();
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,

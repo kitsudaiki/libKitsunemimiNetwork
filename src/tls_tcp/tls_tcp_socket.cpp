@@ -7,9 +7,11 @@
  */
 
 #include <tls_tcp/tls_tcp_socket.h>
-#include <iostream>
 #include <network_trigger.h>
 #include <cleanup_thread.h>
+#include <logger/logger.h>
+
+using namespace Kitsune::Persistence;
 
 namespace Kitsune
 {
@@ -60,6 +62,29 @@ TlsTcpSocket::~TlsTcpSocket()
 }
 
 /**
+ * @brief init socket on client-side
+ *
+ * @return true, if successful, else false
+ */
+bool
+TlsTcpSocket::initClientSide()
+{
+    bool result = initSocket();
+    if(result == false) {
+        return false;
+    }
+
+    result = initOpenssl();
+    if(result == false) {
+        return false;
+    }
+
+    LOG_info("Successfully initialized encrypted tcp-socket client to targe: " + m_address);
+
+    return true;
+}
+
+/**
  * @brief init ssl and bind it to the file-descriptor
  */
 bool
@@ -82,21 +107,24 @@ TlsTcpSocket::initOpenssl()
     m_ctx = SSL_CTX_new(method);
     if(!m_ctx)
     {
-        fprintf (stderr, "SSL_CTX_new ERROR\n");
-        ERR_print_errors_fp(stderr);
+        LOG_error("Failed to create ssl-context object");
         return false;
     }
     SSL_CTX_set_options(m_ctx, SSL_OP_SINGLE_DH_USE);
 
     // set certificate
     int result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
-    if(result <= 0) {
+    if(result <= 0)
+    {
+        LOG_error("Failed to load certificate file for ssl-encrytion. File path: " + m_certFile);
         return false;
     }
 
     // set key
     result = SSL_CTX_use_PrivateKey_file(m_ctx, m_keyFile.c_str(), SSL_FILETYPE_PEM);
-    if(result <= 0) {
+    if(result <= 0)
+    {
+        LOG_error("Failed to load key file for ssl-encrytion. File path: " + m_certFile);
         return false;
     }
 
@@ -104,7 +132,7 @@ TlsTcpSocket::initOpenssl()
     m_ssl = SSL_new(m_ctx);
     if (m_ssl == nullptr)
     {
-        fprintf(stderr, "SSL_new() failed\n");
+        LOG_error("Failed to ini ssl");
         return false;
     }
     SSL_set_fd(m_ssl, m_socket);
@@ -116,7 +144,7 @@ TlsTcpSocket::initOpenssl()
         result = SSL_connect(m_ssl);
         if(result <= 0)
         {
-            ERR_print_errors_fp(stderr);
+            LOG_error("Failed to perform ssl-handshake (client-side)");
             return false;
         }
     }
@@ -124,8 +152,10 @@ TlsTcpSocket::initOpenssl()
     {
         // try to accept incoming ssl-connection
         int result = SSL_accept(m_ssl);
-        if(result <= 0) {
-            ERR_print_errors_fp(stderr);
+        if(result <= 0)
+        {
+            LOG_error("Failed to perform ssl-handshake (server-side)");
+            return false;
         }
     }
 
@@ -163,15 +193,24 @@ TlsTcpSocket::sendData(int,
 /**
  * @brief cleanup openssl
  */
-void
+bool
 TlsTcpSocket::cleanupOpenssl()
 {
+    if(m_ssl == nullptr
+            || m_ctx == nullptr)
+    {
+        LOG_error("Failed to perform ssl-handshake (server-side)");
+        return false;
+    }
+
     SSL_shutdown(m_ssl);
     SSL_free(m_ssl);
     SSL_CTX_free(m_ctx);
 
     ERR_free_strings();
     EVP_cleanup();
+
+    return true;
 }
 
 } // namespace Network

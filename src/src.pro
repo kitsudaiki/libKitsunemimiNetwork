@@ -10,6 +10,11 @@ LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
 INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
 
+LIBS += -L../../libKitsunePersistence/src -lKitsunePersistence
+LIBS += -L../../libKitsunePersistence/src/debug -lKitsunePersistence
+LIBS += -L../../libKitsunePersistence/src/release -lKitsunePersistence
+INCLUDEPATH += ../../libKitsunePersistence/include/libKitsunePersistence
+
 LIBS +=  -lssl -lcrypt
 
 INCLUDEPATH += $$PWD \

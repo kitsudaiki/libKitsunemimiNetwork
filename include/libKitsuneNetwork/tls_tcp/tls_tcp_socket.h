@@ -22,26 +22,32 @@ namespace Kitsune
 {
 namespace Network
 {
+class TlsTcpServer;
 
 class TlsTcpSocket : public TcpSocket
 {
+    friend class TlsTcpServer;
+
 public:
     TlsTcpSocket(const std::string address,
                  const uint16_t port,
                  const std::string certFile,
                  const std::string keyFile);
-    TlsTcpSocket(const int socketFd,
-                 const std::string certFile,
-                 const std::string keyFile);
     ~TlsTcpSocket();
 
-    bool initOpenssl();
+    bool initClientSide();
 
 protected:
     SSL_CTX* m_ctx;
     SSL* m_ssl;
     std::string m_certFile = "";
     std::string m_keyFile = "";
+
+    bool initOpenssl();
+
+    TlsTcpSocket(const int socketFd,
+                 const std::string certFile,
+                 const std::string keyFile);
 
     long recvData(int,
                   void* bufferPosition,
@@ -52,7 +58,7 @@ protected:
                      const size_t bufferSize,
                      int);
 
-    void cleanupOpenssl();
+    bool cleanupOpenssl();
 };
 
 } // namespace Network

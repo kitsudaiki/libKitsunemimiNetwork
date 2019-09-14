@@ -7,9 +7,11 @@
  */
 
 #include <tcp/tcp_socket.h>
-#include <iostream>
 #include <network_trigger.h>
 #include <cleanup_thread.h>
+#include <logger/logger.h>
+
+using namespace Kitsune::Persistence;
 
 namespace Kitsune
 {
@@ -29,6 +31,24 @@ TcpSocket::TcpSocket(const std::string address,
     m_address = address;
     m_port = port;
     m_clientSide = true;
+}
+
+/**
+ * @brief init socket on client-side
+ *
+ * @return true, if successful, else false
+ */
+bool
+TcpSocket::initClientSide()
+{
+    bool result = initSocket();
+    if(result == false) {
+        return false;
+    }
+
+    LOG_info("Successfully initialized tcp-socket client to targe: " + m_address);
+
+    return true;
 }
 
 /**
@@ -58,14 +78,18 @@ TcpSocket::initSocket()
 
     // create socket
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if(m_socket < 0) {
+    if(m_socket < 0)
+    {
+        LOG_error("Failed to create a tcp-socket");
         return false;
     }
 
     // set TCP_NODELAY for sure
     int optval = 1;
-    if(setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0) {
-        printf("Cannot set TCP_NODELAY option on listen socket (%s)\n", strerror(errno));
+    if(setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
+    {
+        LOG_error("Failed to initialize tcp-socket for addresse: " + m_address);
+        return false;
     }
 
     // set server-address
@@ -77,7 +101,9 @@ TcpSocket::initSocket()
     {
         // get server-connection via host-name instead of ip-address
         hostInfo = gethostbyname(m_address.c_str());
-        if(hostInfo == nullptr) {
+        if(hostInfo == nullptr)
+        {
+            LOG_error("Failed to get host by address: " + m_address);
             return false;
         }
         memcpy(reinterpret_cast<char*>(&address.sin_addr),
@@ -92,8 +118,7 @@ TcpSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        // TODO: correctly close socket
-        m_socket = 0;
+        LOG_error("Failed to connect tcp-socket to server with addresse: " + m_address);
         return false;
     }
 
