@@ -98,6 +98,11 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
 
     //make new connection
     int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
+
+    if(m_abort) {
+        return nullptr;
+    }
+
     if(fd < 0)
     {
         LOG_error("Failed accept incoming connection on tcp-server with "
