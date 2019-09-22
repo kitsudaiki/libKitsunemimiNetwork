@@ -147,7 +147,7 @@ The inheritance tree of the classes has the following look. For servers its the 
           ^
           |
     AbstractSocket
-	^            ^
+    ^            ^
     |            |
 TcpSocket    UnixSocket
     ^
@@ -171,8 +171,8 @@ public:
 	DemoBuffer::runTask(MessageRingBuffer &recvBuffer,
 	                    AbstractSocket* socket)
 	{
-		// example
-		const uint8_t* dataPointer = getDataPointer(recvBuffer, NUMBER_OF_BYTES);
+	    // example
+	    const uint8_t* dataPointer = getDataPointer(recvBuffer, NUMBER_OF_BYTES);
 	    // do something with the dataPointer
 	    // recvBuffer contains the data and socket is the socket, which had the message received
 	}
@@ -198,7 +198,10 @@ server = new TlsTcpServer("/tmp/cert.pem",
                           "/tmp/key.pem",
                           buffer);  // <- demo-buffer, which is given to any
                                     //    socket which is spawned by the server
+// let the server listen on port
 server->initServer(12345);
+// start the thread, so it can create a socket for every incoming 
+//    connection in the background
 server->start();
 
 // create a client which works as client and connect to the server
@@ -206,8 +209,11 @@ socketClientSide = new TlsTcpSocket("127.0.0.1",
                                     12345,
                                     "/tmp/cert.pem",
                                     "/tmp/key.pem");
+// if the client should only send and never receive messages,
+//    it doesn't need the following two lines. These init the buffer
+//    for incoming messages and starting the thread of the client-socket
 socketClientSide->addNetworkTrigger(buffer);
-
+socketClientSide->start();
 //..
 
 // get socket on server-side, which was spawned by the incoming connection
