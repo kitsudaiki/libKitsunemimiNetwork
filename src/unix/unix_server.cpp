@@ -8,7 +8,8 @@
 
 #include <unix/unix_socket.h>
 #include <unix/unix_server.h>
-#include <network_trigger.h>
+#include <message_trigger.h>
+#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;
@@ -21,9 +22,10 @@ namespace Network
 /**
  * constructor
  */
-UnixServer::UnixServer(NetworkTrigger* trigger)
+UnixServer::UnixServer(MessageTrigger* messageTrigger,
+                       ConnectionTrigger* connectionTrigger)
+    : AbstractServer(messageTrigger, connectionTrigger)
 {
-    m_trigger.push_back(trigger);
 }
 
 /**
@@ -105,13 +107,8 @@ UnixServer::waitForIncomingConnection()
 
     // create new socket-object from file-descriptor
     UnixSocket* unixSocket = new UnixSocket(fd);
-    for(uint32_t i = 0; i < m_trigger.size(); i++) 
-    {
-        unixSocket->addNetworkTrigger(m_trigger.at(i));
-    }
-
-    // start new socket-thread
-    unixSocket->start();
+    unixSocket->addNetworkTrigger(m_messageTrigger);
+    m_connectionTrigger->handleConnection(unixSocket);
 
     // append new socket to the list
     mutexLock();

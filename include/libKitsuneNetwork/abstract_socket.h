@@ -31,7 +31,7 @@ namespace Kitsune
 {
 namespace Network
 {
-class NetworkTrigger;
+class MessageTrigger;
 class CleanupThread;
 
 class AbstractSocket : public Kitsune::Common::Thread
@@ -43,7 +43,7 @@ public:
     virtual bool initClientSide() = 0;
 
     // trigger-control
-    bool addNetworkTrigger(NetworkTrigger* trigger);
+    bool addNetworkTrigger(MessageTrigger* trigger);
     bool removeNetworkTrigger(const uint32_t index);
     void clearNetworkTrigger();
 
@@ -60,7 +60,7 @@ protected:
     int m_socket = 0;
 
     MessageRingBuffer m_recvBuffer;
-    std::vector<NetworkTrigger*> m_trigger;
+    std::vector<MessageTrigger*> m_trigger;
 
     void run();
     bool waitForMessage();

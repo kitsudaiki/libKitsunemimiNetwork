@@ -12,6 +12,7 @@
 #include <unix/unix_socket.h>
 #include <unix/unix_server.h>
 #include <dummy_buffer.h>
+#include <income_trigger.h>
 
 namespace Kitsune
 {
@@ -35,7 +36,8 @@ void
 UnixSocket_UnixServer_Test::initTestCase()
 {
     m_buffer = new DummyBuffer();
-    m_server = new UnixServer(m_buffer);
+    m_incomeTrigger = new IncomeTrigger();
+    m_server = new UnixServer(m_buffer, m_incomeTrigger);
 }
 
 /**

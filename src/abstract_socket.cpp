@@ -9,7 +9,7 @@
 #include "abstract_socket.h"
 
 #include <cleanup_thread.h>
-#include <network_trigger.h>
+#include <message_trigger.h>
 
 namespace Kitsune
 {
@@ -47,7 +47,7 @@ AbstractSocket::~AbstractSocket()
  * @return false, if object was nullptr, else true
  */
 bool
-AbstractSocket::addNetworkTrigger(NetworkTrigger *trigger)
+AbstractSocket::addNetworkTrigger(MessageTrigger *trigger)
 {
     if(trigger == nullptr) {
         return false;

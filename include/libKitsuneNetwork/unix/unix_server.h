@@ -20,7 +20,8 @@ class UnixSocket;
 class UnixServer : public AbstractServer
 {
 public:
-    UnixServer(NetworkTrigger* trigger = nullptr);
+    UnixServer(MessageTrigger* messageTrigger,
+               ConnectionTrigger* connectionTrigger);
     ~UnixServer();
 
     bool initServer(const std::string socketFile);

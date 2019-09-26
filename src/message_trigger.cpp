@@ -1,21 +1,21 @@
 /**
- *  @file    network_trigger.cpp
+ *  @file    message_trigger.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include <network_trigger.h>
+#include <message_trigger.h>
 
 namespace Kitsune
 {
 namespace Network
 {
 
-NetworkTrigger::NetworkTrigger() {}
+MessageTrigger::MessageTrigger() {}
 
-NetworkTrigger::~NetworkTrigger() {}
+MessageTrigger::~MessageTrigger() {}
 
 } // namespace Network
 } // namespace Kitsune

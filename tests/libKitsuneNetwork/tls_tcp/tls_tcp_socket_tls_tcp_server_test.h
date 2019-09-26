@@ -19,6 +19,7 @@ namespace Network
 class TlsTcpServer;
 class TlsTcpSocket;
 class DummyBuffer;
+class IncomeTrigger;
 
 class TlsTcpSocket_TcpServer_Test : public Kitsune::Common::UnitTest
 {
@@ -36,6 +37,7 @@ private:
     TlsTcpSocket* m_socketClientSide = nullptr;
     TlsTcpSocket* m_socketServerSide = nullptr;
     DummyBuffer* m_buffer = nullptr;
+    IncomeTrigger* m_incomeTrigger = nullptr;
 };
 
 } // namespace Network

@@ -9,7 +9,7 @@
 #ifndef DUMMYBUFFER_H
 #define DUMMYBUFFER_H
 
-#include <network_trigger.h>
+#include <message_trigger.h>
 
 namespace Kitsune
 {
@@ -23,7 +23,7 @@ namespace Network
 class AbstractSocket;
 struct MessageRingBuffer;
 
-class DummyBuffer : public NetworkTrigger
+class DummyBuffer : public MessageTrigger
 {
 public:
     DummyBuffer();

@@ -18,7 +18,8 @@ namespace Network
 class TcpServer : public AbstractServer
 {
 public:
-    TcpServer(NetworkTrigger* trigger = nullptr);
+    TcpServer(MessageTrigger* messageTrigger,
+              ConnectionTrigger* connectionTrigger);
     ~TcpServer();
 
     bool initServer(const uint16_t port);

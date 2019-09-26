@@ -155,21 +155,22 @@ TcpSocket    UnixSocket
 TlsTcpSocket
 ```
 
-Because each socket run in its own thread, this thread have to handle incoming messages. So the class to handle these messages have to inherite the class `NetworkTrigger` (`network_trigger.h`). The `runTask` of this class is called whenever the socket get some data. This has to append to the server and sockets. See following examples:
+Because each socket run in its own thread, this thread have to handle incoming messages. So the class to handle these messages have to inherite the class `MessageTrigger` (`message_trigger.h`). The `runTask` of this class is called whenever the socket get some data. This has to append to the server and sockets. See following examples:
 
 ```cpp
-#include <network_trigger.h>
+#include <message_trigger.h>
+#include <message_ring_buffer.h>
 #include <abstract_socket.h>
 
-class DemoBuffer : public NetworkTrigger
+class DemoBuffer : public MessageTrigger
 {
 public:
     DemoBuffer() {};
     ~DemoBuffer() {};
 
 	uint64_t
-	DemoBuffer::runTask(MessageRingBuffer &recvBuffer,
-	                    AbstractSocket* socket)
+	runTask(MessageRingBuffer &recvBuffer,
+	        AbstractSocket* socket)
 	{
 	    // example
 	    const uint8_t* dataPointer = getDataPointer(recvBuffer, NUMBER_OF_BYTES);
@@ -180,7 +181,31 @@ public:
 };
 ```
 
+Similar to the message-trigger, to handle messages by the thread of the socket, there is another class `ConnectionTrigger` (`connection_trigger.h`) to handle incoming connections by the thread of the server. This class has an abstract method called `handleConnection`, which is called for every socket, which is created by the server. See example:
+
+```cpp
+#include <connection_trigger.h>
+#include <abstract_socket.h>
+
+class IncomeTrigger : public ConnectionTrigger
+{
+public:
+    IncomeTrigger() {};
+    ~IncomeTrigger() {};
+
+    void
+    handleConnection(AbstractSocket* socket)
+    {
+        // this example starts the thread of every socket, which is created by the server. 
+        // this MUST be done, if the socket should be able the receive data.
+        socket->start()
+    }
+
+};
+```
+
 Example to create server and socket:
+(the `TlsTcpSocket` of the example can also replaced by the `UnixSocket` or `TcpSocket`. Only the values of the conectructor are different)
 
 ```cpp
 #include <tls_tcp/tls_tcp_server.h>
@@ -192,12 +217,14 @@ TlsTcpSocket* socketServerSide = nullptr;
 
 // init the demo-buffer from above
 DemoBuffer* buffer = new DemoBuffer();
+IncomeTrigger* incomeTrigger = new IncomeTrigger();
 
 // create server on port 12345 and start his thread
 server = new TlsTcpServer("/tmp/cert.pem",
                           "/tmp/key.pem",
-                          buffer);  // <- demo-buffer, which is given to any
-                                    //    socket which is spawned by the server
+                          buffer,           // <- message-trigger, which is given to any, socket which is spawned by the server
+                          incomeTrigger);   // <- connection-trigger, which is called for every incoming connection
+                                    
 // let the server listen on port
 server->initServer(12345);
 // start the thread, so it can create a socket for every incoming 

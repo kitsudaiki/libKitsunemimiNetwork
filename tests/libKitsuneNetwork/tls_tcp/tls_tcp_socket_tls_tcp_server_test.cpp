@@ -12,6 +12,7 @@
 #include <tls_tcp/tls_tcp_server.h>
 #include <tls_tcp/tls_tcp_socket.h>
 #include <dummy_buffer.h>
+#include <income_trigger.h>
 #include <cert_init.h>
 
 namespace Kitsune
@@ -38,9 +39,11 @@ TlsTcpSocket_TcpServer_Test::initTestCase()
     writeTestCerts();
 
     m_buffer = new DummyBuffer();
+    m_incomeTrigger = new IncomeTrigger();
     m_server = new TlsTcpServer(std::string("/tmp/cert.pem"),
                                 std::string("/tmp/key.pem"),
-                                m_buffer);
+                                m_buffer,
+                                m_incomeTrigger);
 }
 
 /**

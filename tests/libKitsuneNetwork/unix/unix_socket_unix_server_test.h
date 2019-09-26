@@ -19,6 +19,7 @@ namespace Network
 class UnixServer;
 class UnixSocket;
 class DummyBuffer;
+class IncomeTrigger;
 
 class UnixSocket_UnixServer_Test : public Kitsune::Common::UnitTest
 {
@@ -36,6 +37,7 @@ private:
     UnixSocket* m_socketClientSide = nullptr;
     UnixSocket* m_socketServerSide = nullptr;
     DummyBuffer* m_buffer = nullptr;
+    IncomeTrigger* m_incomeTrigger = nullptr;
 };
 
 } // namespace Network
