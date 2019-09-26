@@ -8,7 +8,8 @@
 
 #include <tcp/tcp_server.h>
 #include <tcp/tcp_socket.h>
-#include <network_trigger.h>
+#include <message_trigger.h>
+#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;
@@ -21,9 +22,10 @@ namespace Network
 /**
  * constructor
  */
-TcpServer::TcpServer(NetworkTrigger* trigger)
+TcpServer::TcpServer(MessageTrigger* messageTrigger,
+                     ConnectionTrigger* connectionTrigger)
+  : AbstractServer(messageTrigger, connectionTrigger)
 {
-    m_trigger.push_back(trigger);
 }
 
 /**
@@ -115,13 +117,8 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
 
     // create new socket-object from file-descriptor
     TcpSocket* tcpSocket = new TcpSocket(fd);
-    for(uint32_t i = 0; i < m_trigger.size(); i++) 
-    {
-        tcpSocket->addNetworkTrigger(m_trigger.at(i));
-    }
-
-    // start new socket-thread
-    tcpSocket->start();
+    tcpSocket->addNetworkTrigger(m_messageTrigger);
+    m_connectionTrigger->handleConnection(tcpSocket);
 
     // append new socket to the list
     mutexLock();

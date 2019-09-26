@@ -26,13 +26,15 @@ namespace Kitsune
 {
 namespace Network
 {
-class NetworkTrigger;
+class MessageTrigger;
+class ConnectionTrigger;
 class AbstractSocket;
 
 class AbstractServer : public Kitsune::Common::Thread
 {
 public:
-    AbstractServer();
+    AbstractServer(MessageTrigger* messageTrigger,
+                   ConnectionTrigger* connectionTrigger);
     ~AbstractServer();
 
     virtual AbstractSocket* waitForIncomingConnection() = 0;
@@ -42,14 +44,17 @@ public:
     AbstractSocket* getSocket(const uint32_t pos);
 
     // trigger-control
-    void addAdditionalTrigger(NetworkTrigger* trigger);
+    void addAdditionalTrigger(MessageTrigger* trigger);
     void clearTrigger();
 
 protected:
     void run();
 
     int m_serverSocket = 0;
-    std::vector<NetworkTrigger*> m_trigger;
+
+    MessageTrigger* m_messageTrigger;
+    ConnectionTrigger* m_connectionTrigger;
+
     std::vector<AbstractSocket*> m_sockets;
 };
 

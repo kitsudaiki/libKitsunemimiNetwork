@@ -22,7 +22,6 @@ INCLUDEPATH += $$PWD \
 
 HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcp_server.h \
-    ../include/libKitsuneNetwork/network_trigger.h \
     ../include/libKitsuneNetwork/message_ring_buffer.h \
     cleanup_thread.h \
     ../include/libKitsuneNetwork/abstract_server.h \
@@ -31,10 +30,11 @@ HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcp_socket.h \
     ../include/libKitsuneNetwork/tls_tcp/tls_tcp_socket.h \
     ../include/libKitsuneNetwork/unix/unix_socket.h \
-    ../include/libKitsuneNetwork/abstract_socket.h
+    ../include/libKitsuneNetwork/abstract_socket.h \
+    ../include/libKitsuneNetwork/message_trigger.h \
+    ../include/libKitsuneNetwork/connection_trigger.h
 
 SOURCES += \
-    network_trigger.cpp \
     cleanup_thread.cpp \
     tcp/tcp_server.cpp \
     abstract_server.cpp \
@@ -43,4 +43,6 @@ SOURCES += \
     tcp/tcp_socket.cpp \
     tls_tcp/tls_tcp_socket.cpp \
     unix/unix_socket.cpp \
-    abstract_socket.cpp
+    abstract_socket.cpp \
+    message_trigger.cpp \
+    connection_trigger.cpp

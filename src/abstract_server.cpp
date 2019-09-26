@@ -8,6 +8,7 @@
 
 #include "abstract_server.h"
 #include <abstract_socket.h>
+#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;
@@ -20,9 +21,11 @@ namespace Network
 /**
  * @brief AbstractServer::AbstractServer
  */
-AbstractServer::AbstractServer()
+AbstractServer::AbstractServer(MessageTrigger* messageTrigger,
+                               ConnectionTrigger* connectionTrigger)
 {
-
+    m_messageTrigger = messageTrigger;
+    m_connectionTrigger = connectionTrigger;
 }
 
 /**
@@ -30,7 +33,6 @@ AbstractServer::AbstractServer()
  */
 AbstractServer::~AbstractServer()
 {
-    clearTrigger();
 }
 
 /**
@@ -64,27 +66,6 @@ AbstractServer::getSocket(const uint32_t pos)
     mutexUnlock();
     return result;
 }
-
-/**
- * add a new trigger to the server
- *
- * @param trigger new trigger-object
- */
-void
-AbstractServer::addAdditionalTrigger(NetworkTrigger *trigger)
-{
-    m_trigger.push_back(trigger);
-}
-
-/**
- * delete all trigger-objects from the server
- */
-void
-AbstractServer::clearTrigger()
-{
-    m_trigger.clear();
-}
-
 
 /**
  * close the tcp-server togester with all tcp-socket, which are connected to the server

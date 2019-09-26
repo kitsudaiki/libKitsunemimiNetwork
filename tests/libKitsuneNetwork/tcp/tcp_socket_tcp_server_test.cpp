@@ -12,6 +12,7 @@
 #include <tcp/tcp_server.h>
 #include <tcp/tcp_socket.h>
 #include <dummy_buffer.h>
+#include <income_trigger.h>
 
 namespace Kitsune
 {
@@ -35,7 +36,8 @@ void
 TcpSocket_TcpServer_Test::initTestCase()
 {
     m_buffer = new DummyBuffer();
-    m_server = new TcpServer(m_buffer);
+    m_incomeTrigger = new IncomeTrigger();
+    m_server = new TcpServer(m_buffer, m_incomeTrigger);
 }
 
 /**

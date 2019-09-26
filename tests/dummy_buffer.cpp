@@ -21,7 +21,7 @@ namespace Network
  * constructor
  */
 DummyBuffer::DummyBuffer()
-    : NetworkTrigger ()
+    : MessageTrigger ()
 {
     m_buffer = new Common::DataBuffer(1000);
 }

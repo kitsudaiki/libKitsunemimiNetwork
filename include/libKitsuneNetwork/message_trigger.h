@@ -1,13 +1,13 @@
 /**
- *  @file    network_trigger.h
+ *  @file    message_trigger.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef NETWORK_TRIGGER_H
-#define NETWORK_TRIGGER_H
+#ifndef MESSAGE_TRIGGER_H
+#define MESSAGE_TRIGGER_H
 
 #include <cstdio>
 #include <cinttypes>
@@ -19,11 +19,11 @@ namespace Network
 class AbstractSocket;
 struct MessageRingBuffer;
 
-class NetworkTrigger
+class MessageTrigger
 {
 public:
-    NetworkTrigger();
-    virtual ~NetworkTrigger();
+    MessageTrigger();
+    virtual ~MessageTrigger();
 
     virtual uint64_t runTask(MessageRingBuffer& recvBuffer,
                              AbstractSocket* socket) = 0;
@@ -32,4 +32,4 @@ public:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // NETWORK_TRIGGER_H
+#endif // MESSAGE_TRIGGER_H
