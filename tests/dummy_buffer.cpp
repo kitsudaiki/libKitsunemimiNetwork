@@ -7,8 +7,7 @@
  */
 
 #include "dummy_buffer.h"
-#include <tcp/tcp_socket.h>
-
+#include <message_ring_buffer.h>
 #include <buffering/data_buffer.h>
 #include <buffering/data_buffer_methods.h>
 

@@ -18,16 +18,12 @@ namespace Network
  * constructor
  */
 IncomeTrigger::IncomeTrigger()
-    : ConnectionTrigger ()
-{
-}
+    : ConnectionTrigger () {}
 
 /**
  * destructor
  */
-IncomeTrigger::~IncomeTrigger()
-{
-}
+IncomeTrigger::~IncomeTrigger() {}
 
 /**
  * runTask
