@@ -25,15 +25,18 @@ namespace Network
  * @param port port where the server is listen
  * @param certFile path to certificate-file
  * @param keyFile path to key-file
+ * @param caFile path to ca-file
  */
 TlsTcpSocket::TlsTcpSocket(const std::string address,
                            const uint16_t port,
                            const std::string certFile,
-                           const std::string keyFile)
+                           const std::string keyFile,
+                           const std::string caFile)
     : TcpSocket(address, port)
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
+    m_caFile = caFile;
     m_type = TLS_TCP_SOCKET;
 }
 
@@ -44,14 +47,17 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
  * @param socketFd file-descriptor of the socket-socket
  * @param certFile path to certificate-file
  * @param keyFile path to key-file
+ * @param caFile path to ca-file
  */
 TlsTcpSocket::TlsTcpSocket(const int socketFd,
                            const std::string certFile,
-                           const std::string keyFile)
+                           const std::string keyFile,
+                           const std::string caFile)
     : TcpSocket(socketFd)
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
+    m_caFile = caFile;
     m_type = TLS_TCP_SOCKET;
 }
 
@@ -126,8 +132,22 @@ TlsTcpSocket::initOpenssl()
     result = SSL_CTX_use_PrivateKey_file(m_ctx, m_keyFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        LOG_error("Failed to load key file for ssl-encrytion. File path: " + m_certFile);
+        LOG_error("Failed to load key file for ssl-encrytion. File path: " + m_keyFile);
         return false;
+    }
+
+    // set CA-file if exist
+    if(m_caFile != "")
+    {
+        result = SSL_CTX_load_verify_locations(m_ctx, m_caFile.c_str(), nullptr);
+        if(result <= 0)
+        {
+            LOG_error("Failed to load ca file for ssl-encrytion. File path: " + m_caFile);
+            return false;
+        }
+
+        // set the verification depth to 1
+        SSL_CTX_set_verify_depth(m_ctx, 1);
     }
 
     // init ssl-cennection
@@ -138,6 +158,17 @@ TlsTcpSocket::initOpenssl()
         return false;
     }
     SSL_set_fd(m_ssl, m_socket);
+
+    // enable certificate validation, if ca-file was set
+    if(m_caFile != "")
+    {
+        // SSL_VERIFY_PEER -> check cert if exist
+        // SSL_VERIFY_FAIL_IF_NO_PEER_CERT -> server requires cert
+        // SSL_VERIFY_CLIENT_ONCE -> check only on initial handshake
+        SSL_set_verify(m_ssl,
+                       SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT | SSL_VERIFY_CLIENT_ONCE,
+                       nullptr);
+    }
 
     // process tls-handshake
     if(m_clientSide)

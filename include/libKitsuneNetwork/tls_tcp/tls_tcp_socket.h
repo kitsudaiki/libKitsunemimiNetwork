@@ -32,7 +32,8 @@ public:
     TlsTcpSocket(const std::string address,
                  const uint16_t port,
                  const std::string certFile,
-                 const std::string keyFile);
+                 const std::string keyFile,
+                 const std::string caFile="");
     ~TlsTcpSocket();
 
     bool initClientSide();
@@ -42,12 +43,14 @@ protected:
     SSL* m_ssl;
     std::string m_certFile = "";
     std::string m_keyFile = "";
+    std::string m_caFile = "";
 
     bool initOpenssl();
 
     TlsTcpSocket(const int socketFd,
                  const std::string certFile,
-                 const std::string keyFile);
+                 const std::string keyFile,
+                 const std::string caFile="");
 
     long recvData(int,
                   void* bufferPosition,

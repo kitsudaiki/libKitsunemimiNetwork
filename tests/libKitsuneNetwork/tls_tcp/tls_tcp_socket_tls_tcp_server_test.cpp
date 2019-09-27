@@ -40,10 +40,10 @@ TlsTcpSocket_TcpServer_Test::initTestCase()
 
     m_buffer = new DummyBuffer();
     m_incomeTrigger = new IncomeTrigger();
-    m_server = new TlsTcpServer(std::string("/tmp/cert.pem"),
-                                std::string("/tmp/key.pem"),
-                                m_buffer,
-                                m_incomeTrigger);
+    m_server = new TlsTcpServer(m_buffer,
+                                m_incomeTrigger,
+                                std::string("/tmp/cert.pem"),
+                                std::string("/tmp/key.pem"));
 }
 
 /**
