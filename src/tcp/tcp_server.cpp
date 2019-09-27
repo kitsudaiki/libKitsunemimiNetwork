@@ -26,6 +26,7 @@ TcpServer::TcpServer(MessageTrigger* messageTrigger,
                      ConnectionTrigger* connectionTrigger)
   : AbstractServer(messageTrigger, connectionTrigger)
 {
+    m_type = TCP_SERVER;
 }
 
 /**

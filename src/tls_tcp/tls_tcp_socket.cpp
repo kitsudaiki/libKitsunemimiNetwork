@@ -34,6 +34,7 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
+    m_type = TLS_TCP_SOCKET;
 }
 
 /**
@@ -51,6 +52,7 @@ TlsTcpSocket::TlsTcpSocket(const int socketFd,
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
+    m_type = TLS_TCP_SOCKET;
 }
 
 /**

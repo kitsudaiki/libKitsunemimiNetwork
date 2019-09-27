@@ -37,10 +37,18 @@ class CleanupThread;
 class AbstractSocket : public Kitsune::Common::Thread
 {
 public:
+    enum socketTypes {
+        UNDEFINED_TYPE = 0,
+        UNIX_SOCKET = 1,
+        TCP_SOCKET = 2,
+        TLS_TCP_SOCKET = 3
+    };
+
     AbstractSocket();
     ~AbstractSocket();
 
     virtual bool initClientSide() = 0;
+    socketTypes getType();
 
     // trigger-control
     bool addNetworkTrigger(MessageTrigger* trigger);
@@ -58,6 +66,7 @@ public:
 protected:
     bool m_clientSide = false;
     int m_socket = 0;
+    socketTypes m_type = UNDEFINED_TYPE;
 
     MessageRingBuffer m_recvBuffer;
     std::vector<MessageTrigger*> m_trigger;

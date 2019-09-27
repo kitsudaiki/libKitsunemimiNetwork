@@ -31,6 +31,7 @@ TcpSocket::TcpSocket(const std::string address,
     m_address = address;
     m_port = port;
     m_clientSide = true;
+    m_type = TCP_SOCKET;
 }
 
 /**
@@ -62,6 +63,7 @@ TcpSocket::TcpSocket(const int socketFd)
 {
     m_socket = socketFd;
     m_clientSide = false;
+    m_type = TCP_SOCKET;
 }
 
 /**

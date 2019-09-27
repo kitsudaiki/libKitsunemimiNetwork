@@ -30,6 +30,7 @@ UnixSocket::UnixSocket(const std::string socketFile)
 {
     m_socketFile = socketFile;
     m_clientSide = true;
+    m_type = UNIX_SOCKET;
 }
 
 /**
@@ -61,6 +62,7 @@ UnixSocket::UnixSocket(const int socketFd)
 {
     m_socket = socketFd;
     m_clientSide = false;
+    m_type = UNIX_SOCKET;
 }
 
 /**
