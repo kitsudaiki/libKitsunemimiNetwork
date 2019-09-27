@@ -10,7 +10,7 @@
 - socket on client-side have to be init manually to get return value
 - socket-constructors for server-side are now private 
 - renamed NetworkTrigger to MessageTrigger
-
+- renamed UnixSocket to UnixDomainSocket and UnixServer to UnixDomainServer
 
 ## [0.3.0] - 2019-09-09
 

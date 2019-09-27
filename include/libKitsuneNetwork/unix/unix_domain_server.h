@@ -1,13 +1,13 @@
 /**
- *  @file    unix_server.h
+ *  @file    unix_domain_server.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef UNIX_SERVER_H
-#define UNIX_SERVER_H
+#ifndef UNIX_DOMAIN_SERVER_H
+#define UNIX_DOMAIN_SERVER_H
 
 #include <abstract_server.h>
 
@@ -15,14 +15,14 @@ namespace Kitsune
 {
 namespace Network
 {
-class UnixSocket;
+class UnixDomainSocket;
 
-class UnixServer : public AbstractServer
+class UnixDomainServer : public AbstractServer
 {
 public:
-    UnixServer(MessageTrigger* messageTrigger,
-               ConnectionTrigger* connectionTrigger);
-    ~UnixServer();
+    UnixDomainServer(MessageTrigger* messageTrigger,
+                     ConnectionTrigger* connectionTrigger);
+    ~UnixDomainServer();
 
     bool initServer(const std::string socketFile);
     AbstractSocket* waitForIncomingConnection();
@@ -35,4 +35,4 @@ private:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // UNIX_SERVER_H
+#endif // UNIX_DOMAIN_SERVER_H

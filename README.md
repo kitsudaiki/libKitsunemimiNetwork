@@ -7,7 +7,7 @@
 
 ## Description
 
-This is a small library for network connections. It provides servers and clients for unix-sockets, tcp-sockets and ssl encrypted tcp-sockets. 
+This is a small library for network connections. It provides servers and clients for unix-domain-sockets, tcp-sockets and ssl encrypted tcp-sockets. 
 
 ## Common Information aboud my projects
 
@@ -138,7 +138,7 @@ Tested on Debian and Ubuntu. If you use Centos, Arch, etc and the build-script f
 
 (sorry, that the usage-chapter here is very short, but while writing I found some points, which must become better.)
 
-This libray contains servers and clients for unix-sockets, tcp-sockets and ssl encrypted tcp-sockets. Each socket and server runs in its own thread.
+This libray contains servers and clients for unix-domain-sockets, tcp-sockets and ssl encrypted tcp-sockets. Each socket and server runs in its own thread.
 
 The inheritance tree of the classes has the following look. For servers its the same with only servers instead of sockets.
 
@@ -149,7 +149,7 @@ The inheritance tree of the classes has the following look. For servers its the 
     AbstractSocket
     ^            ^
     |            |
-TcpSocket    UnixSocket
+TcpSocket    UnixDomainSocket
     ^
     |
 TlsTcpSocket
@@ -205,7 +205,7 @@ public:
 ```
 
 Example to create server and socket:
-(the `TlsTcpSocket` of the example can also replaced by the `UnixSocket` or `TcpSocket`. Only the values of the conectructor are different)
+(the `TlsTcpSocket` of the example can also replaced by the `UnixDomainSocket` or `TcpSocket`. Only the values of the conectructor are different)
 
 ```cpp
 #include <tls_tcp/tls_tcp_server.h>

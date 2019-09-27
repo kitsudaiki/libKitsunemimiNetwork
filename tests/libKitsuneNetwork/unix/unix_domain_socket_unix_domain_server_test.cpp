@@ -1,16 +1,16 @@
 /**
- *  @file    unix_socket_unix_server_test.cpp
+ *  @file    unix_domain_socket_unix_domain_server_test.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include "unix_socket_unix_server_test.h"
+#include "unix_domain_socket_unix_domain_server_test.h"
 #include <buffering/data_buffer.h>
 
-#include <unix/unix_socket.h>
-#include <unix/unix_server.h>
+#include <unix/unix_domain_socket.h>
+#include <unix/unix_domain_server.h>
 #include <dummy_buffer.h>
 #include <income_trigger.h>
 
@@ -19,8 +19,8 @@ namespace Kitsune
 namespace Network
 {
 
-UnixSocket_UnixServer_Test::UnixSocket_UnixServer_Test() :
-    Kitsune::Common::UnitTest("UnixSocket_UnixServer_Test")
+UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test() :
+    Kitsune::Common::UnitTest("UnixDomainSocket_UnixDomainServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -33,18 +33,18 @@ UnixSocket_UnixServer_Test::UnixSocket_UnixServer_Test() :
  * initTestCase
  */
 void
-UnixSocket_UnixServer_Test::initTestCase()
+UnixDomainSocket_UnixDomainServer_Test::initTestCase()
 {
     m_buffer = new DummyBuffer();
     m_incomeTrigger = new IncomeTrigger();
-    m_server = new UnixServer(m_buffer, m_incomeTrigger);
+    m_server = new UnixDomainServer(m_buffer, m_incomeTrigger);
 }
 
 /**
  * checkConnectionInit
  */
 void
-UnixSocket_UnixServer_Test::checkConnectionInit()
+UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
 {
     // init server
     UNITTEST(m_server->getType(), AbstractServer::UNIX_SERVER);
@@ -52,7 +52,7 @@ UnixSocket_UnixServer_Test::checkConnectionInit()
     UNITTEST(m_server->start(), true);
 
     // init client
-    m_socketClientSide = new UnixSocket("/tmp/sock.uds");
+    m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");
     UNITTEST(m_socketClientSide->initClientSide(), true);
     UNITTEST(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
 
@@ -62,7 +62,7 @@ UnixSocket_UnixServer_Test::checkConnectionInit()
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_socketServerSide = static_cast<UnixSocket*>(m_server->getSocket(0));
+        m_socketServerSide = static_cast<UnixDomainSocket*>(m_server->getSocket(0));
         UNITTEST(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
     }
 }
@@ -71,7 +71,7 @@ UnixSocket_UnixServer_Test::checkConnectionInit()
  * checkLittleDataTransfer
  */
 void
-UnixSocket_UnixServer_Test::checkLittleDataTransfer()
+UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
@@ -97,7 +97,7 @@ UnixSocket_UnixServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-UnixSocket_UnixServer_Test::checkBigDataTransfer()
+UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
@@ -128,7 +128,7 @@ UnixSocket_UnixServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-UnixSocket_UnixServer_Test::cleanupTestCase()
+UnixDomainSocket_UnixDomainServer_Test::cleanupTestCase()
 {
     UNITTEST(m_socketServerSide->closeSocket(), true);
     m_socketServerSide->closeSocket();

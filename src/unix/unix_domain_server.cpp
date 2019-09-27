@@ -1,13 +1,13 @@
 /**
- *  @file    unix_server.cpp
+ *  @file    unix_domain_server.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include <unix/unix_socket.h>
-#include <unix/unix_server.h>
+#include <unix/unix_domain_socket.h>
+#include <unix/unix_domain_server.h>
 #include <message_trigger.h>
 #include <connection_trigger.h>
 #include <logger/logger.h>
@@ -22,8 +22,8 @@ namespace Network
 /**
  * constructor
  */
-UnixServer::UnixServer(MessageTrigger* messageTrigger,
-                       ConnectionTrigger* connectionTrigger)
+UnixDomainServer::UnixDomainServer(MessageTrigger* messageTrigger,
+                                   ConnectionTrigger* connectionTrigger)
     : AbstractServer(messageTrigger, connectionTrigger)
 {
     m_type = UNIX_SERVER;
@@ -32,7 +32,7 @@ UnixServer::UnixServer(MessageTrigger* messageTrigger,
 /**
  * destructor
  */
-UnixServer::~UnixServer()
+UnixDomainServer::~UnixDomainServer()
 {
     closeServer();
 }
@@ -45,7 +45,7 @@ UnixServer::~UnixServer()
  * @return false, if server creation failed, else true
  */
 bool
-UnixServer::initServer(const std::string socketFile)
+UnixDomainServer::initServer(const std::string socketFile)
 {
     m_socketFile = socketFile;
 
@@ -86,7 +86,7 @@ UnixServer::initServer(const std::string socketFile)
  * @return new unix-socket-socket-pointer for the new incoming connection
  */
 AbstractSocket*
-UnixServer::waitForIncomingConnection()
+UnixDomainServer::waitForIncomingConnection()
 {
     uint32_t length = sizeof(struct sockaddr_un);
 
@@ -107,7 +107,7 @@ UnixServer::waitForIncomingConnection()
              "address : " + m_socketFile);
 
     // create new socket-object from file-descriptor
-    UnixSocket* unixSocket = new UnixSocket(fd);
+    UnixDomainSocket* unixSocket = new UnixDomainSocket(fd);
     unixSocket->addNetworkTrigger(m_messageTrigger);
     m_connectionTrigger->handleConnection(unixSocket);
 

@@ -7,7 +7,7 @@
  */
 
 #include <libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.h>
-#include <libKitsuneNetwork/unix/unix_socket_unix_server_test.h>
+#include <libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.h>
 #include <libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h>
 
 #include <logger/logger.h>
@@ -19,6 +19,6 @@ int main()
     //initLogger("/tmp", "testlog", true, true);
 
     Kitsune::Network::TcpSocket_TcpServer_Test();
-    Kitsune::Network::UnixSocket_UnixServer_Test();
+    Kitsune::Network::UnixDomainSocket_UnixDomainServer_Test();
     Kitsune::Network::TlsTcpSocket_TcpServer_Test();
 }
