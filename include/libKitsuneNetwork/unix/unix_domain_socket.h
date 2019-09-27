@@ -1,13 +1,13 @@
 /**
- *  @file    unix_socket.h
+ *  @file    unix_domain_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef UNIX_SOCKET_H
-#define UNIX_SOCKET_H
+#ifndef UNIX_DOMAIN_SOCKET_H
+#define UNIX_DOMAIN_SOCKET_H
 
 #include <abstract_socket.h>
 
@@ -15,14 +15,14 @@ namespace Kitsune
 {
 namespace Network
 {
-class UnixServer;
+class UnixDomainServer;
 
-class UnixSocket : public AbstractSocket
+class UnixDomainSocket : public AbstractSocket
 {
-    friend class UnixServer;
+    friend class UnixDomainServer;
 
 public:
-    UnixSocket(const std::string socketFile);
+    UnixDomainSocket(const std::string socketFile);
 
     bool initClientSide();
 
@@ -30,7 +30,7 @@ protected:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
 
-    UnixSocket(const int socketFd);
+    UnixDomainSocket(const int socketFd);
 
     bool initSocket();
     long recvData(int socket,
@@ -46,4 +46,4 @@ protected:
 } // namespace Network
 } // namespace Kitsune
 
-#endif // UNIX_SOCKET_H
+#endif // UNIX_DOMAIN_SOCKET_H

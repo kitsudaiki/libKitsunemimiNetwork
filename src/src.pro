@@ -25,24 +25,24 @@ HEADERS += \
     ../include/libKitsuneNetwork/message_ring_buffer.h \
     cleanup_thread.h \
     ../include/libKitsuneNetwork/abstract_server.h \
-    ../include/libKitsuneNetwork/unix/unix_server.h \
     ../include/libKitsuneNetwork/tls_tcp/tls_tcp_server.h \
     ../include/libKitsuneNetwork/tcp/tcp_socket.h \
     ../include/libKitsuneNetwork/tls_tcp/tls_tcp_socket.h \
-    ../include/libKitsuneNetwork/unix/unix_socket.h \
     ../include/libKitsuneNetwork/abstract_socket.h \
     ../include/libKitsuneNetwork/message_trigger.h \
-    ../include/libKitsuneNetwork/connection_trigger.h
+    ../include/libKitsuneNetwork/connection_trigger.h \
+    ../include/libKitsuneNetwork/unix/unix_domain_server.h \
+    ../include/libKitsuneNetwork/unix/unix_domain_socket.h
 
 SOURCES += \
     cleanup_thread.cpp \
     tcp/tcp_server.cpp \
     abstract_server.cpp \
-    unix/unix_server.cpp \
     tls_tcp/tls_tcp_server.cpp \
     tcp/tcp_socket.cpp \
     tls_tcp/tls_tcp_socket.cpp \
-    unix/unix_socket.cpp \
     abstract_socket.cpp \
     message_trigger.cpp \
-    connection_trigger.cpp
+    connection_trigger.cpp \
+    unix/unix_domain_socket.cpp \
+    unix/unix_domain_server.cpp
