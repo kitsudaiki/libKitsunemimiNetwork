@@ -108,7 +108,7 @@ UnixDomainServer::waitForIncomingConnection()
 
     // create new socket-object from file-descriptor
     UnixDomainSocket* unixSocket = new UnixDomainSocket(fd);
-    unixSocket->addNetworkTrigger(m_messageTrigger);
+    unixSocket->setMessageTrigger(m_messageTrigger);
     m_connectionTrigger->handleConnection(unixSocket);
 
     // append new socket to the list

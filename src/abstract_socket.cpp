@@ -36,7 +36,6 @@ AbstractSocket::AbstractSocket()
 AbstractSocket::~AbstractSocket()
 {
     closeSocket();
-    clearNetworkTrigger();
 }
 
 /**
@@ -56,44 +55,10 @@ AbstractSocket::getType()
  *
  * @return false, if object was nullptr, else true
  */
-bool
-AbstractSocket::addNetworkTrigger(MessageTrigger *trigger)
-{
-    if(trigger == nullptr) {
-        return false;
-    }
-
-    m_trigger.push_back(trigger);
-
-    return true;
-}
-
-/**
- * remove a specific trigger from the socket
- *
- * @param index index of the trigger in the list
- *
- * @return false, if index too high, else tru
- */
-bool
-AbstractSocket::removeNetworkTrigger(const uint32_t index)
-{
-    if(m_trigger.size() <= index) {
-        return false;
-    }
-
-    m_trigger.erase(m_trigger.begin() + index);
-
-    return true;
-}
-
-/**
- * delete all trigger-objects from the socket
- */
 void
-AbstractSocket::clearNetworkTrigger()
+AbstractSocket::setMessageTrigger(MessageTrigger *trigger)
 {
-    m_trigger.clear();
+    m_trigger = trigger;
 }
 
 /**
@@ -185,9 +150,9 @@ AbstractSocket::waitForMessage()
     m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint64_t>(recvSize));
 
     // add all trigger to the new socket
-    for(uint64_t i = 0; i < m_trigger.size(); i++)
+    if(m_trigger != nullptr)
     {
-        const uint64_t readBytes = m_trigger[i]->runTask(m_recvBuffer, this);
+        const uint64_t readBytes = m_trigger->runTask(m_recvBuffer, this);
 
         m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes)
                                     % m_recvBuffer.totalBufferSize;

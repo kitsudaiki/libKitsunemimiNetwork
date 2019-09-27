@@ -51,9 +51,7 @@ public:
     socketTypes getType();
 
     // trigger-control
-    bool addNetworkTrigger(MessageTrigger* trigger);
-    bool removeNetworkTrigger(const uint32_t index);
-    void clearNetworkTrigger();
+    void setMessageTrigger(MessageTrigger* trigger);
 
     bool sendMessage(const std::string &message);
     bool sendMessage(const void *message,
@@ -69,7 +67,7 @@ protected:
     socketTypes m_type = UNDEFINED_TYPE;
 
     MessageRingBuffer m_recvBuffer;
-    std::vector<MessageTrigger*> m_trigger;
+    MessageTrigger* m_trigger;
 
     void run();
     bool waitForMessage();

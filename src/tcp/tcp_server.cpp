@@ -118,7 +118,7 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
 
     // create new socket-object from file-descriptor
     TcpSocket* tcpSocket = new TcpSocket(fd);
-    tcpSocket->addNetworkTrigger(m_messageTrigger);
+    tcpSocket->setMessageTrigger(m_messageTrigger);
     m_connectionTrigger->handleConnection(tcpSocket);
 
     // append new socket to the list
