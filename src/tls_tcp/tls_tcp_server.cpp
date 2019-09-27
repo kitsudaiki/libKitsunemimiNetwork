@@ -30,6 +30,8 @@ TlsTcpServer::TlsTcpServer(const std::string certFile,
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
+
+    m_type = TLS_TCP_SERVER;
 }
 
 /**

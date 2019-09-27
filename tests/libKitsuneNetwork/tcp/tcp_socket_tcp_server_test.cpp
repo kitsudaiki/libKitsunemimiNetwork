@@ -47,12 +47,14 @@ void
 TcpSocket_TcpServer_Test::checkConnectionInit()
 {
     // init server
+    UNITTEST(m_server->getType(), AbstractServer::TCP_SERVER);
     UNITTEST(m_server->initServer(12345), true);
     UNITTEST(m_server->start(), true);
 
     // init client
     m_socketClientSide = new TcpSocket("127.0.0.1", 12345);
     UNITTEST(m_socketClientSide->initClientSide(), true);
+    UNITTEST(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
     usleep(10000);
 
@@ -61,6 +63,7 @@ TcpSocket_TcpServer_Test::checkConnectionInit()
     if(m_server->getNumberOfSockets() == 1)
     {
         m_socketServerSide = static_cast<TcpSocket*>(m_server->getSocket(0));
+        UNITTEST(m_socketServerSide->getType(), AbstractSocket::TCP_SOCKET);
     }
 }
 

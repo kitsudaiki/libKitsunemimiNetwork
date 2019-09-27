@@ -53,6 +53,7 @@ void
 TlsTcpSocket_TcpServer_Test::checkConnectionInit()
 {
     // init server
+    UNITTEST(m_server->getType(), AbstractServer::TLS_TCP_SERVER);
     UNITTEST(m_server->initServer(12345), true);
     UNITTEST(m_server->start(), true);
 
@@ -62,6 +63,7 @@ TlsTcpSocket_TcpServer_Test::checkConnectionInit()
                                           "/tmp/cert.pem",
                                           "/tmp/key.pem");
     UNITTEST(m_socketClientSide->initClientSide(), true);
+    UNITTEST(m_socketClientSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
 
     usleep(10000);
 
@@ -70,6 +72,7 @@ TlsTcpSocket_TcpServer_Test::checkConnectionInit()
     if(m_server->getNumberOfSockets() == 1)
     {
         m_socketServerSide = static_cast<TlsTcpSocket*>(m_server->getSocket(0));
+        UNITTEST(m_socketServerSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
     }
 }
 

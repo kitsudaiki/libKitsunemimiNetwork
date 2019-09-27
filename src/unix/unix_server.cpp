@@ -26,6 +26,7 @@ UnixServer::UnixServer(MessageTrigger* messageTrigger,
                        ConnectionTrigger* connectionTrigger)
     : AbstractServer(messageTrigger, connectionTrigger)
 {
+    m_type = UNIX_SERVER;
 }
 
 /**

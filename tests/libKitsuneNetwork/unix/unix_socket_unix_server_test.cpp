@@ -47,12 +47,14 @@ void
 UnixSocket_UnixServer_Test::checkConnectionInit()
 {
     // init server
+    UNITTEST(m_server->getType(), AbstractServer::UNIX_SERVER);
     UNITTEST(m_server->initServer("/tmp/sock.uds"), true);
     UNITTEST(m_server->start(), true);
 
     // init client
     m_socketClientSide = new UnixSocket("/tmp/sock.uds");
     UNITTEST(m_socketClientSide->initClientSide(), true);
+    UNITTEST(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
 
     usleep(10000);
 
@@ -61,6 +63,7 @@ UnixSocket_UnixServer_Test::checkConnectionInit()
     if(m_server->getNumberOfSockets() == 1)
     {
         m_socketServerSide = static_cast<UnixSocket*>(m_server->getSocket(0));
+        UNITTEST(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
     }
 }
 

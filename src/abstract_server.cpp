@@ -36,6 +36,16 @@ AbstractServer::~AbstractServer()
 }
 
 /**
+ * @brief AbstractServer::getType
+ * @return
+ */
+AbstractServer::serverTypes
+AbstractServer::getType()
+{
+    return m_type;
+}
+
+/**
  * get the number of sockets which are registered at the server
  */
 uint64_t

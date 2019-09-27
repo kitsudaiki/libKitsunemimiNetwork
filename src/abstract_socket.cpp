@@ -40,6 +40,16 @@ AbstractSocket::~AbstractSocket()
 }
 
 /**
+ * @brief AbstractSocket::getType
+ * @return
+ */
+AbstractSocket::socketTypes
+AbstractSocket::getType()
+{
+    return m_type;
+}
+
+/**
  * add new trigger-object for incoming messages
  *
  * @param trigger new trigger-object

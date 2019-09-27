@@ -4,6 +4,7 @@
 ### Added
 - log-output base on the logger of libKitsundePersistence
 - ConnectionTrigger to handle incoming connections on server-side
+- type-value to sockets and servers to identify abstract sockets and servers
 
 ### Changed
 - socket on client-side have to be init manually to get return value
