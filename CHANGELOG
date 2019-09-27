@@ -11,6 +11,8 @@
 - socket-constructors for server-side are now private 
 - renamed NetworkTrigger to MessageTrigger
 - renamed UnixSocket to UnixDomainSocket and UnixServer to UnixDomainServer
+- reduced the list of triggers in the sockets to only one trigger-object per socket
+
 
 ## [0.3.0] - 2019-09-09
 

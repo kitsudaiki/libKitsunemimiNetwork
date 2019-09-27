@@ -79,7 +79,7 @@ TlsTcpServer::waitForIncomingConnection()
     LOG_info("Successfully accepted incoming connection on encrypted tcp-socket server with "
              "port : " + std::to_string(m_port));
 
-    tcpSocket->addNetworkTrigger(m_messageTrigger);
+    tcpSocket->setMessageTrigger(m_messageTrigger);
     m_connectionTrigger->handleConnection(tcpSocket);
 
     // append new socket to the list
