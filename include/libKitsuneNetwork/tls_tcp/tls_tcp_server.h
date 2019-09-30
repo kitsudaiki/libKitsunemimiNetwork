@@ -24,8 +24,8 @@ class TlsTcpServer : public TcpServer
 public:
     TlsTcpServer(const std::string certFile,
                  const std::string keyFile,
-                 MessageTrigger* messageTrigger,
-                 ConnectionTrigger* connectionTrigger);
+                 void* target,
+                 void (*processConnection)(void*, AbstractSocket*));
     ~TlsTcpServer();
 
     AbstractSocket* waitForIncomingConnection();

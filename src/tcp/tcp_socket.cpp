@@ -26,7 +26,7 @@ namespace Network
  */
 TcpSocket::TcpSocket(const std::string address,
                      const uint16_t port)
-    : AbstractSocket ()
+    : AbstractSocket()
 {
     m_address = address;
     m_port = port;
@@ -59,7 +59,7 @@ TcpSocket::initClientSide()
  * @param socketFd file-descriptor of the socket-socket
  */
 TcpSocket::TcpSocket(const int socketFd)
-    : AbstractSocket ()
+    : AbstractSocket()
 {
     m_socket = socketFd;
     m_clientSide = false;

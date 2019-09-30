@@ -22,9 +22,10 @@ namespace Network
 /**
  * constructor
  */
-UnixDomainServer::UnixDomainServer(MessageTrigger* messageTrigger,
-                                   ConnectionTrigger* connectionTrigger)
-    : AbstractServer(messageTrigger, connectionTrigger)
+UnixDomainServer::UnixDomainServer(void* target,
+                                   void (*processConnection)(void*, AbstractSocket*))
+    : AbstractServer(target,
+                     processConnection)
 {
     m_type = UNIX_SERVER;
 }
@@ -108,8 +109,7 @@ UnixDomainServer::waitForIncomingConnection()
 
     // create new socket-object from file-descriptor
     UnixDomainSocket* unixSocket = new UnixDomainSocket(fd);
-    unixSocket->setMessageTrigger(m_messageTrigger);
-    m_connectionTrigger->handleConnection(unixSocket);
+    m_processConnection(m_target, unixSocket);
 
     // append new socket to the list
     mutexLock();

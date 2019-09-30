@@ -23,17 +23,13 @@ INCLUDEPATH += $$PWD \
 LIBS += -L../src -lKitsuneNetwork
 
 HEADERS += \
-    dummy_buffer.h \
     cert_init.h \
     libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.h \
     libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h \
-    income_trigger.h \
     libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.h
 
 SOURCES += \
     main.cpp \
-    dummy_buffer.cpp \
     libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.cpp \
     libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.cpp \
-    income_trigger.cpp \
     libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.cpp

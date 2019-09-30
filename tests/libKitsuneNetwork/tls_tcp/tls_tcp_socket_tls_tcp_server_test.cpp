@@ -11,17 +11,44 @@
 
 #include <tls_tcp/tls_tcp_server.h>
 #include <tls_tcp/tls_tcp_socket.h>
-#include <dummy_buffer.h>
-#include <income_trigger.h>
+
 #include <cert_init.h>
 
 namespace Kitsune
 {
 namespace Network
 {
+/**
+ * processMessageTlsTcp-callback
+ */
+uint64_t processMessageTlsTcp(void* target,
+                              MessageRingBuffer* recvBuffer,
+                              AbstractSocket*)
+{
+    Common::DataBuffer* targetBuffer = static_cast<Common::DataBuffer*>(target);
+    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
 
-TlsTcpSocket_TcpServer_Test::TlsTcpSocket_TcpServer_Test() :
-    Kitsune::Common::UnitTest("TlsTcpSocket_TcpServer_Test")
+    if(dataPointer == nullptr) {
+        return 0;
+    }
+
+    addDataToBuffer(targetBuffer, dataPointer, recvBuffer->readWriteDiff);
+    return recvBuffer->readWriteDiff;
+}
+
+/**
+ * processConnectionTlsTcp-callback
+ */
+void processConnectionTlsTcp(void* target,
+                             AbstractSocket* socket)
+{
+    socket->setMessageCallback(target, &processMessageTlsTcp);
+    socket->start();
+}
+
+
+TlsTcpSocket_TlsTcpServer_Test::TlsTcpSocket_TlsTcpServer_Test() :
+    Kitsune::Common::UnitTest("TlsTcpSocket_TlsTcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -34,23 +61,22 @@ TlsTcpSocket_TcpServer_Test::TlsTcpSocket_TcpServer_Test() :
  * initTestCase
  */
 void
-TlsTcpSocket_TcpServer_Test::initTestCase()
+TlsTcpSocket_TlsTcpServer_Test::initTestCase()
 {
     writeTestCerts();
 
-    m_buffer = new DummyBuffer();
-    m_incomeTrigger = new IncomeTrigger();
+    m_buffer = new Common::DataBuffer(1000);
     m_server = new TlsTcpServer(std::string("/tmp/cert.pem"),
                                 std::string("/tmp/key.pem"),
                                 m_buffer,
-                                m_incomeTrigger);
+                                &processConnectionTlsTcp);
 }
 
 /**
  * checkConnectionInit
  */
 void
-TlsTcpSocket_TcpServer_Test::checkConnectionInit()
+TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
 {
     // init server
     UNITTEST(m_server->getType(), AbstractServer::TLS_TCP_SERVER);
@@ -80,25 +106,25 @@ TlsTcpSocket_TcpServer_Test::checkConnectionInit()
  * checkLittleDataTransfer
  */
 void
-TlsTcpSocket_TcpServer_Test::checkLittleDataTransfer()
+TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
     std::string sendMessage("poipoipoi");
     UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
-    UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
+    UNITTEST(m_buffer->bufferPosition, 9);
 
 
-    if(m_buffer->getNumberOfWrittenBytes() == 9)
+    if(m_buffer->bufferPosition == 9)
     {
-        Common::DataBuffer* buffer = m_buffer->getBuffer();
+        Common::DataBuffer* buffer = m_buffer;
         uint64_t bufferSize = buffer->bufferPosition;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
         UNITTEST(bufferSize, 9);
         UNITTEST(recvMessage[2], sendMessage.at(2));
-        m_buffer->clearBuffer();
+        resetBuffer(m_buffer, 1000);
     }
 }
 
@@ -106,7 +132,7 @@ TlsTcpSocket_TcpServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-TlsTcpSocket_TcpServer_Test::checkBigDataTransfer()
+TlsTcpSocket_TlsTcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
@@ -115,8 +141,8 @@ TlsTcpSocket_TcpServer_Test::checkBigDataTransfer()
         m_socketClientSide->sendMessage(sendMessage);
     }
     usleep(100000);
-    uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
-    Common::DataBuffer* dataBuffer = m_buffer->getBuffer();
+    uint64_t totalIncom = m_buffer->bufferPosition;
+    Common::DataBuffer* dataBuffer = m_buffer;
     UNITTEST(totalIncom, 300000);
     UNITTEST(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;
@@ -137,7 +163,7 @@ TlsTcpSocket_TcpServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-TlsTcpSocket_TcpServer_Test::cleanupTestCase()
+TlsTcpSocket_TlsTcpServer_Test::cleanupTestCase()
 {
     UNITTEST(m_socketServerSide->closeSocket(), true);
     m_socketServerSide->closeSocket();

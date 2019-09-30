@@ -21,11 +21,11 @@ namespace Network
 /**
  * @brief AbstractServer::AbstractServer
  */
-AbstractServer::AbstractServer(MessageTrigger* messageTrigger,
-                               ConnectionTrigger* connectionTrigger)
+AbstractServer::AbstractServer(void* target,
+                               void (*processConnection)(void*, AbstractSocket*))
 {
-    m_messageTrigger = messageTrigger;
-    m_connectionTrigger = connectionTrigger;
+    m_target = target;
+    m_processConnection = processConnection;
 }
 
 /**

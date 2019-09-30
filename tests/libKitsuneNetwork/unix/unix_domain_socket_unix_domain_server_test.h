@@ -13,13 +13,13 @@
 
 namespace Kitsune
 {
+namespace Common {
+class DataBuffer;
+}
 namespace Network
 {
-
 class UnixDomainServer;
 class UnixDomainSocket;
-class DummyBuffer;
-class IncomeTrigger;
 
 class UnixDomainSocket_UnixDomainServer_Test
         : public Kitsune::Common::UnitTest
@@ -37,8 +37,7 @@ private:
     UnixDomainServer* m_server = nullptr;
     UnixDomainSocket* m_socketClientSide = nullptr;
     UnixDomainSocket* m_socketServerSide = nullptr;
-    DummyBuffer* m_buffer = nullptr;
-    IncomeTrigger* m_incomeTrigger = nullptr;
+    Common::DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

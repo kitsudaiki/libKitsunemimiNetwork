@@ -20,8 +20,8 @@ class UnixDomainSocket;
 class UnixDomainServer : public AbstractServer
 {
 public:
-    UnixDomainServer(MessageTrigger* messageTrigger,
-                     ConnectionTrigger* connectionTrigger);
+    UnixDomainServer(void* target,
+                     void (*processConnection)(void*, AbstractSocket*));
     ~UnixDomainServer();
 
     bool initServer(const std::string socketFile);

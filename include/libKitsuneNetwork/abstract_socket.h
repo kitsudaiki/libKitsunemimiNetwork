@@ -47,11 +47,11 @@ public:
     AbstractSocket();
     ~AbstractSocket();
 
+    void setMessageCallback(void *target,
+                            uint64_t (*processMessage)(void*, MessageRingBuffer*, AbstractSocket*));
+
     virtual bool initClientSide() = 0;
     socketTypes getType();
-
-    // trigger-control
-    void setMessageTrigger(MessageTrigger* trigger);
 
     bool sendMessage(const std::string &message);
     bool sendMessage(const void *message,
@@ -65,9 +65,11 @@ protected:
     bool m_clientSide = false;
     int m_socket = 0;
     socketTypes m_type = UNDEFINED_TYPE;
-
     MessageRingBuffer m_recvBuffer;
-    MessageTrigger* m_trigger;
+
+    // callback-parameter
+    void* m_target = nullptr;
+    uint64_t (*m_processMessage)(void*, MessageRingBuffer*, AbstractSocket*);
 
     void run();
     bool waitForMessage();

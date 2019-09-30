@@ -20,5 +20,5 @@ int main()
 
     Kitsune::Network::TcpSocket_TcpServer_Test();
     Kitsune::Network::UnixDomainSocket_UnixDomainServer_Test();
-    Kitsune::Network::TlsTcpSocket_TcpServer_Test();
+    Kitsune::Network::TlsTcpSocket_TlsTcpServer_Test();
 }
