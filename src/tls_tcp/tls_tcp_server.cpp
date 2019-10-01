@@ -23,12 +23,14 @@ namespace Network
 TlsTcpServer::TlsTcpServer(const std::string certFile,
                            const std::string keyFile,
                            void* target,
-                           void (*processConnection)(void*, AbstractSocket*))
+                           void (*processConnection)(void*, AbstractSocket*),
+                           const std::string caFile)
     : TcpServer(target,
                 processConnection)
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
+    m_caFile = caFile;
 
     m_type = TLS_TCP_SERVER;
 }
@@ -68,7 +70,8 @@ TlsTcpServer::waitForIncomingConnection()
     // create new socket-object from file-descriptor
     TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
                                                m_certFile,
-                                               m_keyFile);
+                                               m_keyFile,
+                                               m_caFile);
     if(tcpSocket->initOpenssl() == false)
     {
         delete tcpSocket;

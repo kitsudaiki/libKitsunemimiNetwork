@@ -25,7 +25,8 @@ public:
     TlsTcpServer(const std::string certFile,
                  const std::string keyFile,
                  void* target,
-                 void (*processConnection)(void*, AbstractSocket*));
+                 void (*processConnection)(void*, AbstractSocket*),
+                 const std::string caFile="");
     ~TlsTcpServer();
 
     AbstractSocket* waitForIncomingConnection();
