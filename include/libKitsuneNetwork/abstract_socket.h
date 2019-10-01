@@ -31,7 +31,6 @@ namespace Kitsune
 {
 namespace Network
 {
-class MessageTrigger;
 class CleanupThread;
 
 class AbstractSocket : public Kitsune::Common::Thread

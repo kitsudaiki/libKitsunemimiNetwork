@@ -8,8 +8,6 @@
 
 #include <unix/unix_domain_socket.h>
 #include <unix/unix_domain_server.h>
-#include <message_trigger.h>
-#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;

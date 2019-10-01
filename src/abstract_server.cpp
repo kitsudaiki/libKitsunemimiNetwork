@@ -8,7 +8,6 @@
 
 #include "abstract_server.h"
 #include <abstract_socket.h>
-#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;

@@ -8,7 +8,6 @@
 
 #include <unix/unix_domain_socket.h>
 #include <iostream>
-#include <message_trigger.h>
 #include <cleanup_thread.h>
 #include <logger/logger.h>
 

@@ -9,7 +9,6 @@
 #include "abstract_socket.h"
 
 #include <cleanup_thread.h>
-#include <message_trigger.h>
 
 namespace Kitsune
 {
@@ -49,9 +48,10 @@ AbstractSocket::getType()
 }
 
 /**
- * add new trigger-object for incoming messages
+ * add new callback for incoming messages
  *
- * @param trigger new trigger-object
+ * @param target
+ * @param processMessage
  *
  * @return false, if object was nullptr, else true
  */
@@ -153,7 +153,7 @@ AbstractSocket::waitForMessage()
     // increase the
     m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint64_t>(recvSize));
 
-    // add all trigger to the new socket
+    // process message via callback-function
     const uint64_t readBytes = m_processMessage(m_target, &m_recvBuffer, this);
     m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes)
                                  % m_recvBuffer.totalBufferSize;

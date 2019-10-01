@@ -8,8 +8,6 @@
 
 #include <tls_tcp/tls_tcp_server.h>
 #include <tls_tcp/tls_tcp_socket.h>
-#include <message_trigger.h>
-#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;
