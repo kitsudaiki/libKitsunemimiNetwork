@@ -7,7 +7,6 @@
  */
 
 #include <tls_tcp/tls_tcp_socket.h>
-#include <message_trigger.h>
 #include <cleanup_thread.h>
 #include <logger/logger.h>
 

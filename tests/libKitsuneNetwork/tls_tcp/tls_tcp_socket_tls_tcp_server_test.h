@@ -13,18 +13,18 @@
 
 namespace Kitsune
 {
+namespace Common {
+class DataBuffer;
+}
 namespace Network
 {
-
 class TlsTcpServer;
 class TlsTcpSocket;
-class DummyBuffer;
-class IncomeTrigger;
 
-class TlsTcpSocket_TcpServer_Test : public Kitsune::Common::UnitTest
+class TlsTcpSocket_TlsTcpServer_Test : public Kitsune::Common::UnitTest
 {
 public:
-    TlsTcpSocket_TcpServer_Test();
+    TlsTcpSocket_TlsTcpServer_Test();
 
 private:
     void initTestCase();
@@ -36,8 +36,7 @@ private:
     TlsTcpServer* m_server = nullptr;
     TlsTcpSocket* m_socketClientSide = nullptr;
     TlsTcpSocket* m_socketServerSide = nullptr;
-    DummyBuffer* m_buffer = nullptr;
-    IncomeTrigger* m_incomeTrigger = nullptr;
+    Common::DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

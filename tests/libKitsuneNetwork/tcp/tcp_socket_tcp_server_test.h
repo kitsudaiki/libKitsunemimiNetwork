@@ -13,13 +13,15 @@
 
 namespace Kitsune
 {
+namespace Common {
+class DataBuffer;
+}
 namespace Network
 {
-
 class TcpServer;
 class TcpSocket;
-class DummyBuffer;
-class IncomeTrigger;
+class MessageRingBuffer;
+class AbstractSocket;
 
 class TcpSocket_TcpServer_Test : public Kitsune::Common::UnitTest
 {
@@ -36,8 +38,7 @@ private:
     TcpServer* m_server = nullptr;
     TcpSocket* m_socketClientSide = nullptr;
     TcpSocket* m_socketServerSide = nullptr;
-    DummyBuffer* m_buffer = nullptr;
-    IncomeTrigger* m_incomeTrigger = nullptr;
+    Common::DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

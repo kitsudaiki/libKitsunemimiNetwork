@@ -22,10 +22,10 @@ namespace Network
 class TlsTcpServer : public TcpServer
 {
 public:
-    TlsTcpServer(MessageTrigger* messageTrigger,
-                 ConnectionTrigger* connectionTrigger,
-                 const std::string certFile,
+    TlsTcpServer(const std::string certFile,
                  const std::string keyFile,
+                 void* target,
+                 void (*processConnection)(void*, AbstractSocket*),
                  const std::string caFile="");
     ~TlsTcpServer();
 

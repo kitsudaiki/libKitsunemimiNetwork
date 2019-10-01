@@ -29,8 +29,6 @@ HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcp_socket.h \
     ../include/libKitsuneNetwork/tls_tcp/tls_tcp_socket.h \
     ../include/libKitsuneNetwork/abstract_socket.h \
-    ../include/libKitsuneNetwork/message_trigger.h \
-    ../include/libKitsuneNetwork/connection_trigger.h \
     ../include/libKitsuneNetwork/unix/unix_domain_server.h \
     ../include/libKitsuneNetwork/unix/unix_domain_socket.h
 
@@ -42,7 +40,5 @@ SOURCES += \
     tcp/tcp_socket.cpp \
     tls_tcp/tls_tcp_socket.cpp \
     abstract_socket.cpp \
-    message_trigger.cpp \
-    connection_trigger.cpp \
     unix/unix_domain_socket.cpp \
     unix/unix_domain_server.cpp

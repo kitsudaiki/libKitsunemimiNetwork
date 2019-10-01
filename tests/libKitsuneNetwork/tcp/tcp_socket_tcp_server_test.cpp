@@ -11,13 +11,40 @@
 
 #include <tcp/tcp_server.h>
 #include <tcp/tcp_socket.h>
-#include <dummy_buffer.h>
-#include <income_trigger.h>
 
 namespace Kitsune
 {
 namespace Network
 {
+
+/**
+ * processMessageTcp-callback
+ */
+uint64_t processMessageTcp(void* target,
+                           MessageRingBuffer* recvBuffer,
+                           AbstractSocket*)
+{
+    Common::DataBuffer* targetBuffer = static_cast<Common::DataBuffer*>(target);
+    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
+
+    if(dataPointer == nullptr) {
+        return 0;
+    }
+
+    addDataToBuffer(targetBuffer, dataPointer, recvBuffer->readWriteDiff);
+    return recvBuffer->readWriteDiff;
+}
+
+/**
+ * processConnectionTcp-callback
+ */
+void processConnectionTcp(void* target,
+                          AbstractSocket* socket)
+{
+    socket->setMessageCallback(target, &processMessageTcp);
+    socket->start();
+}
+
 
 TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
     Kitsune::Common::UnitTest("TcpSocket_TcpServer_Test")
@@ -35,9 +62,8 @@ TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
 void
 TcpSocket_TcpServer_Test::initTestCase()
 {
-    m_buffer = new DummyBuffer();
-    m_incomeTrigger = new IncomeTrigger();
-    m_server = new TcpServer(m_buffer, m_incomeTrigger);
+    m_buffer = new Common::DataBuffer(1000);
+    m_server = new TcpServer(m_buffer, &processConnectionTcp);
 }
 
 /**
@@ -78,18 +104,17 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
     std::string sendMessage("poipoipoi");
     UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
-    UNITTEST(m_buffer->getNumberOfWrittenBytes(), 9);
+    UNITTEST(m_buffer->bufferPosition, 9);
 
 
-    if(m_buffer->getNumberOfWrittenBytes() == 9)
+    if(m_buffer->bufferPosition == 9)
     {
-        Common::DataBuffer* buffer = m_buffer->getBuffer();
-        uint64_t bufferSize = buffer->bufferPosition;
+        uint64_t bufferSize = m_buffer->bufferPosition;
         char recvMessage[bufferSize];
-        memcpy(recvMessage, buffer->data, bufferSize);
+        memcpy(recvMessage, m_buffer->data, bufferSize);
         UNITTEST(bufferSize, 9);
         UNITTEST(recvMessage[2], sendMessage.at(2));
-        m_buffer->clearBuffer();
+        resetBuffer(m_buffer, 1000);
     }
 }
 
@@ -106,8 +131,8 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
         m_socketClientSide->sendMessage(sendMessage);
     }
     usleep(10000);
-    uint64_t totalIncom = m_buffer->getNumberOfWrittenBytes();
-    Common::DataBuffer* dataBuffer = m_buffer->getBuffer();
+    uint64_t totalIncom = m_buffer->bufferPosition;
+    Common::DataBuffer* dataBuffer = m_buffer;
     UNITTEST(totalIncom, 300000);
     UNITTEST(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;

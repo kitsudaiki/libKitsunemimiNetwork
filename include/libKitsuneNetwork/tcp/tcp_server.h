@@ -15,11 +15,12 @@ namespace Kitsune
 {
 namespace Network
 {
+
 class TcpServer : public AbstractServer
 {
 public:
-    TcpServer(MessageTrigger* messageTrigger,
-              ConnectionTrigger* connectionTrigger);
+    TcpServer(void* target,
+              void (*processConnection)(void*, AbstractSocket*));
     ~TcpServer();
 
     bool initServer(const uint16_t port);

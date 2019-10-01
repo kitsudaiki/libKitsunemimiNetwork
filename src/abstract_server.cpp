@@ -8,7 +8,6 @@
 
 #include "abstract_server.h"
 #include <abstract_socket.h>
-#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;
@@ -21,11 +20,11 @@ namespace Network
 /**
  * @brief AbstractServer::AbstractServer
  */
-AbstractServer::AbstractServer(MessageTrigger* messageTrigger,
-                               ConnectionTrigger* connectionTrigger)
+AbstractServer::AbstractServer(void* target,
+                               void (*processConnection)(void*, AbstractSocket*))
 {
-    m_messageTrigger = messageTrigger;
-    m_connectionTrigger = connectionTrigger;
+    m_target = target;
+    m_processConnection = processConnection;
 }
 
 /**
