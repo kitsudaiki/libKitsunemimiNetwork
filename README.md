@@ -156,54 +156,6 @@ TcpSocket    UnixDomainSocket
 TlsTcpSocket
 ```
 
-Because each socket run in its own thread, this thread have to handle incoming messages. So the class to handle these messages have to inherite the class `MessageTrigger` (`message_trigger.h`). The `runTask` of this class is called whenever the socket get some data. This has to append to the server and sockets. See following examples:
-
-```cpp
-#include <message_trigger.h>
-#include <message_ring_buffer.h>
-#include <abstract_socket.h>
-
-class DemoBuffer : public MessageTrigger
-{
-public:
-    DemoBuffer() {};
-    ~DemoBuffer() {};
-
-	uint64_t
-	runTask(MessageRingBuffer &recvBuffer,
-	        AbstractSocket* socket)
-	{
-	    // example
-	    const uint8_t* dataPointer = getDataPointer(recvBuffer, NUMBER_OF_BYTES);
-	    // do something with the dataPointer
-	    // recvBuffer contains the data and socket is the socket, which had the message received
-	}
-
-};
-```
-
-Similar to the message-trigger, to handle messages by the thread of the socket, there is another class `ConnectionTrigger` (`connection_trigger.h`) to handle incoming connections by the thread of the server. This class has an abstract method called `handleConnection`, which is called for every socket, which is created by the server. See example:
-
-```cpp
-#include <connection_trigger.h>
-#include <abstract_socket.h>
-
-class IncomeTrigger : public ConnectionTrigger
-{
-public:
-    IncomeTrigger() {};
-    ~IncomeTrigger() {};
-
-    void
-    handleConnection(AbstractSocket* socket)
-    {
-        // this example starts the thread of every socket, which is created by the server. 
-        // this MUST be done, if the socket should be able the receive data.
-        socket->start()
-    }
-
-};
-```
 
 Example to create server and socket:
 (the `TlsTcpSocket` of the example can also replaced by the `UnixDomainSocket` or `TcpSocket`. Only the values of the conectructor are different)
@@ -211,36 +163,70 @@ Example to create server and socket:
 ```cpp
 #include <tls_tcp/tls_tcp_server.h>
 #include <tls_tcp/tls_tcp_socket.h>
+#include <buffering/data_buffer.h>
 
 TlsTcpServer* server = nullptr;
 TlsTcpSocket* socketClientSide = nullptr;
 TlsTcpSocket* socketServerSide = nullptr;
 
-// init the demo-buffer from above
-DemoBuffer* buffer = new DemoBuffer();
-IncomeTrigger* incomeTrigger = new IncomeTrigger();
+// callback for new incoming messages
+uint64_t processMessageTlsTcp(void* target,
+                              MessageRingBuffer* recvBuffer,
+                              AbstractSocket*)
+{
+	// here in this example the demo-buffer, which was registered in the server
+	// is converted back from the void-pointer into the original object-pointer
+    Common::DataBuffer* targetBuffer = static_cast<Common::DataBuffer*>(target);
 
-// create server on port 12345 and start his thread
+    // get data from the message-ring-buffer
+    const uint8_t* dataPointer = getDataPointer(*recvBuffer, numberOfBytesToRead);
+    // this checks, if numberOfBytesToRead is available in the buffer and if that
+    // is the case, it returns a pointer the the beginning of the buffer, else it
+    // returns a nullptr
+
+    // do what you want
+
+    // return the number of byte, you have processed from the ring-buffer
+    return numberOfProcessedBytes;
+}
+
+// callback for new incoming connections
+void processConnectionTlsTcp(void* target,
+                             AbstractSocket* socket)
+{
+	// set callback-method for incoming messages on the new socket
+	// you can also create a new buffer here and don't need to forward the void-pointer
+    socket->setMessageCallback(target, &processMessageTlsTcp);
+
+    // start the thread of the socket
+    socket->start();
+}
+
+// init the demo-buffer from above
+Common::DataBuffer* buffer = new Common::DataBuffer(1000);
+
+// create server
 server = new TlsTcpServer("/tmp/cert.pem",
                           "/tmp/key.pem",
-                          buffer,           // <- message-trigger, which is given to any, socket which is spawned by the server
-                          incomeTrigger);   // <- connection-trigger, which is called for every incoming connection
+                          buffer,                      // <- demo-buffer, which is forwarded to the 
+                                                       //        target void-pointer in the callback
+                          &processConnectionTlsTcp);   // <- callback-method for new incoming connections
                                     
-// let the server listen on port
+// let the server listen on port 12345
 server->initServer(12345);
 // start the thread, so it can create a socket for every incoming 
 //    connection in the background
 server->start();
 
 // create a client which works as client and connect to the server
-socketClientSide = new TlsTcpSocket("127.0.0.1",
-                                    12345,
+socketClientSide = new TlsTcpSocket("127.0.0.1",   // <- server-address
+                                    12345,         // <- server-port
                                     "/tmp/cert.pem",
                                     "/tmp/key.pem");
 // if the client should only send and never receive messages,
 //    it doesn't need the following two lines. These init the buffer
 //    for incoming messages and starting the thread of the client-socket
-socketClientSide->addNetworkTrigger(buffer);
+socketClientSide->addNetworkTrigger(buffer, &processMessageTlsTcp);
 socketClientSide->start();
 //..
 
