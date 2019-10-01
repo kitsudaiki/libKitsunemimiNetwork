@@ -8,7 +8,6 @@
 
 #include <unix/unix_domain_socket.h>
 #include <iostream>
-#include <message_trigger.h>
 #include <cleanup_thread.h>
 #include <logger/logger.h>
 
@@ -22,11 +21,10 @@ namespace Network
 /**
  * constructor for the socket-side of the unix-socket-connection
  *
- * @param address ipv4-adress of the server
- * @param port port where the server is listen
+ * @param socketFile
  */
 UnixDomainSocket::UnixDomainSocket(const std::string socketFile)
-    : AbstractSocket ()
+    : AbstractSocket()
 {
     m_socketFile = socketFile;
     m_clientSide = true;
@@ -58,7 +56,7 @@ UnixDomainSocket::initClientSide()
  * @param socketFd file-descriptor of the socket-socket
  */
 UnixDomainSocket::UnixDomainSocket(const int socketFd)
-    : AbstractSocket ()
+    : AbstractSocket()
 {
     m_socket = socketFd;
     m_clientSide = false;

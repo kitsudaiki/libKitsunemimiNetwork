@@ -8,8 +8,6 @@
 
 #include <tls_tcp/tls_tcp_server.h>
 #include <tls_tcp/tls_tcp_socket.h>
-#include <message_trigger.h>
-#include <connection_trigger.h>
 #include <logger/logger.h>
 
 using namespace Kitsune::Persistence;
@@ -24,9 +22,10 @@ namespace Network
  */
 TlsTcpServer::TlsTcpServer(const std::string certFile,
                            const std::string keyFile,
-                           MessageTrigger* messageTrigger,
-                           ConnectionTrigger* connectionTrigger)
-    : TcpServer(messageTrigger, connectionTrigger)
+                           void* target,
+                           void (*processConnection)(void*, AbstractSocket*))
+    : TcpServer(target,
+                processConnection)
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
@@ -79,8 +78,7 @@ TlsTcpServer::waitForIncomingConnection()
     LOG_info("Successfully accepted incoming connection on encrypted tcp-socket server with "
              "port : " + std::to_string(m_port));
 
-    tcpSocket->setMessageTrigger(m_messageTrigger);
-    m_connectionTrigger->handleConnection(tcpSocket);
+    m_processConnection(m_target, tcpSocket);
 
     // append new socket to the list
     mutexLock();

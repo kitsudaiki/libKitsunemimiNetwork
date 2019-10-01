@@ -26,8 +26,7 @@ namespace Kitsune
 {
 namespace Network
 {
-class MessageTrigger;
-class ConnectionTrigger;
+class MessageRingBuffer;
 class AbstractSocket;
 
 class AbstractServer : public Kitsune::Common::Thread
@@ -40,8 +39,8 @@ public:
         TLS_TCP_SERVER = 3
     };
 
-    AbstractServer(MessageTrigger* messageTrigger,
-                   ConnectionTrigger* connectionTrigger);
+    AbstractServer(void* target,
+                   void (*processConnection)(void*, AbstractSocket*));
     ~AbstractServer();
 
     serverTypes getType();
@@ -52,18 +51,15 @@ public:
     uint64_t getNumberOfSockets();
     AbstractSocket* getSocket(const uint32_t pos);
 
-    // trigger-control
-    void addAdditionalTrigger(MessageTrigger* trigger);
-    void clearTrigger();
-
 protected:
     void run();
 
     int m_serverSocket = 0;
     serverTypes m_type = UNDEFINED_TYPE;
 
-    MessageTrigger* m_messageTrigger;
-    ConnectionTrigger* m_connectionTrigger;
+    // callback-parameter
+    void* m_target = nullptr;
+    void (*m_processConnection)(void*, AbstractSocket*);
 
     std::vector<AbstractSocket*> m_sockets;
 };

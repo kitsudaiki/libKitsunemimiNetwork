@@ -7,7 +7,6 @@
  */
 
 #include <tcp/tcp_socket.h>
-#include <message_trigger.h>
 #include <cleanup_thread.h>
 #include <logger/logger.h>
 
@@ -26,7 +25,7 @@ namespace Network
  */
 TcpSocket::TcpSocket(const std::string address,
                      const uint16_t port)
-    : AbstractSocket ()
+    : AbstractSocket()
 {
     m_address = address;
     m_port = port;
@@ -59,7 +58,7 @@ TcpSocket::initClientSide()
  * @param socketFd file-descriptor of the socket-socket
  */
 TcpSocket::TcpSocket(const int socketFd)
-    : AbstractSocket ()
+    : AbstractSocket()
 {
     m_socket = socketFd;
     m_clientSide = false;
