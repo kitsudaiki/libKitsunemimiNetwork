@@ -206,11 +206,11 @@ void processConnectionTlsTcp(void* target,
 Common::DataBuffer* buffer = new Common::DataBuffer(1000);
 
 // create server
-server = new TlsTcpServer("/tmp/cert.pem",
-                          "/tmp/key.pem",
-                          buffer,                      // <- demo-buffer, which is forwarded to the 
+server = new TlsTcpServer(buffer,                      // <- demo-buffer, which is forwarded to the 
                                                        //        target void-pointer in the callback
-                          &processConnectionTlsTcp);   // <- callback-method for new incoming connections
+                          &processConnectionTlsTcp,
+                          "/tmp/cert.pem",
+                          "/tmp/key.pem");   // <- callback-method for new incoming connections
                                     
 // let the server listen on port 12345
 server->initServer(12345);

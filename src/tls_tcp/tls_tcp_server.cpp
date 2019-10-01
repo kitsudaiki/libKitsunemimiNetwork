@@ -20,10 +20,10 @@ namespace Network
 /**
  * constructor
  */
-TlsTcpServer::TlsTcpServer(const std::string certFile,
-                           const std::string keyFile,
-                           void* target,
+TlsTcpServer::TlsTcpServer(void* target,
                            void (*processConnection)(void*, AbstractSocket*),
+                           const std::string certFile,
+                           const std::string keyFile,
                            const std::string caFile)
     : TcpServer(target,
                 processConnection)

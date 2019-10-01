@@ -66,10 +66,10 @@ TlsTcpSocket_TlsTcpServer_Test::initTestCase()
     writeTestCerts();
 
     m_buffer = new Common::DataBuffer(1000);
-    m_server = new TlsTcpServer(std::string("/tmp/cert.pem"),
-                                std::string("/tmp/key.pem"),
-                                m_buffer,
-                                &processConnectionTlsTcp);
+    m_server = new TlsTcpServer(m_buffer,
+                                &processConnectionTlsTcp,
+                                std::string("/tmp/cert.pem"),
+                                std::string("/tmp/key.pem"));
 }
 
 /**

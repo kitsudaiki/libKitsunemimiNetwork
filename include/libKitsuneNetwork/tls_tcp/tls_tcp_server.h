@@ -22,18 +22,16 @@ namespace Network
 class TlsTcpServer : public TcpServer
 {
 public:
-    TlsTcpServer(const std::string certFile,
-                 const std::string keyFile,
-                 void* target,
+    TlsTcpServer(void* target,
                  void (*processConnection)(void*, AbstractSocket*),
+                 const std::string certFile,
+                 const std::string keyFile,
                  const std::string caFile="");
     ~TlsTcpServer();
 
     AbstractSocket* waitForIncomingConnection();
 
 private:
-    struct sockaddr_in m_server;
-
     std::string m_caFile = "";
     std::string m_certFile = "";
     std::string m_keyFile = "";
