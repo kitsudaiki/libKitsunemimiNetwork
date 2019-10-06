@@ -97,10 +97,13 @@ AbstractSocket::sendMessage(const void* message,
     }
 
     // send message
+    while(m_lock.test_and_set(std::memory_order_acquire))  // acquire lock
+                 ; // spin
     const ssize_t successfulSended = sendData(m_socket,
                                               message,
                                               numberOfBytes,
                                               MSG_NOSIGNAL);
+    m_lock.clear(std::memory_order_release);
 
     // check if the message was completely send
     if(successfulSended < -1

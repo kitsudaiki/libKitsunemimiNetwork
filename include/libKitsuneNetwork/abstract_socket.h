@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <errno.h>
+#include <atomic>
 
 #include <buffering/data_buffer.h>
 #include <message_ring_buffer.h>
@@ -65,6 +66,7 @@ protected:
     int m_socket = 0;
     socketTypes m_type = UNDEFINED_TYPE;
     MessageRingBuffer m_recvBuffer;
+    std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
 
     // callback-parameter
     void* m_target = nullptr;
