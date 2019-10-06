@@ -14,6 +14,7 @@
 - renamed UnixSocket to UnixDomainSocket and UnixServer to UnixDomainServer
 - reduced the list of triggers in the sockets to only one trigger-object per socket
 - replaced trigger-classes with callbacks
+- made sendMessage-method in sockets thread-safe
 
 
 ## [0.3.0] - 2019-09-09
