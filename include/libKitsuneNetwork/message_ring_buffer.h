@@ -45,7 +45,7 @@ inline const uint8_t*
 getDataPointer(MessageRingBuffer &recvBuffer,
                const uint64_t size)
 {
-    if(recvBuffer.readWriteDiff > size) {
+    if(recvBuffer.readWriteDiff < size) {
         return nullptr;
     }
 
