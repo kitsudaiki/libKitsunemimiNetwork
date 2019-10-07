@@ -17,7 +17,7 @@ mkdir -p $RESULT_DIR
 # clone libKitsuneCommon
 git clone  git@gitlab.com:tobiasanker/libKitsuneCommon.git "$PARENT_DIR/libKitsuneCommon"
 cd "$PARENT_DIR/libKitsuneCommon"
-git checkout 0.6.0
+git checkout v0.6.0
 
 # create build directory for libKitsuneCommon and go into this directory
 LIB_KITSUNE_COMMON_DIR="$BUILD_DIR/libKitsuneCommon"
@@ -37,7 +37,7 @@ cp -r "$PARENT_DIR/libKitsuneCommon/include" "$RESULT_DIR/"
 # clone libKitsunePersistence
 git clone  git@gitlab.com:tobiasanker/libKitsunePersistence.git "$PARENT_DIR/libKitsunePersistence"
 cd "$PARENT_DIR/libKitsunePersistence"
-git checkout 0.5.0
+git checkout v0.5.0
 
 # create build directory for libKitsunePersistence and go into this directory
 LIB_KITSUNE_PERSISTENCE_DIR="$BUILD_DIR/libKitsunePersistence"
