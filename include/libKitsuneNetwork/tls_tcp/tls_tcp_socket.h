@@ -16,7 +16,7 @@
 #include <openssl/bio.h>
 #include <openssl/err.h>
 
-#include <tcp/tcp_socket.h>
+#include <libKitsuneNetwork/tcp/tcp_socket.h>
 
 namespace Kitsune
 {

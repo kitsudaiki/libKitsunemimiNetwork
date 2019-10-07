@@ -7,10 +7,10 @@
  */
 
 #include "tls_tcp_socket_tls_tcp_server_test.h"
-#include <buffering/data_buffer.h>
+#include <libKitsuneCommon/data_buffer.h>
 
-#include <tls_tcp/tls_tcp_server.h>
-#include <tls_tcp/tls_tcp_socket.h>
+#include <libKitsuneNetwork/tls_tcp/tls_tcp_server.h>
+#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket.h>
 
 #include <cert_init.h>
 

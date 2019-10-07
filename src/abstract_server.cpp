@@ -6,9 +6,9 @@
  *  @copyright MIT License
  */
 
-#include "abstract_server.h"
-#include <abstract_socket.h>
-#include <logger/logger.h>
+#include <libKitsuneNetwork/abstract_server.h>
+#include <libKitsuneNetwork/abstract_socket.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 using namespace Kitsune::Persistence;
 
@@ -112,7 +112,7 @@ AbstractServer::closeServer()
     m_sockets.clear();
     mutexUnlock();
 
-    LOG_info("Successfully closed server");
+    KS::LOG_info("Successfully closed server");
 
     return true;
 }

@@ -17,7 +17,7 @@
 #include <cinttypes>
 #include <unistd.h>
 
-#include <tcp/tcp_socket.h>
+#include <libKitsuneNetwork/tcp/tcp_socket.h>
 #include <iostream>
 
 namespace Kitsune

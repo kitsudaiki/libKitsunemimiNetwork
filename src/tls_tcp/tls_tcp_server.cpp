@@ -6,11 +6,9 @@
  *  @copyright MIT License
  */
 
-#include <tls_tcp/tls_tcp_server.h>
-#include <tls_tcp/tls_tcp_socket.h>
-#include <logger/logger.h>
-
-using namespace Kitsune::Persistence;
+#include <libKitsuneNetwork/tls_tcp/tls_tcp_server.h>
+#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 namespace Kitsune
 {
@@ -62,8 +60,8 @@ TlsTcpServer::waitForIncomingConnection()
 
     if(fd < 0)
     {
-        LOG_error("Failed accept incoming connection on encrypted tcp-server with "
-                  "port: " + std::to_string(m_port));
+        KS::LOG_error("Failed accept incoming connection on encrypted tcp-server with "
+                      "port: " + std::to_string(m_port));
         return nullptr;
     }
 
@@ -78,8 +76,8 @@ TlsTcpServer::waitForIncomingConnection()
         return nullptr;
     }
 
-    LOG_info("Successfully accepted incoming connection on encrypted tcp-socket server with "
-             "port : " + std::to_string(m_port));
+    KS::LOG_info("Successfully accepted incoming connection on encrypted tcp-socket server with "
+                 "port : " + std::to_string(m_port));
 
     m_processConnection(m_target, tcpSocket);
 

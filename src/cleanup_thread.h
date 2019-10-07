@@ -11,7 +11,7 @@
 
 #include <queue>
 
-#include <threading/thread.h>
+#include <libKitsuneCommon/thread.h>
 
 namespace Kitsune
 {

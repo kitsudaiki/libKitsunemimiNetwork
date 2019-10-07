@@ -20,7 +20,7 @@
 #include <string.h>
 #include <vector>
 
-#include <threading/thread.h>
+#include <libKitsuneCommon/thread.h>
 
 namespace Kitsune
 {

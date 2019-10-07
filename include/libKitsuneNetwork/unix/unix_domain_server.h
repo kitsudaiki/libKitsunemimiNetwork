@@ -9,7 +9,8 @@
 #ifndef UNIX_DOMAIN_SERVER_H
 #define UNIX_DOMAIN_SERVER_H
 
-#include <abstract_server.h>
+#include <string>
+#include <libKitsuneNetwork/abstract_server.h>
 
 namespace Kitsune
 {

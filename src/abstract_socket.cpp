@@ -6,7 +6,7 @@
  *  @copyright MIT License
  */
 
-#include "abstract_socket.h"
+#include <libKitsuneNetwork/abstract_socket.h>
 
 #include <cleanup_thread.h>
 

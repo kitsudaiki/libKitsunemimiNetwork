@@ -9,7 +9,7 @@
 #ifndef TLSTCPSOCKET_TLSTCPSERVER_TEST_H
 #define TLSTCPSOCKET_TLSTCPSERVER_TEST_H
 
-#include <testing/unit_test.h>
+#include <libKitsuneCommon/unit_test.h>
 
 namespace Kitsune
 {
@@ -21,7 +21,8 @@ namespace Network
 class TlsTcpServer;
 class TlsTcpSocket;
 
-class TlsTcpSocket_TlsTcpServer_Test : public Kitsune::Common::UnitTest
+class TlsTcpSocket_TlsTcpServer_Test
+        : public Kitsune::Common::UnitTest
 {
 public:
     TlsTcpSocket_TlsTcpServer_Test();

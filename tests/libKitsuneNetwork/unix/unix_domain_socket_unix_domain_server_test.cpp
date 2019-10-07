@@ -7,10 +7,10 @@
  */
 
 #include "unix_domain_socket_unix_domain_server_test.h"
-#include <buffering/data_buffer.h>
+#include <libKitsuneCommon/data_buffer.h>
 
-#include <unix/unix_domain_socket.h>
-#include <unix/unix_domain_server.h>
+#include <libKitsuneNetwork/unix/unix_domain_socket.h>
+#include <libKitsuneNetwork/unix/unix_domain_server.h>
 
 namespace Kitsune
 {

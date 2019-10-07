@@ -9,7 +9,7 @@
 #ifndef TCPSOCKET_TCPSERVER_TEST_H
 #define TCPSOCKET_TCPSERVER_TEST_H
 
-#include <testing/unit_test.h>
+#include <libKitsuneCommon/unit_test.h>
 
 namespace Kitsune
 {
@@ -23,7 +23,8 @@ class TcpSocket;
 class MessageRingBuffer;
 class AbstractSocket;
 
-class TcpSocket_TcpServer_Test : public Kitsune::Common::UnitTest
+class TcpSocket_TcpServer_Test
+        : public Kitsune::Common::UnitTest
 {
 public:
     TcpSocket_TcpServer_Test();

@@ -7,10 +7,10 @@
  */
 
 #include "tcp_socket_tcp_server_test.h"
-#include <buffering/data_buffer.h>
+#include <libKitsuneCommon/data_buffer.h>
 
-#include <tcp/tcp_server.h>
-#include <tcp/tcp_socket.h>
+#include <libKitsuneNetwork/tcp/tcp_server.h>
+#include <libKitsuneNetwork/tcp/tcp_socket.h>
 
 namespace Kitsune
 {

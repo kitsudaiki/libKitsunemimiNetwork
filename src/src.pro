@@ -8,17 +8,17 @@ VERSION = 0.3.0
 LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
-INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
+INCLUDEPATH += ../../libKitsuneCommon/include
 
 LIBS += -L../../libKitsunePersistence/src -lKitsunePersistence
 LIBS += -L../../libKitsunePersistence/src/debug -lKitsunePersistence
 LIBS += -L../../libKitsunePersistence/src/release -lKitsunePersistence
-INCLUDEPATH += ../../libKitsunePersistence/include/libKitsunePersistence
+INCLUDEPATH += ../../libKitsunePersistence/include
 
 LIBS +=  -lssl -lcrypt
 
 INCLUDEPATH += $$PWD \
-               $$PWD/../include/libKitsuneNetwork
+               $$PWD/../include
 
 HEADERS += \
     ../include/libKitsuneNetwork/tcp/tcp_server.h \

@@ -6,11 +6,9 @@
  *  @copyright MIT License
  */
 
-#include <tcp/tcp_server.h>
-#include <tcp/tcp_socket.h>
-#include <logger/logger.h>
-
-using namespace Kitsune::Persistence;
+#include <libKitsuneNetwork/tcp/tcp_server.h>
+#include <libKitsuneNetwork/tcp/tcp_socket.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 namespace Kitsune
 {
@@ -52,7 +50,7 @@ TcpServer::initServer(const uint16_t port)
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(m_serverSocket < 0)
     {
-        LOG_error("Failed to create a tcp-socket");
+        KS::LOG_error("Failed to create a tcp-socket");
         return false;
     }
 
@@ -60,7 +58,7 @@ TcpServer::initServer(const uint16_t port)
     int enable = 1;
     if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)))
     {
-        LOG_error("Failed set socket-options for tcp-server on port: " + std::to_string(m_port));
+        KS::LOG_error("Failed set socket-options for tcp-server on port: " + std::to_string(m_port));
         return false;
     }
 
@@ -73,18 +71,18 @@ TcpServer::initServer(const uint16_t port)
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
-        LOG_error("Failed to bind tcp-socket to port: " + std::to_string(m_port));
+        KS::LOG_error("Failed to bind tcp-socket to port: " + std::to_string(m_port));
         return false;
     }
 
     // start listening for incoming connections
     if(listen(m_serverSocket, 5) == -1)
     {
-        LOG_error("Failed listen on tcp-socket on port: " + std::to_string(m_port));
+        KS::LOG_error("Failed listen on tcp-socket on port: " + std::to_string(m_port));
         return false;
     }
 
-    LOG_info("Successfully initialized tcp-socket server on port: " + std::to_string(m_port));
+    KS::LOG_info("Successfully initialized tcp-socket server on port: " + std::to_string(m_port));
 
     return true;
 }
@@ -107,13 +105,13 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
 
     if(fd < 0)
     {
-        LOG_error("Failed accept incoming connection on tcp-server with "
-                  "port: " + std::to_string(m_port));
+        KS::LOG_error("Failed accept incoming connection on tcp-server with "
+                      "port: " + std::to_string(m_port));
         return nullptr;
     }
 
-    LOG_info("Successfully accepted incoming connection on tcp-socket server with "
-             "port : " + std::to_string(m_port));
+    KS::LOG_info("Successfully accepted incoming connection on tcp-socket server with "
+                 "port : " + std::to_string(m_port));
 
     // create new socket-object from file-descriptor
     TcpSocket* tcpSocket = new TcpSocket(fd);
