@@ -13,7 +13,7 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
-#include <abstract_socket.h>
+#include <libKitsuneNetwork/abstract_socket.h>
 
 namespace Kitsune
 {

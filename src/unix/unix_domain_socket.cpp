@@ -6,12 +6,10 @@
  *  @copyright MIT License
  */
 
-#include <unix/unix_domain_socket.h>
+#include <libKitsuneNetwork/unix/unix_domain_socket.h>
 #include <iostream>
 #include <cleanup_thread.h>
-#include <logger/logger.h>
-
-using namespace Kitsune::Persistence;
+#include <libKitsunePersistence/logger/logger.h>
 
 namespace Kitsune
 {
@@ -44,7 +42,7 @@ UnixDomainSocket::initClientSide()
         return false;
     }
 
-    LOG_info("Successfully initialized unix-socket client to targe: " + m_socketFile);
+    KS::LOG_info("Successfully initialized unix-socket client to targe: " + m_socketFile);
 
     return true;
 }
@@ -77,7 +75,7 @@ UnixDomainSocket::initSocket()
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        LOG_error("Failed to create a unix-socket");
+        KS::LOG_error("Failed to create a unix-socket");
         return false;
     }
 
@@ -88,7 +86,7 @@ UnixDomainSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        LOG_error("Failed to connect unix-socket to server with addresse: " + m_socketFile);
+        KS::LOG_error("Failed to connect unix-socket to server with addresse: " + m_socketFile);
         return false;
     }
 

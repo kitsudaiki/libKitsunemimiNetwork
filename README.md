@@ -114,15 +114,15 @@ After running the build-script:
     │   └── libKitsuneNetwork
     │       └── ...
     │
-    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.5.1
-    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.5.1
-    ├── libKitsuneCommon.so.0.5 -> libKitsuneCommon.so.0.5.1
-    ├── libKitsuneCommon.so.0.5.1
+    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.6.0
+    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.6.0
+    ├── libKitsuneCommon.so.0.6 -> libKitsuneCommon.so.0.6.0
+    ├── libKitsuneCommon.so.0.6.0
     │
-    ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.3.0
-    ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.3.0
-    ├── libKitsunePersistence.so.0.3 -> libKitsunePersistence.so.0.3.0
-    ├── libKitsunePersistence.so.0.3.0
+    ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.5.0
+    ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.5.0
+    ├── libKitsunePersistence.so.0.5 -> libKitsunePersistence.so.0.5.0
+    ├── libKitsunePersistence.so.0.5.0
     │
     ├── libKitsuneNetwork.so -> libKitsuneNetwork.so.0.2.0
     ├── libKitsuneNetwork.so.0 -> libKitsuneNetwork.so.0.2.0

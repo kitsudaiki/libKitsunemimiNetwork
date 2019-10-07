@@ -9,7 +9,7 @@
 #ifndef UNIX_DOMAIN_SOCKET_H
 #define UNIX_DOMAIN_SOCKET_H
 
-#include <abstract_socket.h>
+#include <libKitsuneNetwork/abstract_socket.h>
 
 namespace Kitsune
 {

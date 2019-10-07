@@ -9,7 +9,7 @@
 #ifndef TCP_SERVER_H
 #define TCP_SERVER_H
 
-#include <abstract_server.h>
+#include <libKitsuneNetwork/abstract_server.h>
 
 namespace Kitsune
 {

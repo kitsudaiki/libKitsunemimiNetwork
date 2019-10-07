@@ -9,10 +9,11 @@
 #ifndef TLS_TCP_SERVER_H
 #define TLS_TCP_SERVER_H
 
+#include <string>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#include <tcp/tcp_server.h>
+#include <libKitsuneNetwork/tcp/tcp_server.h>
 
 namespace Kitsune
 {

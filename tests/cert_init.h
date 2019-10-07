@@ -2,7 +2,7 @@
 #define CERT_INIT_H
 
 #include <iostream>
-#include <files/text_file.h>
+#include <libKitsunePersistence/files/text_file.h>
 
 namespace Kitsune
 {

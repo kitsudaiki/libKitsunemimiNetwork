@@ -6,11 +6,9 @@
  *  @copyright MIT License
  */
 
-#include <unix/unix_domain_socket.h>
-#include <unix/unix_domain_server.h>
-#include <logger/logger.h>
-
-using namespace Kitsune::Persistence;
+#include <libKitsuneNetwork/unix/unix_domain_socket.h>
+#include <libKitsuneNetwork/unix/unix_domain_server.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 namespace Kitsune
 {
@@ -52,7 +50,7 @@ UnixDomainServer::initServer(const std::string socketFile)
     m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if(m_serverSocket < 0)
     {
-        LOG_error("Failed to create a unix-socket");
+        KS::LOG_error("Failed to create a unix-socket");
         return false;
     }
 
@@ -63,18 +61,18 @@ UnixDomainServer::initServer(const std::string socketFile)
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
-        LOG_error("Failed to bind unix-socket to addresse: " + m_socketFile);
+        KS::LOG_error("Failed to bind unix-socket to addresse: " + m_socketFile);
         return false;
     }
 
     // start listening for incoming connections
     if(listen(m_serverSocket, 5) == -1)
     {
-        LOG_error("Failed listen on unix-socket on addresse: " + m_socketFile);
+        KS::LOG_error("Failed listen on unix-socket on addresse: " + m_socketFile);
         return false;
     }
 
-    LOG_info("Successfully initialized unix-socket server on targe: " + m_socketFile);
+    KS::LOG_info("Successfully initialized unix-socket server on targe: " + m_socketFile);
 
     return true;
 }
@@ -98,12 +96,12 @@ UnixDomainServer::waitForIncomingConnection()
 
     if(fd < 0)
     {
-        LOG_error("Failed accept incoming connection on unix-server with address: " + m_socketFile);
+        KS::LOG_error("Failed accept incoming connection on unix-server with address: " + m_socketFile);
         return nullptr;
     }
 
-    LOG_info("Successfully accepted incoming connection on unix-socket server with "
-             "address : " + m_socketFile);
+    KS::LOG_info("Successfully accepted incoming connection on unix-socket server with "
+                 "address : " + m_socketFile);
 
     // create new socket-object from file-descriptor
     UnixDomainSocket* unixSocket = new UnixDomainSocket(fd);

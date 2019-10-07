@@ -6,11 +6,9 @@
  *  @copyright MIT License
  */
 
-#include <tcp/tcp_socket.h>
+#include <libKitsuneNetwork/tcp/tcp_socket.h>
 #include <cleanup_thread.h>
-#include <logger/logger.h>
-
-using namespace Kitsune::Persistence;
+#include <libKitsunePersistence/logger/logger.h>
 
 namespace Kitsune
 {
@@ -46,7 +44,7 @@ TcpSocket::initClientSide()
         return false;
     }
 
-    LOG_info("Successfully initialized tcp-socket client to targe: " + m_address);
+    KS::LOG_info("Successfully initialized tcp-socket client to targe: " + m_address);
 
     return true;
 }
@@ -81,7 +79,7 @@ TcpSocket::initSocket()
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        LOG_error("Failed to create a tcp-socket");
+        KS::LOG_error("Failed to create a tcp-socket");
         return false;
     }
 
@@ -89,7 +87,7 @@ TcpSocket::initSocket()
     int optval = 1;
     if(setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
     {
-        LOG_error("Failed to initialize tcp-socket for addresse: " + m_address);
+        KS::LOG_error("Failed to initialize tcp-socket for addresse: " + m_address);
         return false;
     }
 
@@ -104,7 +102,7 @@ TcpSocket::initSocket()
         hostInfo = gethostbyname(m_address.c_str());
         if(hostInfo == nullptr)
         {
-            LOG_error("Failed to get host by address: " + m_address);
+            KS::LOG_error("Failed to get host by address: " + m_address);
             return false;
         }
         memcpy(reinterpret_cast<char*>(&address.sin_addr),
@@ -119,7 +117,7 @@ TcpSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        LOG_error("Failed to connect tcp-socket to server with addresse: " + m_address);
+        KS::LOG_error("Failed to connect tcp-socket to server with addresse: " + m_address);
         return false;
     }
 

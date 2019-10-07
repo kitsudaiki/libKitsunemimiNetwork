@@ -10,7 +10,7 @@
 #include <libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.h>
 #include <libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h>
 
-#include <logger/logger.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 using Kitsune::Persistence::initLogger;
 

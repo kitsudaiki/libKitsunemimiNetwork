@@ -24,9 +24,9 @@
 #include <errno.h>
 #include <atomic>
 
-#include <buffering/data_buffer.h>
-#include <message_ring_buffer.h>
-#include <threading/thread.h>
+#include <libKitsuneCommon/data_buffer.h>
+#include <libKitsuneNetwork/message_ring_buffer.h>
+#include <libKitsuneCommon/thread.h>
 
 namespace Kitsune
 {
