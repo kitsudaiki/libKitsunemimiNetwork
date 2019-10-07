@@ -42,7 +42,7 @@ UnixDomainSocket::initClientSide()
         return false;
     }
 
-    KS::LOG_info("Successfully initialized unix-socket client to targe: " + m_socketFile);
+    LOG_INFO("Successfully initialized unix-socket client to targe: " + m_socketFile);
 
     return true;
 }
@@ -75,7 +75,7 @@ UnixDomainSocket::initSocket()
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        KS::LOG_error("Failed to create a unix-socket");
+        LOG_ERROR("Failed to create a unix-socket");
         return false;
     }
 
@@ -86,7 +86,7 @@ UnixDomainSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        KS::LOG_error("Failed to connect unix-socket to server with addresse: " + m_socketFile);
+        LOG_ERROR("Failed to connect unix-socket to server with addresse: " + m_socketFile);
         return false;
     }
 

@@ -112,7 +112,7 @@ AbstractServer::closeServer()
     m_sockets.clear();
     mutexUnlock();
 
-    KS::LOG_info("Successfully closed server");
+    LOG_INFO("Successfully closed server");
 
     return true;
 }

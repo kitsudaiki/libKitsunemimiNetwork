@@ -44,7 +44,7 @@ TcpSocket::initClientSide()
         return false;
     }
 
-    KS::LOG_info("Successfully initialized tcp-socket client to targe: " + m_address);
+    LOG_INFO("Successfully initialized tcp-socket client to targe: " + m_address);
 
     return true;
 }
@@ -79,7 +79,7 @@ TcpSocket::initSocket()
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        KS::LOG_error("Failed to create a tcp-socket");
+        LOG_ERROR("Failed to create a tcp-socket");
         return false;
     }
 
@@ -87,7 +87,7 @@ TcpSocket::initSocket()
     int optval = 1;
     if(setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
     {
-        KS::LOG_error("Failed to initialize tcp-socket for addresse: " + m_address);
+        LOG_ERROR("Failed to initialize tcp-socket for addresse: " + m_address);
         return false;
     }
 
@@ -102,7 +102,7 @@ TcpSocket::initSocket()
         hostInfo = gethostbyname(m_address.c_str());
         if(hostInfo == nullptr)
         {
-            KS::LOG_error("Failed to get host by address: " + m_address);
+            LOG_ERROR("Failed to get host by address: " + m_address);
             return false;
         }
         memcpy(reinterpret_cast<char*>(&address.sin_addr),
@@ -117,7 +117,7 @@ TcpSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        KS::LOG_error("Failed to connect tcp-socket to server with addresse: " + m_address);
+        LOG_ERROR("Failed to connect tcp-socket to server with addresse: " + m_address);
         return false;
     }
 

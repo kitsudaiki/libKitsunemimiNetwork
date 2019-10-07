@@ -50,7 +50,7 @@ UnixDomainServer::initServer(const std::string socketFile)
     m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if(m_serverSocket < 0)
     {
-        KS::LOG_error("Failed to create a unix-socket");
+        LOG_ERROR("Failed to create a unix-socket");
         return false;
     }
 
@@ -61,18 +61,18 @@ UnixDomainServer::initServer(const std::string socketFile)
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
-        KS::LOG_error("Failed to bind unix-socket to addresse: " + m_socketFile);
+        LOG_ERROR("Failed to bind unix-socket to addresse: " + m_socketFile);
         return false;
     }
 
     // start listening for incoming connections
     if(listen(m_serverSocket, 5) == -1)
     {
-        KS::LOG_error("Failed listen on unix-socket on addresse: " + m_socketFile);
+        LOG_ERROR("Failed listen on unix-socket on addresse: " + m_socketFile);
         return false;
     }
 
-    KS::LOG_info("Successfully initialized unix-socket server on targe: " + m_socketFile);
+    LOG_INFO("Successfully initialized unix-socket server on targe: " + m_socketFile);
 
     return true;
 }
@@ -96,11 +96,11 @@ UnixDomainServer::waitForIncomingConnection()
 
     if(fd < 0)
     {
-        KS::LOG_error("Failed accept incoming connection on unix-server with address: " + m_socketFile);
+        LOG_ERROR("Failed accept incoming connection on unix-server with address: " + m_socketFile);
         return nullptr;
     }
 
-    KS::LOG_info("Successfully accepted incoming connection on unix-socket server with "
+    LOG_INFO("Successfully accepted incoming connection on unix-socket server with "
                  "address : " + m_socketFile);
 
     // create new socket-object from file-descriptor

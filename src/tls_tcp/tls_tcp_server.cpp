@@ -60,7 +60,7 @@ TlsTcpServer::waitForIncomingConnection()
 
     if(fd < 0)
     {
-        KS::LOG_error("Failed accept incoming connection on encrypted tcp-server with "
+        LOG_ERROR("Failed accept incoming connection on encrypted tcp-server with "
                       "port: " + std::to_string(m_port));
         return nullptr;
     }
@@ -76,7 +76,7 @@ TlsTcpServer::waitForIncomingConnection()
         return nullptr;
     }
 
-    KS::LOG_info("Successfully accepted incoming connection on encrypted tcp-socket server with "
+    LOG_INFO("Successfully accepted incoming connection on encrypted tcp-socket server with "
                  "port : " + std::to_string(m_port));
 
     m_processConnection(m_target, tcpSocket);

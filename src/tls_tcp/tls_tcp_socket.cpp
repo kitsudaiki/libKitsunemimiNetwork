@@ -84,7 +84,7 @@ TlsTcpSocket::initClientSide()
         return false;
     }
 
-    KS::LOG_info("Successfully initialized encrypted tcp-socket client to targe: " + m_address);
+    LOG_INFO("Successfully initialized encrypted tcp-socket client to targe: " + m_address);
 
     return true;
 }
@@ -112,7 +112,7 @@ TlsTcpSocket::initOpenssl()
     m_ctx = SSL_CTX_new(method);
     if(!m_ctx)
     {
-        KS::LOG_error("Failed to create ssl-context object");
+        LOG_ERROR("Failed to create ssl-context object");
         return false;
     }
     SSL_CTX_set_options(m_ctx, SSL_OP_SINGLE_DH_USE);
@@ -121,7 +121,7 @@ TlsTcpSocket::initOpenssl()
     int result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        KS::LOG_error("Failed to load certificate file for ssl-encrytion. File path: " + m_certFile);
+        LOG_ERROR("Failed to load certificate file for ssl-encrytion. File path: " + m_certFile);
         return false;
     }
 
@@ -129,7 +129,7 @@ TlsTcpSocket::initOpenssl()
     result = SSL_CTX_use_PrivateKey_file(m_ctx, m_keyFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        KS::LOG_error("Failed to load key file for ssl-encrytion. File path: " + m_keyFile);
+        LOG_ERROR("Failed to load key file for ssl-encrytion. File path: " + m_keyFile);
         return false;
     }
 
@@ -139,7 +139,7 @@ TlsTcpSocket::initOpenssl()
         result = SSL_CTX_load_verify_locations(m_ctx, m_caFile.c_str(), nullptr);
         if(result <= 0)
         {
-            KS::LOG_error("Failed to load ca file for ssl-encrytion. File path: " + m_caFile);
+            LOG_ERROR("Failed to load ca file for ssl-encrytion. File path: " + m_caFile);
             return false;
         }
 
@@ -151,7 +151,7 @@ TlsTcpSocket::initOpenssl()
     m_ssl = SSL_new(m_ctx);
     if (m_ssl == nullptr)
     {
-        KS::LOG_error("Failed to ini ssl");
+        LOG_ERROR("Failed to ini ssl");
         return false;
     }
     SSL_set_fd(m_ssl, m_socket);
@@ -174,7 +174,7 @@ TlsTcpSocket::initOpenssl()
         result = SSL_connect(m_ssl);
         if(result <= 0)
         {
-            KS::LOG_error("Failed to perform ssl-handshake (client-side)");
+            LOG_ERROR("Failed to perform ssl-handshake (client-side)");
             return false;
         }
     }
@@ -184,7 +184,7 @@ TlsTcpSocket::initOpenssl()
         int result = SSL_accept(m_ssl);
         if(result <= 0)
         {
-            KS::LOG_error("Failed to perform ssl-handshake (server-side)");
+            LOG_ERROR("Failed to perform ssl-handshake (server-side)");
             return false;
         }
     }
@@ -229,7 +229,7 @@ TlsTcpSocket::cleanupOpenssl()
     if(m_ssl == nullptr
             || m_ctx == nullptr)
     {
-        KS::LOG_error("Failed to perform ssl-handshake (server-side)");
+        LOG_ERROR("Failed to perform ssl-handshake (server-side)");
         return false;
     }
 
