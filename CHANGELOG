@@ -1,6 +1,8 @@
 # Changelog
 
-[Unreleased]
+
+## [0.3.0] - 2019-10-07
+
 ### Added
 - log-output base on the logger of libKitsundePersistence
 - ConnectionTrigger to handle incoming connections on server-side
@@ -15,6 +17,8 @@
 - reduced the list of triggers in the sockets to only one trigger-object per socket
 - replaced trigger-classes with callbacks
 - made sendMessage-method in sockets thread-safe
+- update include-style
+- update to use litKitsuneCommon 0.6.0 and libKitsunePersistence 0.5.0
 
 
 ## [0.3.0] - 2019-09-09
