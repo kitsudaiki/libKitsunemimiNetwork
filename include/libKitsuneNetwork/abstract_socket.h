@@ -62,6 +62,7 @@ public:
     static Kitsune::Network::CleanupThread* m_cleanup;
 
 protected:
+    bool m_isConnected = false;
     bool m_clientSide = false;
     int m_socket = 0;
     socketTypes m_type = UNDEFINED_TYPE;

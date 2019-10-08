@@ -80,6 +80,7 @@ TcpSocket_TcpServer_Test::checkConnectionInit()
     // init client
     m_socketClientSide = new TcpSocket("127.0.0.1", 12345);
     UNITTEST(m_socketClientSide->initClientSide(), true);
+    UNITTEST(m_socketClientSide->initClientSide(), true);
     UNITTEST(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
     usleep(10000);

@@ -37,11 +37,16 @@ UnixDomainSocket::UnixDomainSocket(const std::string socketFile)
 bool
 UnixDomainSocket::initClientSide()
 {
+    if(m_isConnected) {
+        return true;
+    }
+
     bool result = initSocket();
     if(result == false) {
         return false;
     }
 
+    m_isConnected = true;
     LOG_INFO("Successfully initialized unix-socket client to targe: " + m_socketFile);
 
     return true;
@@ -59,6 +64,7 @@ UnixDomainSocket::UnixDomainSocket(const int socketFd)
     m_socket = socketFd;
     m_clientSide = false;
     m_type = UNIX_SOCKET;
+    m_isConnected = true;
 }
 
 /**
@@ -91,6 +97,7 @@ UnixDomainSocket::initSocket()
     }
 
     m_socketAddr = address;
+    m_isConnected = true;
 
     return true;
 }

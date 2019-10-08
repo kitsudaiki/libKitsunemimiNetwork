@@ -90,6 +90,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
                                           "/tmp/cert.pem",
                                           "/tmp/key.pem");
     UNITTEST(m_socketClientSide->initClientSide(), true);
+    UNITTEST(m_socketClientSide->initClientSide(), true);
     UNITTEST(m_socketClientSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
 
     usleep(10000);
