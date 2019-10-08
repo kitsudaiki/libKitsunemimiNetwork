@@ -56,6 +56,7 @@ TlsTcpSocket::TlsTcpSocket(const int socketFd,
     m_keyFile = keyFile;
     m_caFile = caFile;
     m_type = TLS_TCP_SOCKET;
+    m_isConnected = true;
 }
 
 /**
@@ -74,6 +75,10 @@ TlsTcpSocket::~TlsTcpSocket()
 bool
 TlsTcpSocket::initClientSide()
 {
+    if(m_isConnected) {
+        return true;
+    }
+
     bool result = initSocket();
     if(result == false) {
         return false;
@@ -84,6 +89,7 @@ TlsTcpSocket::initClientSide()
         return false;
     }
 
+    m_isConnected = true;
     LOG_INFO("Successfully initialized encrypted tcp-socket client to targe: " + m_address);
 
     return true;

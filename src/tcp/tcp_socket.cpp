@@ -39,11 +39,16 @@ TcpSocket::TcpSocket(const std::string address,
 bool
 TcpSocket::initClientSide()
 {
+    if(m_isConnected) {
+        return true;
+    }
+
     bool result = initSocket();
     if(result == false) {
         return false;
     }
 
+    m_isConnected = true;
     LOG_INFO("Successfully initialized tcp-socket client to targe: " + m_address);
 
     return true;
@@ -61,6 +66,7 @@ TcpSocket::TcpSocket(const int socketFd)
     m_socket = socketFd;
     m_clientSide = false;
     m_type = TCP_SOCKET;
+    m_isConnected = true;
 }
 
 /**

@@ -80,6 +80,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
     // init client
     m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");
     UNITTEST(m_socketClientSide->initClientSide(), true);
+    UNITTEST(m_socketClientSide->initClientSide(), true);
     UNITTEST(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
 
     usleep(10000);
