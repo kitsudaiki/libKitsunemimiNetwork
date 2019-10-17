@@ -64,6 +64,31 @@ getDataPointer(MessageRingBuffer &recvBuffer,
     return &recvBuffer.data[startPosition];
 }
 
+
+/**
+ * @brief getObjectFromBuffer
+ *
+ * @param recvBuffer
+ *
+ * @return
+ */
+template <typename T>
+const T*
+getObjectFromBuffer(MessageRingBuffer* recvBuffer)
+{
+    if(recvBuffer == nullptr) {
+        return nullptr;
+    }
+
+    const void* data = static_cast<const void*>(getDataPointer(*recvBuffer, sizeof(T)));
+
+    if(recvBuffer == nullptr) {
+        return nullptr;
+    }
+
+    return static_cast<const T*>(data);
+}
+
 } // namespace Network
 } // namespace Kitsune
 
