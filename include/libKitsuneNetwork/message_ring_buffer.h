@@ -73,18 +73,10 @@ getDataPointer(MessageRingBuffer &recvBuffer,
  * @return
  */
 template <typename T>
-const T*
+inline const T*
 getObjectFromBuffer(MessageRingBuffer* recvBuffer)
 {
-    if(recvBuffer == nullptr) {
-        return nullptr;
-    }
-
     const void* data = static_cast<const void*>(getDataPointer(*recvBuffer, sizeof(T)));
-
-    if(recvBuffer == nullptr) {
-        return nullptr;
-    }
 
     return static_cast<const T*>(data);
 }
