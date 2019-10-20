@@ -69,8 +69,8 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsuneCommon | 0.5.1 |  https://github.com/tobiasanker/libKitsuneCommon.git
-libKitsunePersistence | 0.4.0 |  https://github.com/tobiasanker/libKitsunePersistence.git
+libKitsuneCommon | v0.6.0 |  https://github.com/tobiasanker/libKitsuneCommon.git
+libKitsunePersistence | v0.5.0 |  https://github.com/tobiasanker/libKitsunePersistence.git
 
 ### build library
 
@@ -114,17 +114,14 @@ After running the build-script:
     │   └── libKitsuneNetwork
     │       └── ...
     │
-    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.6.0
     ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.6.0
     ├── libKitsuneCommon.so.0.6 -> libKitsuneCommon.so.0.6.0
     ├── libKitsuneCommon.so.0.6.0
     │
-    ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.5.0
     ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.5.0
     ├── libKitsunePersistence.so.0.5 -> libKitsunePersistence.so.0.5.0
     ├── libKitsunePersistence.so.0.5.0
     │
-    ├── libKitsuneNetwork.so -> libKitsuneNetwork.so.0.4.0
     ├── libKitsuneNetwork.so.0 -> libKitsuneNetwork.so.0.4.0
     ├── libKitsuneNetwork.so.0.4 -> libKitsuneNetwork.so.0.4.0
     └── libKitsuneNetwork.so.0.4.0
