@@ -158,9 +158,9 @@ Example to create server and socket:
 (the `TlsTcpSocket` of the example can also replaced by the `UnixDomainSocket` or `TcpSocket`. Only the values of the conectructor are different)
 
 ```cpp
-#include <tls_tcp/tls_tcp_server.h>
-#include <tls_tcp/tls_tcp_socket.h>
-#include <buffering/data_buffer.h>
+#include <libKitsuneNetwork/tls_tcp/tls_tcp_server.h>
+#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket.h>
+#include <libKitsuneCommon/data_buffer.h>
 
 TlsTcpServer* server = nullptr;
 TlsTcpSocket* socketClientSide = nullptr;
