@@ -48,6 +48,16 @@ AbstractSocket::getType()
 }
 
 /**
+ * @brief AbstractSocket::isClientSide
+ * @return
+ */
+bool
+AbstractSocket::isClientSide() const
+{
+    return m_isClientSide;
+}
+
+/**
  * add new callback for incoming messages
  *
  * @param target

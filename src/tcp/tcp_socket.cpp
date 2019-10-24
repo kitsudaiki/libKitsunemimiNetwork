@@ -27,7 +27,7 @@ TcpSocket::TcpSocket(const std::string address,
 {
     m_address = address;
     m_port = port;
-    m_clientSide = true;
+    m_isClientSide = true;
     m_type = TCP_SOCKET;
 }
 
@@ -64,7 +64,7 @@ TcpSocket::TcpSocket(const int socketFd)
     : AbstractSocket()
 {
     m_socket = socketFd;
-    m_clientSide = false;
+    m_isClientSide = false;
     m_type = TCP_SOCKET;
     m_isConnected = true;
 }
