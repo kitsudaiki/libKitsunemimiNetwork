@@ -48,6 +48,16 @@ AbstractSocket::getType()
 }
 
 /**
+ * @brief AbstractSocket::isClientSide
+ * @return
+ */
+bool
+AbstractSocket::isClientSide() const
+{
+    return m_isClientSide;
+}
+
+/**
  * add new callback for incoming messages
  *
  * @param target
@@ -157,10 +167,12 @@ AbstractSocket::waitForMessage()
     m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint64_t>(recvSize));
 
     // process message via callback-function
-    const uint64_t readBytes = m_processMessage(m_target, &m_recvBuffer, this);
-    m_recvBuffer.readPosition = (m_recvBuffer.readPosition + readBytes)
-                                 % m_recvBuffer.totalBufferSize;
-    m_recvBuffer.readWriteDiff -= readBytes;
+    uint64_t readBytes = 0;
+    do {
+        readBytes = m_processMessage(m_target, &m_recvBuffer, this);
+        moveBufferForward(m_recvBuffer, readBytes);
+    }
+    while(readBytes > 0);
 
     return true;
 }

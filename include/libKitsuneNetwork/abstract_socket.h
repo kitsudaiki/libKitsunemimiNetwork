@@ -52,6 +52,7 @@ public:
 
     virtual bool initClientSide() = 0;
     socketTypes getType();
+    bool isClientSide() const;
 
     bool sendMessage(const std::string &message);
     bool sendMessage(const void *message,
@@ -63,7 +64,7 @@ public:
 
 protected:
     bool m_isConnected = false;
-    bool m_clientSide = false;
+    bool m_isClientSide = false;
     int m_socket = 0;
     socketTypes m_type = UNDEFINED_TYPE;
     MessageRingBuffer m_recvBuffer;

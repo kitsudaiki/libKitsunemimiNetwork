@@ -25,7 +25,7 @@ UnixDomainSocket::UnixDomainSocket(const std::string socketFile)
     : AbstractSocket()
 {
     m_socketFile = socketFile;
-    m_clientSide = true;
+    m_isClientSide = true;
     m_type = UNIX_SOCKET;
 }
 
@@ -62,7 +62,7 @@ UnixDomainSocket::UnixDomainSocket(const int socketFd)
     : AbstractSocket()
 {
     m_socket = socketFd;
-    m_clientSide = false;
+    m_isClientSide = false;
     m_type = UNIX_SOCKET;
     m_isConnected = true;
 }

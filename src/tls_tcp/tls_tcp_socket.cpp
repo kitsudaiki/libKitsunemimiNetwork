@@ -108,7 +108,7 @@ TlsTcpSocket::initOpenssl()
 
     // set ssl-type
     const SSL_METHOD* method;
-    if(m_clientSide) {
+    if(m_isClientSide) {
         method = TLS_client_method();
     } else {
         method = TLS_server_method();
@@ -174,7 +174,7 @@ TlsTcpSocket::initOpenssl()
     }
 
     // process tls-handshake
-    if(m_clientSide)
+    if(m_isClientSide)
     {
         // try to connect to server
         result = SSL_connect(m_ssl);
