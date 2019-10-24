@@ -64,6 +64,21 @@ getDataPointer(MessageRingBuffer &recvBuffer,
     return &recvBuffer.data[startPosition];
 }
 
+/**
+ * @brief moveBufferForward
+ *
+ * @param recvBuffer
+ *
+ * @param numberOfBytes
+ */
+inline void
+moveBufferForward(MessageRingBuffer &recvBuffer,
+                  const uint64_t numberOfBytes)
+{
+    recvBuffer.readPosition = (recvBuffer.readPosition + numberOfBytes)
+                               % recvBuffer.totalBufferSize;
+    recvBuffer.readWriteDiff -= numberOfBytes;
+}
 
 /**
  * @brief getObjectFromBuffer
