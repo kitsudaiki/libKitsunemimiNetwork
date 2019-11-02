@@ -6,7 +6,7 @@
 - renamed repo from `libKitsunePersistence` to `libKitsunemimiPersistence
 
 
-## [0.3.0] - 2019-10-07
+## [0.4.0] - 2019-10-07
 
 ### Added
 - log-output base on the logger of libKitsundePersistence
