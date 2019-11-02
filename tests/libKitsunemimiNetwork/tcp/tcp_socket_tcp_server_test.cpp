@@ -7,12 +7,12 @@
  */
 
 #include "tcp_socket_tcp_server_test.h"
-#include <libKitsuneCommon/data_buffer.h>
+#include <libKitsunemimiCommon/data_buffer.h>
 
-#include <libKitsuneNetwork/tcp/tcp_server.h>
-#include <libKitsuneNetwork/tcp/tcp_socket.h>
+#include <libKitsunemimiNetwork/tcp/tcp_server.h>
+#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -42,12 +42,12 @@ void processConnectionTcp(void* target,
                           AbstractSocket* socket)
 {
     socket->setMessageCallback(target, &processMessageTcp);
-    socket->start();
+    socket->startThread();
 }
 
 
 TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
-    Kitsune::Common::UnitTest("TcpSocket_TcpServer_Test")
+    Kitsunemimi::Common::Test("TcpSocket_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -73,24 +73,24 @@ void
 TcpSocket_TcpServer_Test::checkConnectionInit()
 {
     // init server
-    UNITTEST(m_server->getType(), AbstractServer::TCP_SERVER);
-    UNITTEST(m_server->initServer(12345), true);
-    UNITTEST(m_server->start(), true);
+    TEST_EQUAL(m_server->getType(), AbstractServer::TCP_SERVER);
+    TEST_EQUAL(m_server->initServer(12345), true);
+    TEST_EQUAL(m_server->startThread(), true);
 
     // init client
     m_socketClientSide = new TcpSocket("127.0.0.1", 12345);
-    UNITTEST(m_socketClientSide->initClientSide(), true);
-    UNITTEST(m_socketClientSide->initClientSide(), true);
-    UNITTEST(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
+    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
     usleep(10000);
 
-    UNITTEST(m_server->getNumberOfSockets(), 1);
+    TEST_EQUAL(m_server->getNumberOfSockets(), 1);
 
     if(m_server->getNumberOfSockets() == 1)
     {
         m_socketServerSide = static_cast<TcpSocket*>(m_server->getSocket(0));
-        UNITTEST(m_socketServerSide->getType(), AbstractSocket::TCP_SOCKET);
+        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::TCP_SOCKET);
     }
 }
 
@@ -103,9 +103,9 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
     usleep(10000);
 
     std::string sendMessage("poipoipoi");
-    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
-    UNITTEST(m_buffer->bufferPosition, 9);
+    TEST_EQUAL(m_buffer->bufferPosition, 9);
 
 
     if(m_buffer->bufferPosition == 9)
@@ -113,8 +113,8 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
         uint64_t bufferSize = m_buffer->bufferPosition;
         char recvMessage[bufferSize];
         memcpy(recvMessage, m_buffer->data, bufferSize);
-        UNITTEST(bufferSize, 9);
-        UNITTEST(recvMessage[2], sendMessage.at(2));
+        TEST_EQUAL(bufferSize, 9);
+        TEST_EQUAL(recvMessage[2], sendMessage.at(2));
         resetBuffer(m_buffer, 1000);
     }
 }
@@ -126,7 +126,7 @@ void
 TcpSocket_TcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
-    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     for(uint32_t i = 0; i < 99999; i++)
     {
         m_socketClientSide->sendMessage(sendMessage);
@@ -134,8 +134,8 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
     usleep(10000);
     uint64_t totalIncom = m_buffer->bufferPosition;
     Common::DataBuffer* dataBuffer = m_buffer;
-    UNITTEST(totalIncom, 300000);
-    UNITTEST(dataBuffer->bufferPosition, 300000);
+    TEST_EQUAL(totalIncom, 300000);
+    TEST_EQUAL(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)
     {
@@ -147,7 +147,7 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
             numberOfPois++;
         }
     }
-    UNITTEST(numberOfPois, 100000);
+    TEST_EQUAL(numberOfPois, 100000);
 }
 
 /**
@@ -156,13 +156,13 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
 void
 TcpSocket_TcpServer_Test::cleanupTestCase()
 {
-    UNITTEST(m_socketServerSide->closeSocket(), true);
+    TEST_EQUAL(m_socketServerSide->closeSocket(), true);
     m_socketServerSide->closeSocket();
-    UNITTEST(m_server->closeServer(), true);
+    TEST_EQUAL(m_server->closeServer(), true);
 
     delete m_server;
     delete m_buffer;
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

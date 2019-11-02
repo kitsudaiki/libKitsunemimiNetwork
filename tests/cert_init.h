@@ -2,9 +2,9 @@
 #define CERT_INIT_H
 
 #include <iostream>
-#include <libKitsunePersistence/files/text_file.h>
+#include <libKitsunemimiPersistence/files/text_file.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -66,6 +66,6 @@ void writeTestCerts()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // CERT_INIT_H

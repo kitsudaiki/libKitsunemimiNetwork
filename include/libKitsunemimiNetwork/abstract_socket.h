@@ -24,17 +24,17 @@
 #include <errno.h>
 #include <atomic>
 
-#include <libKitsuneCommon/data_buffer.h>
-#include <libKitsuneNetwork/message_ring_buffer.h>
-#include <libKitsuneCommon/thread.h>
+#include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiNetwork/message_ring_buffer.h>
+#include <libKitsunemimiCommon/thread.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
 class CleanupThread;
 
-class AbstractSocket : public Kitsune::Common::Thread
+class AbstractSocket : public Kitsunemimi::Common::Thread
 {
 public:
     enum socketTypes {
@@ -60,7 +60,7 @@ public:
 
     bool closeSocket();
 
-    static Kitsune::Network::CleanupThread* m_cleanup;
+    static Kitsunemimi::Network::CleanupThread* m_cleanup;
 
 protected:
     bool m_isConnected = false;
@@ -89,6 +89,6 @@ protected:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // ABSTRACT_SOCKET_H

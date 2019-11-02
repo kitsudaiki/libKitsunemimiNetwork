@@ -1,42 +1,36 @@
 /**
- *  @file    tcp_socket.h
+ *  @file    unix_domain_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef TCP_SOCKET_H
-#define TCP_SOCKET_H
+#ifndef UNIX_DOMAIN_SOCKET_H
+#define UNIX_DOMAIN_SOCKET_H
 
-#include <netinet/in.h>
-#include <netdb.h>
-#include <netinet/tcp.h>
+#include <libKitsunemimiNetwork/abstract_socket.h>
 
-#include <libKitsuneNetwork/abstract_socket.h>
-
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
-class TcpServer;
+class UnixDomainServer;
 
-class TcpSocket : public AbstractSocket
+class UnixDomainSocket : public AbstractSocket
 {
-    friend class TcpServer;
+    friend class UnixDomainServer;
 
 public:
-    TcpSocket(const std::string address,
-              const uint16_t port);
+    UnixDomainSocket(const std::string socketFile);
 
     bool initClientSide();
 
 protected:
-    std::string m_address = "";
-    uint16_t m_port = 0;
-    sockaddr_in m_socketAddr;
+    std::string m_socketFile = "";
+    sockaddr_un m_socketAddr;
 
-    TcpSocket(const int socketFd);
+    UnixDomainSocket(const int socketFd);
 
     bool initSocket();
     long recvData(int socket,
@@ -50,6 +44,6 @@ protected:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
-#endif // TCP_SOCKET_H
+#endif // UNIX_DOMAIN_SOCKET_H

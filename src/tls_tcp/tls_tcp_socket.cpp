@@ -6,11 +6,11 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
 #include <cleanup_thread.h>
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -250,4 +250,4 @@ TlsTcpSocket::cleanupOpenssl()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

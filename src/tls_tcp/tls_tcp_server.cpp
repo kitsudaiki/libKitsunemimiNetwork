@@ -6,11 +6,11 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/tls_tcp/tls_tcp_server.h>
-#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket.h>
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -90,4 +90,4 @@ TlsTcpServer::waitForIncomingConnection()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

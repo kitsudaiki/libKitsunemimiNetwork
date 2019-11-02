@@ -1,8 +1,8 @@
-# libKitsuneNetwork
+# libKitsunemimiNetwork
 
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/tobiasanker/libKitsuneNetwork?label=build%20and%20test&style=flat-square)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/tobiasanker/libKitsuneNetwork?label=version&style=flat-square)
-![GitHub](https://img.shields.io/github/license/tobiasanker/libKitsuneNetwork?style=flat-square)
+![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/tobiasanker/libKitsunemimiNetwork?label=build%20and%20test&style=flat-square)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/tobiasanker/libKitsunemimiNetwork?label=version&style=flat-square)
+![GitHub](https://img.shields.io/github/license/tobiasanker/libKitsunemimiNetwork?style=flat-square)
 ![C++Version](https://img.shields.io/badge/c%2B%2B-14-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Linux--x64-lightgrey?style=flat-square)
 
@@ -18,7 +18,7 @@ Here some common information about my projects and my code-styling. It's not com
 
 1. All my libraries beginning with `libKitsune`, because I needed a naming to identify my own libraries and I decided to use `Kitsune` as name, because Kitsunemimi are moe. ;)
 
-2. The namespace of the code within the libraries is identically to the name of the library. So for example all content of `libKitsuneCommon` has the namespace `Kitsune::Common`.
+2. The namespace of the code within the libraries is identically to the name of the library. So for example all content of `libKitsunemimiCommon` has the namespace `Kitsune::Common`.
 
 3. If you only want to use the library, beside the binary you only ne the public methods and variables in the header-files, which are located in the `include`-directory of each `libKitsune`-repo. I try my best to make these as small and self-explaining, as possible. 
 
@@ -69,8 +69,8 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsuneCommon | v0.6.0 |  https://github.com/tobiasanker/libKitsuneCommon.git
-libKitsunePersistence | v0.5.0 |  https://github.com/tobiasanker/libKitsunePersistence.git
+libKitsunemimiCommon | v0.7.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiPersistence | v0.6.0 |  https://github.com/tobiasanker/libKitsunemimiPersistence.git
 
 ### build library
 
@@ -80,7 +80,7 @@ Before running the build-script:
 
 ```bash
 .
-└── libKitsuneNetwork
+└── libKitsunemimiNetwork
     ├── build.sh
     └── ...
 ```
@@ -90,41 +90,41 @@ After running the build-script:
 ```bash
 .
 ├── build
-│   ├── libKitsuneCommon
+│   ├── libKitsunemimiCommon
 │   │   └── ...
-│   ├── libKitsunePersistence
+│   ├── libKitsunemimiPersistence
 │   │   └── ...
-│   └── libKitsuneNetwork
+│   └── libKitsunemimiNetwork
 │       └── ...
 │
-├── libKitsuneCommon
+├── libKitsunemimiCommon
 │   └── ...
-├── libKitsunePersistence
+├── libKitsunemimiPersistence
 │   └── ...
-├── libKitsuneNetwork
+├── libKitsunemimiNetwork
 │   ├── build.sh
 │   └── ...
 │
 └── result
     ├── include
-    │   ├── libKitsuneCommon
+    │   ├── libKitsunemimiCommon
     │   │   └── ...
-    │   ├── libKitsunePersistence
+    │   ├── libKitsunemimiPersistence
     │   │	└── ...
-    │   └── libKitsuneNetwork
+    │   └── libKitsunemimiNetwork
     │       └── ...
     │
-    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.6.0
-    ├── libKitsuneCommon.so.0.6 -> libKitsuneCommon.so.0.6.0
-    ├── libKitsuneCommon.so.0.6.0
+    ├── libKitsunemimiCommon.so.0 -> libKitsunemimiCommon.so.0.7.0
+    ├── libKitsunemimiCommon.so.0.7 -> libKitsunemimiCommon.so.0.7.0
+    ├── libKitsunemimiCommon.so.0.7.0
     │
-    ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.5.0
-    ├── libKitsunePersistence.so.0.5 -> libKitsunePersistence.so.0.5.0
-    ├── libKitsunePersistence.so.0.5.0
+    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.6.0
+    ├── libKitsunemimiPersistence.so.0.6 -> libKitsunemimiPersistence.so.0.6.0
+    ├── libKitsunemimiPersistence.so.0.6.0
     │
-    ├── libKitsuneNetwork.so.0 -> libKitsuneNetwork.so.0.4.0
-    ├── libKitsuneNetwork.so.0.4 -> libKitsuneNetwork.so.0.4.0
-    └── libKitsuneNetwork.so.0.4.0
+    ├── libKitsunemimiNetwork.so.0 -> libKitsunemimiNetwork.so.0.4.0
+    ├── libKitsunemimiNetwork.so.0.4 -> libKitsunemimiNetwork.so.0.4.0
+    └── libKitsunemimiNetwork.so.0.4.0
 ```
 
 It create automatic a `build` and `result` directory in the directory, where you have cloned the project. At first it build all into the `build`-directory and after all build-steps are finished, it copy the include directory from the cloned repository and the build library into the `result`-directory. So you have all in one single place.
@@ -141,7 +141,7 @@ This libray contains servers and clients for unix-domain-sockets, tcp-sockets an
 The inheritance tree of the classes has the following look. For servers its the same with only servers instead of sockets.
 
 ```
-        Thread (libKitsuneCommon)
+        Thread (libKitsunemimiCommon)
           ^
           |
     AbstractSocket
@@ -158,9 +158,9 @@ Example to create server and socket:
 (the `TlsTcpSocket` of the example can also replaced by the `UnixDomainSocket` or `TcpSocket`. Only the values of the conectructor are different)
 
 ```cpp
-#include <libKitsuneNetwork/tls_tcp/tls_tcp_server.h>
-#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket.h>
-#include <libKitsuneCommon/data_buffer.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
+#include <libKitsunemimiCommon/data_buffer.h>
 
 TlsTcpServer* server = nullptr;
 TlsTcpSocket* socketClientSide = nullptr;

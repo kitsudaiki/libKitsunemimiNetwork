@@ -17,10 +17,10 @@
 #include <cinttypes>
 #include <unistd.h>
 
-#include <libKitsuneNetwork/tcp/tcp_socket.h>
+#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
 #include <iostream>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -57,7 +57,7 @@ CleanupThread::run()
         {
             AbstractSocket* socket = m_cleanupQueue.front();
             m_cleanupQueue.pop();
-            socket->stop();
+            socket->stopThread();
             delete socket;
         }
         mutexUnlock();
@@ -65,4 +65,4 @@ CleanupThread::run()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

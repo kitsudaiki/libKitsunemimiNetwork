@@ -6,16 +6,16 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/abstract_socket.h>
+#include <libKitsunemimiNetwork/abstract_socket.h>
 
 #include <cleanup_thread.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
 
-Kitsune::Network::CleanupThread* AbstractSocket::m_cleanup = nullptr;
+Kitsunemimi::Network::CleanupThread* AbstractSocket::m_cleanup = nullptr;
 
 /**
  * @brief AbstractSocket::AbstractSocket
@@ -24,8 +24,8 @@ AbstractSocket::AbstractSocket()
 {
     if(m_cleanup == nullptr)
     {
-        m_cleanup = new Kitsune::Network::CleanupThread();
-        m_cleanup->start();
+        m_cleanup = new Kitsunemimi::Network::CleanupThread();
+        m_cleanup->startThread();
     }
 }
 
@@ -221,4 +221,4 @@ AbstractSocket::run()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

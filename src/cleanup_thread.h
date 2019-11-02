@@ -11,15 +11,15 @@
 
 #include <queue>
 
-#include <libKitsuneCommon/thread.h>
+#include <libKitsunemimiCommon/thread.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
 class AbstractSocket;
 
-class CleanupThread : public Kitsune::Common::Thread
+class CleanupThread : public Kitsunemimi::Common::Thread
 {
 public:
     CleanupThread();
@@ -34,6 +34,6 @@ private:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // CLEANUP_THREAD_H

@@ -9,9 +9,9 @@
 #ifndef UNIX_DOMAIN_SOCKET_UNIX_DOMAIN_SERVER_TEST_H
 #define UNIX_DOMAIN_SOCKET_UNIX_DOMAIN_SERVER_TEST_H
 
-#include <libKitsuneCommon/unit_test.h>
+#include <libKitsunemimiCommon/test.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Common {
 class DataBuffer;
@@ -22,7 +22,7 @@ class UnixDomainServer;
 class UnixDomainSocket;
 
 class UnixDomainSocket_UnixDomainServer_Test
-        : public Kitsune::Common::UnitTest
+        : public Kitsunemimi::Common::Test
 {
 public:
     UnixDomainSocket_UnixDomainServer_Test();
@@ -41,6 +41,6 @@ private:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // UNIX_DOMAIN_SOCKET_UNIX_DOMAIN_SERVER_TEST_H

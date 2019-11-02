@@ -16,9 +16,9 @@
 #include <openssl/bio.h>
 #include <openssl/err.h>
 
-#include <libKitsuneNetwork/tcp/tcp_socket.h>
+#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -65,6 +65,6 @@ protected:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // TLS_TCP_SOCKET_H

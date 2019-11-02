@@ -1,19 +1,19 @@
 QT       -= qt core gui
 
-TARGET = KitsuneNetwork
+TARGET = KitsunemimiNetwork
 TEMPLATE = lib
 CONFIG += c++14
 VERSION = 0.4.0
 
-LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
-LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
-LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
-INCLUDEPATH += ../../libKitsuneCommon/include
+LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
+LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
+LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
+INCLUDEPATH += ../../libKitsunemimiCommon/include
 
-LIBS += -L../../libKitsunePersistence/src -lKitsunePersistence
-LIBS += -L../../libKitsunePersistence/src/debug -lKitsunePersistence
-LIBS += -L../../libKitsunePersistence/src/release -lKitsunePersistence
-INCLUDEPATH += ../../libKitsunePersistence/include
+LIBS += -L../../libKitsunemimiPersistence/src -lKitsunemimiPersistence
+LIBS += -L../../libKitsunemimiPersistence/src/debug -lKitsunemimiPersistence
+LIBS += -L../../libKitsunemimiPersistence/src/release -lKitsunemimiPersistence
+INCLUDEPATH += ../../libKitsunemimiPersistence/include
 
 LIBS +=  -lssl -lcrypt
 
@@ -21,16 +21,16 @@ INCLUDEPATH += $$PWD \
                $$PWD/../include
 
 HEADERS += \
-    ../include/libKitsuneNetwork/tcp/tcp_server.h \
-    ../include/libKitsuneNetwork/message_ring_buffer.h \
+    ../include/libKitsunemimiNetwork/tcp/tcp_server.h \
+    ../include/libKitsunemimiNetwork/message_ring_buffer.h \
     cleanup_thread.h \
-    ../include/libKitsuneNetwork/abstract_server.h \
-    ../include/libKitsuneNetwork/tls_tcp/tls_tcp_server.h \
-    ../include/libKitsuneNetwork/tcp/tcp_socket.h \
-    ../include/libKitsuneNetwork/tls_tcp/tls_tcp_socket.h \
-    ../include/libKitsuneNetwork/abstract_socket.h \
-    ../include/libKitsuneNetwork/unix/unix_domain_server.h \
-    ../include/libKitsuneNetwork/unix/unix_domain_socket.h
+    ../include/libKitsunemimiNetwork/abstract_server.h \
+    ../include/libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h \
+    ../include/libKitsunemimiNetwork/tcp/tcp_socket.h \
+    ../include/libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h \
+    ../include/libKitsunemimiNetwork/abstract_socket.h \
+    ../include/libKitsunemimiNetwork/unix/unix_domain_server.h \
+    ../include/libKitsunemimiNetwork/unix/unix_domain_socket.h
 
 SOURCES += \
     cleanup_thread.cpp \
