@@ -12,7 +12,7 @@
 #include <cinttypes>
 #include <string.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -97,6 +97,6 @@ getObjectFromBuffer(MessageRingBuffer* recvBuffer)
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // MESSAGE_RING_BUFFER_H

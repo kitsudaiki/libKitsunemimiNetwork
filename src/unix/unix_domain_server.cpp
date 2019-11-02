@@ -6,11 +6,11 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/unix/unix_domain_socket.h>
-#include <libKitsuneNetwork/unix/unix_domain_server.h>
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -116,5 +116,5 @@ UnixDomainServer::waitForIncomingConnection()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 

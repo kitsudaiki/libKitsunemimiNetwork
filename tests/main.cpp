@@ -6,19 +6,19 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.h>
-#include <libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.h>
-#include <libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h>
+#include <libKitsunemimiNetwork/tcp/tcp_socket_tcp_server_test.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_socket_unix_domain_server_test.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h>
 
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-using Kitsune::Persistence::initLogger;
+using Kitsunemimi::Persistence::initLogger;
 
 int main()
 {
     //initLogger("/tmp", "testlog", true, true);
 
-    Kitsune::Network::TcpSocket_TcpServer_Test();
-    Kitsune::Network::UnixDomainSocket_UnixDomainServer_Test();
-    Kitsune::Network::TlsTcpSocket_TlsTcpServer_Test();
+    Kitsunemimi::Network::TcpSocket_TcpServer_Test();
+    Kitsunemimi::Network::UnixDomainSocket_UnixDomainServer_Test();
+    Kitsunemimi::Network::TlsTcpSocket_TlsTcpServer_Test();
 }

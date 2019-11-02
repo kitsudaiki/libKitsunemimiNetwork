@@ -7,12 +7,12 @@
  */
 
 #include "unix_domain_socket_unix_domain_server_test.h"
-#include <libKitsuneCommon/data_buffer.h>
+#include <libKitsunemimiCommon/data_buffer.h>
 
-#include <libKitsuneNetwork/unix/unix_domain_socket.h>
-#include <libKitsuneNetwork/unix/unix_domain_server.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -42,12 +42,12 @@ void processConnectionUnixDomain(void* target,
                                  AbstractSocket* socket)
 {
     socket->setMessageCallback(target, &processMessageUnixDomain);
-    socket->start();
+    socket->startThread();
 }
 
 
 UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test() :
-    Kitsune::Common::UnitTest("UnixDomainSocket_UnixDomainServer_Test")
+    Kitsunemimi::Common::Test("UnixDomainSocket_UnixDomainServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -73,24 +73,24 @@ void
 UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
 {
     // init server
-    UNITTEST(m_server->getType(), AbstractServer::UNIX_SERVER);
-    UNITTEST(m_server->initServer("/tmp/sock.uds"), true);
-    UNITTEST(m_server->start(), true);
+    TEST_EQUAL(m_server->getType(), AbstractServer::UNIX_SERVER);
+    TEST_EQUAL(m_server->initServer("/tmp/sock.uds"), true);
+    TEST_EQUAL(m_server->startThread(), true);
 
     // init client
     m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");
-    UNITTEST(m_socketClientSide->initClientSide(), true);
-    UNITTEST(m_socketClientSide->initClientSide(), true);
-    UNITTEST(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
+    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
 
     usleep(10000);
 
-    UNITTEST(m_server->getNumberOfSockets(), 1);
+    TEST_EQUAL(m_server->getNumberOfSockets(), 1);
 
     if(m_server->getNumberOfSockets() == 1)
     {
         m_socketServerSide = static_cast<UnixDomainSocket*>(m_server->getSocket(0));
-        UNITTEST(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
+        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
     }
 }
 
@@ -103,9 +103,9 @@ UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
     usleep(10000);
 
     std::string sendMessage("poipoipoi");
-    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
-    UNITTEST(m_buffer->bufferPosition, 9);
+    TEST_EQUAL(m_buffer->bufferPosition, 9);
 
 
     if(m_buffer->bufferPosition == 9)
@@ -114,8 +114,8 @@ UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
         uint64_t bufferSize = buffer->bufferPosition;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
-        UNITTEST(bufferSize, 9);
-        UNITTEST(recvMessage[2], sendMessage.at(2));
+        TEST_EQUAL(bufferSize, 9);
+        TEST_EQUAL(recvMessage[2], sendMessage.at(2));
         resetBuffer(m_buffer, 1000);
     }
 }
@@ -127,7 +127,7 @@ void
 UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
-    UNITTEST(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     for(uint32_t i = 0; i < 99999; i++)
     {
         m_socketClientSide->sendMessage(sendMessage);
@@ -135,8 +135,8 @@ UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
     usleep(10000);
     uint64_t totalIncom = m_buffer->bufferPosition;
     Common::DataBuffer* dataBuffer = m_buffer;
-    UNITTEST(totalIncom, 300000);
-    UNITTEST(dataBuffer->bufferPosition, 300000);
+    TEST_EQUAL(totalIncom, 300000);
+    TEST_EQUAL(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)
     {
@@ -148,7 +148,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
             numberOfPois++;
         }
     }
-    UNITTEST(numberOfPois, 100000);
+    TEST_EQUAL(numberOfPois, 100000);
 }
 
 /**
@@ -157,13 +157,13 @@ UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
 void
 UnixDomainSocket_UnixDomainServer_Test::cleanupTestCase()
 {
-    UNITTEST(m_socketServerSide->closeSocket(), true);
+    TEST_EQUAL(m_socketServerSide->closeSocket(), true);
     m_socketServerSide->closeSocket();
-    UNITTEST(m_server->closeServer(), true);
+    TEST_EQUAL(m_server->closeServer(), true);
 
     delete m_server;
     delete m_buffer;
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

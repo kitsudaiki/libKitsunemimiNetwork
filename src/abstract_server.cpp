@@ -6,13 +6,13 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/abstract_server.h>
-#include <libKitsuneNetwork/abstract_socket.h>
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiNetwork/abstract_server.h>
+#include <libKitsunemimiNetwork/abstract_socket.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-using namespace Kitsune::Persistence;
+using namespace Kitsunemimi::Persistence;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -101,7 +101,7 @@ AbstractServer::closeServer()
     }
 
     // stop thread
-    stop();
+    stopThread();
 
     // close all connected sockets
     mutexLock();
@@ -130,4 +130,4 @@ AbstractServer::run()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

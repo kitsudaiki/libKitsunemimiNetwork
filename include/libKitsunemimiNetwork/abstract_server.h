@@ -20,16 +20,16 @@
 #include <string.h>
 #include <vector>
 
-#include <libKitsuneCommon/thread.h>
+#include <libKitsunemimiCommon/thread.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
 class MessageRingBuffer;
 class AbstractSocket;
 
-class AbstractServer : public Kitsune::Common::Thread
+class AbstractServer : public Kitsunemimi::Common::Thread
 {
 public:
     enum serverTypes {
@@ -65,6 +65,6 @@ protected:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // ABSTRACT_SERVER_H

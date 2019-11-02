@@ -10,9 +10,9 @@
 #define UNIX_DOMAIN_SERVER_H
 
 #include <string>
-#include <libKitsuneNetwork/abstract_server.h>
+#include <libKitsunemimiNetwork/abstract_server.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -34,6 +34,6 @@ private:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // UNIX_DOMAIN_SERVER_H

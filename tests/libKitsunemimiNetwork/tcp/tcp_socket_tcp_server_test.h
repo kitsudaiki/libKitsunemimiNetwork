@@ -9,9 +9,9 @@
 #ifndef TCPSOCKET_TCPSERVER_TEST_H
 #define TCPSOCKET_TCPSERVER_TEST_H
 
-#include <libKitsuneCommon/unit_test.h>
+#include <libKitsunemimiCommon/test.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Common {
 class DataBuffer;
@@ -24,7 +24,7 @@ class MessageRingBuffer;
 class AbstractSocket;
 
 class TcpSocket_TcpServer_Test
-        : public Kitsune::Common::UnitTest
+        : public Kitsunemimi::Common::Test
 {
 public:
     TcpSocket_TcpServer_Test();
@@ -43,6 +43,6 @@ private:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // TCPSOCKET_TCPSERVER_TEST_H

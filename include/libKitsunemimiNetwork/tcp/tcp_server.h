@@ -9,9 +9,9 @@
 #ifndef TCP_SERVER_H
 #define TCP_SERVER_H
 
-#include <libKitsuneNetwork/abstract_server.h>
+#include <libKitsunemimiNetwork/abstract_server.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -32,6 +32,6 @@ protected:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // TCP_SERVER_H

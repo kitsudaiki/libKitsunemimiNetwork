@@ -13,9 +13,9 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#include <libKitsuneNetwork/tcp/tcp_server.h>
+#include <libKitsunemimiNetwork/tcp/tcp_server.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -39,6 +39,6 @@ private:
 };
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // TLS_TCP_SERVER_H

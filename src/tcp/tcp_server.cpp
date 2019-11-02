@@ -6,11 +6,11 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/tcp/tcp_server.h>
-#include <libKitsuneNetwork/tcp/tcp_socket.h>
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiNetwork/tcp/tcp_server.h>
+#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -126,4 +126,4 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi

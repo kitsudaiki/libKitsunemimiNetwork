@@ -5,28 +5,28 @@ QT       -= qt core gui
 CONFIG -= app_bundle
 CONFIG += c++14 console
 
-LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
-LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
-LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
-INCLUDEPATH += ../../libKitsuneCommon/include
+LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
+LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
+LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
+INCLUDEPATH += ../../libKitsunemimiCommon/include
 
-LIBS += -L../../libKitsunePersistence/src -lKitsunePersistence
-LIBS += -L../../libKitsunePersistence/src/debug -lKitsunePersistence
-LIBS += -L../../libKitsunePersistence/src/release -lKitsunePersistence
-INCLUDEPATH += ../../libKitsunePersistence/include
+LIBS += -L../../libKitsunemimiPersistence/src -lKitsunemimiPersistence
+LIBS += -L../../libKitsunemimiPersistence/src/debug -lKitsunemimiPersistence
+LIBS += -L../../libKitsunemimiPersistence/src/release -lKitsunemimiPersistence
+INCLUDEPATH += ../../libKitsunemimiPersistence/include
 
 LIBS +=  -lboost_filesystem -lboost_system
 
-LIBS += -L../src -lKitsuneNetwork
+LIBS += -L../src -lKitsunemimiNetwork
 
 HEADERS += \
     cert_init.h \
-    libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.h \
-    libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h \
-    libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.h
+    libKitsunemimiNetwork/tcp/tcp_socket_tcp_server_test.h \
+    libKitsunemimiNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h \
+    libKitsunemimiNetwork/unix/unix_domain_socket_unix_domain_server_test.h
 
 SOURCES += \
     main.cpp \
-    libKitsuneNetwork/tcp/tcp_socket_tcp_server_test.cpp \
-    libKitsuneNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.cpp \
-    libKitsuneNetwork/unix/unix_domain_socket_unix_domain_server_test.cpp
+    libKitsunemimiNetwork/tcp/tcp_socket_tcp_server_test.cpp \
+    libKitsunemimiNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.cpp \
+    libKitsunemimiNetwork/unix/unix_domain_socket_unix_domain_server_test.cpp

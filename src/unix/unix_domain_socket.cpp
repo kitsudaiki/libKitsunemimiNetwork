@@ -6,12 +6,12 @@
  *  @copyright MIT License
  */
 
-#include <libKitsuneNetwork/unix/unix_domain_socket.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 #include <iostream>
 #include <cleanup_thread.h>
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Network
 {
@@ -131,4 +131,4 @@ UnixDomainSocket::sendData(int socket,
 }
 
 } // namespace Network
-} // namespace Kitsune
+} // namespace Kitsunemimi
