@@ -93,7 +93,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
 
-    usleep(10000);
+    usleep(100000);
 
     TEST_EQUAL(m_server->getNumberOfSockets(), 1);
 
@@ -110,11 +110,11 @@ TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
 void
 TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
 {
-    usleep(10000);
+    usleep(100000);
 
     std::string sendMessage("poipoipoi");
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
-    usleep(10000);
+    usleep(100000);
     TEST_EQUAL(m_buffer->bufferPosition, 9);
 
 
