@@ -60,17 +60,17 @@ AbstractServer::getNumberOfSockets()
 /**
  * get a specific tcp-socket from the server
  *
- * @param pos position in the list
- *
  * @return tcp-socket-pointer
  */
 AbstractSocket*
-AbstractServer::getSocket(const uint32_t pos)
+AbstractServer::getPendingSocket()
 {
     AbstractSocket* result = nullptr;
     mutexLock();
-    if(pos < m_sockets.size()) {
-        result = m_sockets.at(pos);
+    if(m_sockets.size() > 0)
+    {
+        result = m_sockets.back();
+        m_sockets.pop_back();
     }
     mutexUnlock();
     return result;
@@ -102,15 +102,6 @@ AbstractServer::closeServer()
 
     // stop thread
     stopThread();
-
-    // close all connected sockets
-    mutexLock();
-    for(uint32_t i = 0; i < m_sockets.size(); i++)
-    {
-        m_sockets[i]->closeSocket();
-    }
-    m_sockets.clear();
-    mutexUnlock();
 
     LOG_INFO("Successfully closed server");
 

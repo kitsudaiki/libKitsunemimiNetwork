@@ -89,8 +89,9 @@ TcpSocket_TcpServer_Test::checkConnectionInit()
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_socketServerSide = static_cast<TcpSocket*>(m_server->getSocket(0));
+        m_socketServerSide = static_cast<TcpSocket*>(m_server->getPendingSocket());
         TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::TCP_SOCKET);
+        TEST_EQUAL(m_server->getNumberOfSockets(), 0);
     }
 }
 

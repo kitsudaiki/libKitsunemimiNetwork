@@ -49,7 +49,7 @@ public:
     bool closeServer();
 
     uint64_t getNumberOfSockets();
-    AbstractSocket* getSocket(const uint32_t pos);
+    AbstractSocket* getPendingSocket();
 
 protected:
     void run();
