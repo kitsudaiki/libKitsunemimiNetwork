@@ -99,8 +99,9 @@ TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_socketServerSide = static_cast<TlsTcpSocket*>(m_server->getSocket(0));
+        m_socketServerSide = static_cast<TlsTcpSocket*>(m_server->getPendingSocket());
         TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
+        TEST_EQUAL(m_server->getNumberOfSockets(), 0);
     }
 }
 

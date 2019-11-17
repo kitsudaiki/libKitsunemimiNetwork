@@ -89,8 +89,9 @@ UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_socketServerSide = static_cast<UnixDomainSocket*>(m_server->getSocket(0));
+        m_socketServerSide = static_cast<UnixDomainSocket*>(m_server->getPendingSocket());
         TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
+        TEST_EQUAL(m_server->getNumberOfSockets(), 0);
     }
 }
 
