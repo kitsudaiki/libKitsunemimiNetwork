@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.1] - 2019-11-22
+
+### Changed
+- closing a server now doesn't close the sockets of the server anymore
+- update to use libKitsunemimiCommon 0.8.0
+
 ## [0.5.0] - 2019-11-02
 
 ### Changed
