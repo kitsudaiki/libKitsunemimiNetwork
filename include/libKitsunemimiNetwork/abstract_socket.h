@@ -26,7 +26,7 @@
 
 #include <libKitsunemimiCommon/data_buffer.h>
 #include <libKitsunemimiNetwork/message_ring_buffer.h>
-#include <libKitsunemimiCommon/thread.h>
+#include <libKitsunemimiCommon/threading/thread.h>
 
 namespace Kitsunemimi
 {

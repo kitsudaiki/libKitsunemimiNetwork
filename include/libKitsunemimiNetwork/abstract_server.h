@@ -20,7 +20,7 @@
 #include <string.h>
 #include <vector>
 
-#include <libKitsunemimiCommon/thread.h>
+#include <libKitsunemimiCommon/threading/thread.h>
 
 namespace Kitsunemimi
 {
