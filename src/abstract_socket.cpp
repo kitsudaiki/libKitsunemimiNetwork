@@ -107,8 +107,10 @@ AbstractSocket::sendMessage(const void* message,
     }
 
     // send message
-    while(m_lock.test_and_set(std::memory_order_acquire))  // acquire lock
-                 ; // spin
+    while(m_lock.test_and_set(std::memory_order_acquire)) {
+        asm("");
+    }
+
     const ssize_t successfulSended = sendData(m_socket,
                                               message,
                                               numberOfBytes,
