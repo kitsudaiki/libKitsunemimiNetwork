@@ -2,6 +2,12 @@
 
 ## [0.5.2] - 2020-01-18
 
+### Fixed
+- fixed spin-lock to be not removed while optimizing by the compiler
+
+
+## [0.5.2] - 2020-01-18
+
 ### Changed
 - update to use libKitsunemimiCommon 0.10.0
 
