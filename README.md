@@ -18,7 +18,7 @@ Here some common information about my projects and my code-styling. It's not com
 
 1. All my libraries beginning with `libKitsunemimi`, because I needed a naming to identify my own libraries and I decided to use `Kitsunemimi` as name, because Kitsunemimi are moe. ;)
 
-2. The namespace of the code within the libraries is identically to the name of the library. So for example all content of `libKitsunemimiCommon` has the namespace `Kitsunemimi::Common`.
+2. The namespace of the code within the libraries is identically to the name of the library. So for example all content of `libKitsunemimiNetwork` has the namespace `Kitsunemimi::Network`.
 
 3. If you only want to use the library, beside the binary you only ne the public methods and variables in the header-files, which are located in the `include`-directory of each `libKitsunemimi`-repo. I try my best to make these as small and self-explaining, as possible. 
 
@@ -122,9 +122,9 @@ After running the build-script:
     ├── libKitsunemimiPersistence.so.0.7 -> libKitsunemimiPersistence.so.0.7.0
     ├── libKitsunemimiPersistence.so.0.7.0
     │
-    ├── libKitsunemimiNetwork.so.0 -> libKitsunemimiNetwork.so.0.5.0
-    ├── libKitsunemimiNetwork.so.0.5 -> libKitsunemimiNetwork.so.0.5.0
-    └── libKitsunemimiNetwork.so.0.5.0
+    ├── libKitsunemimiNetwork.so.0 -> libKitsunemimiNetwork.so.0.5.2
+    ├── libKitsunemimiNetwork.so.0.5 -> libKitsunemimiNetwork.so.0.5.2
+    └── libKitsunemimiNetwork.so.0.5.2
 ```
 
 It create automatic a `build` and `result` directory in the directory, where you have cloned the project. At first it build all into the `build`-directory and after all build-steps are finished, it copy the include directory from the cloned repository and the build library into the `result`-directory. So you have all in one single place.

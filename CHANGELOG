@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.2] - 2020-01-18
+
+### Changed
+- update to use libKitsunemimiCommon 0.10.0
+
+
 ## [0.5.1] - 2019-11-22
 
 ### Changed
