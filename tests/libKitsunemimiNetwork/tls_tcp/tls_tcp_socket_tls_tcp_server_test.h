@@ -13,16 +13,14 @@
 
 namespace Kitsunemimi
 {
-namespace Common {
 class DataBuffer;
-}
 namespace Network
 {
 class TlsTcpServer;
 class TlsTcpSocket;
 
 class TlsTcpSocket_TlsTcpServer_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     TlsTcpSocket_TlsTcpServer_Test();
@@ -37,7 +35,7 @@ private:
     TlsTcpServer* m_server = nullptr;
     TlsTcpSocket* m_socketClientSide = nullptr;
     TlsTcpSocket* m_socketServerSide = nullptr;
-    Common::DataBuffer* m_buffer = nullptr;
+    DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

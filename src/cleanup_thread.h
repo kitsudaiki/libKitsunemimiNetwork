@@ -19,7 +19,7 @@ namespace Network
 {
 class AbstractSocket;
 
-class CleanupThread : public Kitsunemimi::Common::Thread
+class CleanupThread : public Kitsunemimi::Thread
 {
 public:
     CleanupThread();

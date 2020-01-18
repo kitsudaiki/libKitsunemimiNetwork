@@ -13,16 +13,14 @@
 
 namespace Kitsunemimi
 {
-namespace Common {
 class DataBuffer;
-}
 namespace Network
 {
 class UnixDomainServer;
 class UnixDomainSocket;
 
 class UnixDomainSocket_UnixDomainServer_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     UnixDomainSocket_UnixDomainServer_Test();
@@ -37,7 +35,7 @@ private:
     UnixDomainServer* m_server = nullptr;
     UnixDomainSocket* m_socketClientSide = nullptr;
     UnixDomainSocket* m_socketServerSide = nullptr;
-    Common::DataBuffer* m_buffer = nullptr;
+    DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

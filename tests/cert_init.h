@@ -61,8 +61,9 @@ const std::string testKey = "-----BEGIN PRIVATE KEY-----\n"
 
 void writeTestCerts()
 {
-    Persistence::writeFile("/tmp/cert.pem", testCert, true);
-    Persistence::writeFile("/tmp/key.pem", testKey, true);
+    std::string errorMessage = "";
+    Persistence::writeFile("/tmp/cert.pem", testCert, errorMessage, true);
+    Persistence::writeFile("/tmp/key.pem", testKey, errorMessage, true);
 }
 
 } // namespace Network

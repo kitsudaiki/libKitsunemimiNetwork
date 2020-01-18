@@ -34,7 +34,7 @@ namespace Network
 {
 class CleanupThread;
 
-class AbstractSocket : public Kitsunemimi::Common::Thread
+class AbstractSocket : public Kitsunemimi::Thread
 {
 public:
     enum socketTypes {

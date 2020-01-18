@@ -13,9 +13,7 @@
 
 namespace Kitsunemimi
 {
-namespace Common {
 class DataBuffer;
-}
 namespace Network
 {
 class TcpServer;
@@ -24,7 +22,7 @@ class MessageRingBuffer;
 class AbstractSocket;
 
 class TcpSocket_TcpServer_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     TcpSocket_TcpServer_Test();
@@ -39,7 +37,7 @@ private:
     TcpServer* m_server = nullptr;
     TcpSocket* m_socketClientSide = nullptr;
     TcpSocket* m_socketServerSide = nullptr;
-    Common::DataBuffer* m_buffer = nullptr;
+    DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

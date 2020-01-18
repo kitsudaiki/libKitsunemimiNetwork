@@ -26,7 +26,7 @@ uint64_t processMessageTlsTcp(void* target,
                               MessageRingBuffer* recvBuffer,
                               AbstractSocket*)
 {
-    Common::DataBuffer* targetBuffer = static_cast<Common::DataBuffer*>(target);
+    DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
     const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
 
     if(dataPointer == nullptr) {
@@ -49,7 +49,7 @@ void processConnectionTlsTcp(void* target,
 
 
 TlsTcpSocket_TlsTcpServer_Test::TlsTcpSocket_TlsTcpServer_Test() :
-    Kitsunemimi::Common::Test("TlsTcpSocket_TlsTcpServer_Test")
+    Kitsunemimi::Test("TlsTcpSocket_TlsTcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -66,7 +66,7 @@ TlsTcpSocket_TlsTcpServer_Test::initTestCase()
 {
     writeTestCerts();
 
-    m_buffer = new Common::DataBuffer(1000);
+    m_buffer = new DataBuffer(1000);
     m_server = new TlsTcpServer(m_buffer,
                                 &processConnectionTlsTcp,
                                 std::string("/tmp/cert.pem"),
@@ -121,7 +121,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
 
     if(m_buffer->bufferPosition == 9)
     {
-        Common::DataBuffer* buffer = m_buffer;
+        DataBuffer* buffer = m_buffer;
         uint64_t bufferSize = buffer->bufferPosition;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
@@ -145,7 +145,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkBigDataTransfer()
     }
     usleep(100000);
     uint64_t totalIncom = m_buffer->bufferPosition;
-    Common::DataBuffer* dataBuffer = m_buffer;
+    DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
     TEST_EQUAL(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;
