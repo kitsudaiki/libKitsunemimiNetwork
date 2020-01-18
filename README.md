@@ -69,8 +69,8 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.8.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
-libKitsunemimiPersistence | v0.6.0 |  https://github.com/tobiasanker/libKitsunemimiPersistence.git
+libKitsunemimiCommon | v0.10.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiPersistence | v0.7.0 |  https://github.com/tobiasanker/libKitsunemimiPersistence.git
 
 ### build library
 
@@ -114,13 +114,13 @@ After running the build-script:
     │   └── libKitsunemimiNetwork
     │       └── ...
     │
-    ├── libKitsunemimiCommon.so.0 -> libKitsunemimiCommon.so.0.8.0
-    ├── libKitsunemimiCommon.so.0.8 -> libKitsunemimiCommon.so.0.8.0
-    ├── libKitsunemimiCommon.so.0.8.0
+    ├── libKitsunemimiCommon.so.0 -> libKitsunemimiCommon.so.0.10.0
+    ├── libKitsunemimiCommon.so.0.10 -> libKitsunemimiCommon.so.0.10.0
+    ├── libKitsunemimiCommon.so.0.10.0
     │
-    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.6.0
-    ├── libKitsunemimiPersistence.so.0.6 -> libKitsunemimiPersistence.so.0.6.0
-    ├── libKitsunemimiPersistence.so.0.6.0
+    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.7.0
+    ├── libKitsunemimiPersistence.so.0.7 -> libKitsunemimiPersistence.so.0.7.0
+    ├── libKitsunemimiPersistence.so.0.7.0
     │
     ├── libKitsunemimiNetwork.so.0 -> libKitsunemimiNetwork.so.0.5.0
     ├── libKitsunemimiNetwork.so.0.5 -> libKitsunemimiNetwork.so.0.5.0

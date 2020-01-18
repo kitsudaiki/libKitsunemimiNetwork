@@ -24,7 +24,7 @@ uint64_t processMessageTcp(void* target,
                            MessageRingBuffer* recvBuffer,
                            AbstractSocket*)
 {
-    Common::DataBuffer* targetBuffer = static_cast<Common::DataBuffer*>(target);
+    DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
     const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
 
     if(dataPointer == nullptr) {
@@ -47,7 +47,7 @@ void processConnectionTcp(void* target,
 
 
 TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
-    Kitsunemimi::Common::Test("TcpSocket_TcpServer_Test")
+    Kitsunemimi::Test("TcpSocket_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -62,7 +62,7 @@ TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
 void
 TcpSocket_TcpServer_Test::initTestCase()
 {
-    m_buffer = new Common::DataBuffer(1000);
+    m_buffer = new DataBuffer(1000);
     m_server = new TcpServer(m_buffer, &processConnectionTcp);
 }
 
@@ -134,7 +134,7 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
     }
     usleep(10000);
     uint64_t totalIncom = m_buffer->bufferPosition;
-    Common::DataBuffer* dataBuffer = m_buffer;
+    DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
     TEST_EQUAL(dataBuffer->bufferPosition, 300000);
     uint32_t numberOfPois = 0;

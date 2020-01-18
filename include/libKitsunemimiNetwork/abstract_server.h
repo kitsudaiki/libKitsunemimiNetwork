@@ -29,7 +29,7 @@ namespace Network
 class MessageRingBuffer;
 class AbstractSocket;
 
-class AbstractServer : public Kitsunemimi::Common::Thread
+class AbstractServer : public Kitsunemimi::Thread
 {
 public:
     enum serverTypes {
