@@ -111,9 +111,10 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
 
     if(m_buffer->bufferPosition == 9)
     {
-        uint64_t bufferSize = m_buffer->bufferPosition;
+        DataBuffer* buffer = m_buffer;
+        uint64_t bufferSize = buffer->bufferPosition;
         char recvMessage[bufferSize];
-        memcpy(recvMessage, m_buffer->data, bufferSize);
+        memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
         TEST_EQUAL(recvMessage[2], sendMessage.at(2));
         resetBuffer(m_buffer, 1000);
