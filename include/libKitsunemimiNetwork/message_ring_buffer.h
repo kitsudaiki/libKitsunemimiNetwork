@@ -17,7 +17,7 @@ namespace Kitsunemimi
 namespace Network
 {
 
-#define RECV_BUFFER_SIZE 8192
+#define RECV_BUFFER_SIZE 8192*1000
 
 
 struct MessageRingBuffer

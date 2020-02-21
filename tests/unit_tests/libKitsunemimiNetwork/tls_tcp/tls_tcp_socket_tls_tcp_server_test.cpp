@@ -172,8 +172,8 @@ TlsTcpSocket_TlsTcpServer_Test::cleanupTestCase()
     m_socketServerSide->closeSocket();
     TEST_EQUAL(m_server->closeServer(), true);
 
-    delete m_server;
-    delete m_buffer;
+    //delete m_server;
+    //delete m_buffer;
 }
 
 } // namespace Network
