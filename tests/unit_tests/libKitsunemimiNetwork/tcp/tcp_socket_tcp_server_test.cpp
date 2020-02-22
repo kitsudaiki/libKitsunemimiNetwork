@@ -1,16 +1,16 @@
 /**
- *  @file    unix_domain_socket_unix_domain_server_test.cpp
+ *  @file    tcp_socket_tcp_server_test.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#include "unix_domain_socket_unix_domain_server_test.h"
+#include "tcp_socket_tcp_server_test.h"
 #include <libKitsunemimiCommon/data_buffer.h>
 
-#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
-#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
+#include <libKitsunemimiNetwork/tcp/tcp_server.h>
+#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
 
 namespace Kitsunemimi
 {
@@ -18,11 +18,11 @@ namespace Network
 {
 
 /**
- * processMessageUnixDomain-callback
+ * processMessageTcp-callback
  */
-uint64_t processMessageUnixDomain(void* target,
-                                  MessageRingBuffer* recvBuffer,
-                                  AbstractSocket*)
+uint64_t processMessageTcp(void* target,
+                           MessageRingBuffer* recvBuffer,
+                           AbstractSocket*)
 {
     DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
     const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
@@ -36,18 +36,18 @@ uint64_t processMessageUnixDomain(void* target,
 }
 
 /**
- * processConnectionUnixDomain-callback
+ * processConnectionTcp-callback
  */
-void processConnectionUnixDomain(void* target,
-                                 AbstractSocket* socket)
+void processConnectionTcp(void* target,
+                          AbstractSocket* socket)
 {
-    socket->setMessageCallback(target, &processMessageUnixDomain);
+    socket->setMessageCallback(target, &processMessageTcp);
     socket->startThread();
 }
 
 
-UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test() :
-    Kitsunemimi::Test("UnixDomainSocket_UnixDomainServer_Test")
+TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
+    Kitsunemimi::Test("TcpSocket_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -60,28 +60,28 @@ UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test()
  * initTestCase
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::initTestCase()
+TcpSocket_TcpServer_Test::initTestCase()
 {
     m_buffer = new DataBuffer(1000);
-    m_server = new UnixDomainServer(m_buffer, &processConnectionUnixDomain);
+    m_server = new TcpServer(m_buffer, &processConnectionTcp);
 }
 
 /**
  * checkConnectionInit
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
+TcpSocket_TcpServer_Test::checkConnectionInit()
 {
     // init server
-    TEST_EQUAL(m_server->getType(), AbstractServer::UNIX_SERVER);
-    TEST_EQUAL(m_server->initServer("/tmp/sock.uds"), true);
+    TEST_EQUAL(m_server->getType(), AbstractServer::TCP_SERVER);
+    TEST_EQUAL(m_server->initServer(12345), true);
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
-    m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");
+    m_socketClientSide = new TcpSocket("127.0.0.1", 12345);
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
-    TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
+    TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
     usleep(10000);
 
@@ -89,8 +89,8 @@ UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
 
     if(m_server->getNumberOfSockets() == 1)
     {
-        m_socketServerSide = static_cast<UnixDomainSocket*>(m_server->getPendingSocket());
-        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
+        m_socketServerSide = static_cast<TcpSocket*>(m_server->getPendingSocket());
+        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::TCP_SOCKET);
         TEST_EQUAL(m_server->getNumberOfSockets(), 0);
     }
 }
@@ -99,7 +99,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
  * checkLittleDataTransfer
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
+TcpSocket_TcpServer_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
@@ -125,7 +125,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
+TcpSocket_TcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
@@ -156,7 +156,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::cleanupTestCase()
+TcpSocket_TcpServer_Test::cleanupTestCase()
 {
     TEST_EQUAL(m_socketServerSide->closeSocket(), true);
     m_socketServerSide->closeSocket();
