@@ -8,6 +8,7 @@
 
 #include <libKitsunemimiCommon/common_methods/string_methods.h>
 #include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiCommon/common_items/table_item.h>
 
 #include <libKitsunemimiPersistence/logger/logger.h>
 
@@ -41,12 +42,21 @@ uint64_t processMessageTcp(void* target,
             testClass->m_end = std::chrono::system_clock::now();
             float duration = std::chrono::duration_cast<chronoMicroSec>(testClass->m_end - testClass->m_start).count();
             duration /= 1000000.0f;
-
-            std::cout<<"duration: "<<duration<<" seconds"<<std::endl;
             const float speed = ((static_cast<float>(testClass->m_size*10)
                                  / (1024.0f*1024.0f*1024.0f))
                                  / duration) * 8;
-            std::cout<<"speed: "<<speed<<" Gbits/sec"<<std::endl;
+
+            Kitsunemimi::TableItem result;
+
+            result.addColumn("key");
+            result.addColumn("value");
+
+            result.addRow(std::vector<std::string>{"duration", std::to_string(duration) + " seconds"});
+            result.addRow(std::vector<std::string>{"speed", std::to_string(speed) + " Gbits/sec"});
+
+            std::cout<<result.toString()<<std::endl;
+
+            exit(0);
         }
     }
 
@@ -55,18 +65,17 @@ uint64_t processMessageTcp(void* target,
 }
 
 /**
- * processConnectionTcp-callback
+ * processConnection-callback
  */
-void processConnectionTcp(void* target,
-                          AbstractSocket* socket)
+void processConnection(void* target,
+                       AbstractSocket* socket)
 {
-    std::cout<<"processConnectionTcp"<<std::endl;
+    std::cout<<"processConnection"<<std::endl;
 
     if(socket->isClientSide() == false)
     {
         TestSession* testClass = static_cast<TestSession*>(target);
-        testClass->m_serverSession = dynamic_cast<TcpSocket*>(socket);
-        //testClass->m_serverSession = dynamic_cast<UnixDomainSocket*>(socket);
+        testClass->m_serverSession = socket;
         testClass->m_serverSession->setMessageCallback(testClass, &processMessageTcp);
         testClass->m_serverSession->startThread();
     }
@@ -78,24 +87,46 @@ void processConnectionTcp(void* target,
  * @param port
  */
 TestSession::TestSession(const std::string &address,
-                         const uint16_t port)
+                         const uint16_t port,
+                         const std::string &type)
 {
-    Kitsunemimi::Persistence::initLogger("/tmp/", "benchmark", true, true);
+    //Kitsunemimi::Persistence::initLogger("/tmp/", "benchmark", true, true);
     m_size = 1024*1024*1024;
     m_dataBuffer = new uint8_t[1024*1024];
 
+    if(type == "tcp") {
+        m_isTcp = true;
+    } else {
+        m_isTcp = false;
+    }
 
     if(port == 0)
     {
         m_isClient = true;
-        m_server = new TcpServer(this, &processConnectionTcp);
-        //m_server = new UnixDomainServer(this, &processConnectionTcp);
-        assert(m_server->initServer(1234));
-        //assert(m_server->initServer("/tmp/sock.uds"));
-        assert(m_server->startThread());
+
+        if(m_isTcp)
+        {
+            TcpServer* tcpServer = new TcpServer(this, &processConnection);
+            m_server = tcpServer;
+            assert(tcpServer->initServer(1234));
+            assert(m_server->startThread());
+        }
+        else
+        {
+            UnixDomainServer* udsServer = new UnixDomainServer(this, &processConnection);
+            m_server = udsServer;
+            assert(udsServer->initServer("/tmp/sock.uds"));
+            assert(m_server->startThread());
+        }
+
         usleep(100000);
-        m_clientSession = new TcpSocket("127.0.0.1", 1234);
-        //m_clientSession = new UnixDomainSocket(std::string("/tmp/sock.uds"));
+
+        if(m_isTcp) {
+            m_clientSession = new TcpSocket("127.0.0.1", 1234);
+        } else {
+            m_clientSession = new UnixDomainSocket(std::string("/tmp/sock.uds"));
+        }
+
         assert(m_clientSession->initClientSide());
         m_clientSession->setMessageCallback(this, &processMessageTcp);
         assert(m_clientSession->startThread());

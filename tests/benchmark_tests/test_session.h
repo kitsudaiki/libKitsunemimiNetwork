@@ -17,6 +17,7 @@ class UnixDomainSocket;
 class UnixDomainServer;
 class MessageRingBuffer;
 class AbstractSocket;
+class AbstractServer;
 
 typedef std::chrono::microseconds  chronoMicroSec;
 typedef std::chrono::nanoseconds  chronoNanoSec;
@@ -28,21 +29,20 @@ class TestSession
 {
 public:
     TestSession(const std::string &address,
-                const uint16_t port);
+                const uint16_t port,
+                const std::string &type);
     void sendLoop();
 
     bool m_isClient = false;
+    bool m_isTcp = false;
 
     uint64_t m_size = 0;
     uint64_t m_sizeCounter = 0;
     uint8_t* m_dataBuffer = nullptr;
 
-    TcpServer* m_server = nullptr;
-    TcpSocket* m_clientSession = nullptr;
-    TcpSocket* m_serverSession = nullptr;
-    //UnixDomainServer* m_server = nullptr;
-    //UnixDomainSocket* m_clientSession = nullptr;
-    //UnixDomainSocket* m_serverSession = nullptr;
+    AbstractServer* m_server = nullptr;
+    AbstractSocket* m_clientSession = nullptr;
+    AbstractSocket* m_serverSession = nullptr;
 
     std::chrono::high_resolution_clock::time_point m_start;
     std::chrono::high_resolution_clock::time_point m_end;
