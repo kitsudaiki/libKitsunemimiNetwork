@@ -49,7 +49,7 @@ void processConnectionTlsTcp(void* target,
 
 
 TlsTcpSocket_TlsTcpServer_Test::TlsTcpSocket_TlsTcpServer_Test() :
-    Kitsunemimi::Test("TlsTcpSocket_TlsTcpServer_Test")
+    Kitsunemimi::CompareTestHelper("TlsTcpSocket_TlsTcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();

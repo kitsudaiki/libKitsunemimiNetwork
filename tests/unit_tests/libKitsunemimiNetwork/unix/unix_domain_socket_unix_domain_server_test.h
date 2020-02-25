@@ -9,7 +9,7 @@
 #ifndef UNIX_DOMAIN_SOCKET_UNIX_DOMAIN_SERVER_TEST_H
 #define UNIX_DOMAIN_SOCKET_UNIX_DOMAIN_SERVER_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -20,7 +20,7 @@ class UnixDomainServer;
 class UnixDomainSocket;
 
 class UnixDomainSocket_UnixDomainServer_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     UnixDomainSocket_UnixDomainServer_Test();

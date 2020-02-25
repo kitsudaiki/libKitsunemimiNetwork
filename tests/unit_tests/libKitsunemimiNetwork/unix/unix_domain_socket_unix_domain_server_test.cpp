@@ -47,7 +47,7 @@ void processConnectionUnixDomain(void* target,
 
 
 UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test() :
-    Kitsunemimi::Test("UnixDomainSocket_UnixDomainServer_Test")
+    Kitsunemimi::CompareTestHelper("UnixDomainSocket_UnixDomainServer_Test")
 {
     initTestCase();
     checkConnectionInit();

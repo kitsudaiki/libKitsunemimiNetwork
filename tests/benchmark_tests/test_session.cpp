@@ -37,12 +37,12 @@ uint64_t processMessageTcp(void* target,
 
     if(socket->isClientSide() == false)
     {
-        if(testClass->m_sizeCounter == testClass->m_size*10)
+        if(testClass->m_sizeCounter == testClass->m_size*100)
         {
             testClass->m_end = std::chrono::system_clock::now();
             float duration = std::chrono::duration_cast<chronoMicroSec>(testClass->m_end - testClass->m_start).count();
             duration /= 1000000.0f;
-            const float speed = ((static_cast<float>(testClass->m_size*10)
+            const float speed = ((static_cast<float>(testClass->m_size*100)
                                  / (1024.0f*1024.0f*1024.0f))
                                  / duration) * 8;
 
@@ -144,9 +144,12 @@ TestSession::sendLoop()
         usleep(1000000);
 
         m_start = std::chrono::system_clock::now();
-        for(int i = 0; i < 10*8*1024; i++)
+        for(int j = 0; j < 100; j++)
         {
-            assert(m_clientSession->sendMessage(m_dataBuffer, 128*1024));
+            for(int i = 0; i < 8*1024; i++)
+            {
+                assert(m_clientSession->sendMessage(m_dataBuffer, 128*1024));
+            }
         }
     }
 

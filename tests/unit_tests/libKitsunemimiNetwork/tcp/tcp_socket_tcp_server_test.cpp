@@ -47,7 +47,7 @@ void processConnectionTcp(void* target,
 
 
 TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
-    Kitsunemimi::Test("TcpSocket_TcpServer_Test")
+    Kitsunemimi::CompareTestHelper("TcpSocket_TcpServer_Test")
 {
     initTestCase();
     checkConnectionInit();

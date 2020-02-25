@@ -9,7 +9,7 @@
 #ifndef TCPSOCKET_TCPSERVER_TEST_H
 #define TCPSOCKET_TCPSERVER_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -22,7 +22,7 @@ class MessageRingBuffer;
 class AbstractSocket;
 
 class TcpSocket_TcpServer_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     TcpSocket_TcpServer_Test();

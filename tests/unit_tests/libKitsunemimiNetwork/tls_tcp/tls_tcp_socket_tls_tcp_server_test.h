@@ -9,7 +9,7 @@
 #ifndef TLSTCPSOCKET_TLSTCPSERVER_TEST_H
 #define TLSTCPSOCKET_TLSTCPSERVER_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -20,7 +20,7 @@ class TlsTcpServer;
 class TlsTcpSocket;
 
 class TlsTcpSocket_TlsTcpServer_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     TlsTcpSocket_TlsTcpServer_Test();
