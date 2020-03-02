@@ -7,7 +7,7 @@
  */
 
 #include "tcp_socket_tcp_server_test.h"
-#include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
 #include <libKitsunemimiNetwork/tcp/tcp_socket.h>
@@ -21,18 +21,18 @@ namespace Network
  * processMessageTcp-callback
  */
 uint64_t processMessageTcp(void* target,
-                           MessageRingBuffer* recvBuffer,
+                           Kitsunemimi::RingBuffer* recvBuffer,
                            AbstractSocket*)
 {
     DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
-    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
+    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->usedSize);
 
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addDataToBuffer(targetBuffer, dataPointer, recvBuffer->readWriteDiff);
-    return recvBuffer->readWriteDiff;
+    addDataToBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    return recvBuffer->usedSize;
 }
 
 /**
@@ -83,7 +83,7 @@ TcpSocket_TcpServer_Test::checkConnectionInit()
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
-    usleep(10000);
+    usleep(100000);
 
     TEST_EQUAL(m_server->getNumberOfSockets(), 1);
 
@@ -117,7 +117,7 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
         TEST_EQUAL(recvMessage[2], sendMessage.at(2));
-        resetBuffer(m_buffer, 1000);
+        resetBuffer(*m_buffer, 1000);
     }
 }
 

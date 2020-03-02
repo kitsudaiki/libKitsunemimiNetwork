@@ -24,12 +24,11 @@
 #include <errno.h>
 #include <atomic>
 
-#include <libKitsunemimiCommon/data_buffer.h>
-#include <libKitsunemimiNetwork/message_ring_buffer.h>
 #include <libKitsunemimiCommon/threading/thread.h>
 
 namespace Kitsunemimi
 {
+struct RingBuffer;
 namespace Network
 {
 class CleanupThread;
@@ -48,7 +47,9 @@ public:
     ~AbstractSocket();
 
     void setMessageCallback(void *target,
-                            uint64_t (*processMessage)(void*, MessageRingBuffer*, AbstractSocket*));
+                            uint64_t (*processMessage)(void*,
+                                                       Kitsunemimi::RingBuffer*,
+                                                       AbstractSocket*));
 
     virtual bool initClientSide() = 0;
     socketTypes getType();
@@ -67,12 +68,12 @@ protected:
     bool m_isClientSide = false;
     int m_socket = 0;
     socketTypes m_type = UNDEFINED_TYPE;
-    MessageRingBuffer m_recvBuffer;
+    Kitsunemimi::RingBuffer* m_recvBuffer = nullptr;
     std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
 
     // callback-parameter
     void* m_target = nullptr;
-    uint64_t (*m_processMessage)(void*, MessageRingBuffer*, AbstractSocket*);
+    uint64_t (*m_processMessage)(void*, RingBuffer*, AbstractSocket*);
 
     void run();
     bool waitForMessage();

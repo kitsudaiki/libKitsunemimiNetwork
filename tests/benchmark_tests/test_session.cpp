@@ -7,7 +7,7 @@
 #include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 
 #include <libKitsunemimiCommon/common_methods/string_methods.h>
-#include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiCommon/buffer/ring_buffer.h>
 #include <libKitsunemimiCommon/common_items/table_item.h>
 
 #include <libKitsunemimiPersistence/logger/logger.h>
@@ -21,19 +21,19 @@ namespace Network
  * processMessageTcp-callback
  */
 uint64_t processMessageTcp(void* target,
-                           MessageRingBuffer* recvBuffer,
+                           Kitsunemimi::RingBuffer* recvBuffer,
                            AbstractSocket* socket)
 {
     TestSession* testClass = static_cast<TestSession*>(target);
 
-    if(recvBuffer->readWriteDiff == 0)
+    if(recvBuffer->usedSize == 0)
     {
         return 0;
     }
 
     //delete data;
     //std::cout<<"testClass->m_sizeCounter "<<testClass->m_sizeCounter<<std::endl;
-    testClass->m_sizeCounter += recvBuffer->readWriteDiff;
+    testClass->m_sizeCounter += recvBuffer->usedSize;
 
     if(socket->isClientSide() == false)
     {
@@ -61,7 +61,7 @@ uint64_t processMessageTcp(void* target,
     }
 
 
-    return recvBuffer->readWriteDiff;
+    return recvBuffer->usedSize;
 }
 
 /**

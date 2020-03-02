@@ -19,6 +19,6 @@ int main()
     //initLogger("/tmp", "testlog", true, true);
 
     Kitsunemimi::Network::TcpSocket_TcpServer_Test();
-    Kitsunemimi::Network::UnixDomainSocket_UnixDomainServer_Test();
     Kitsunemimi::Network::TlsTcpSocket_TlsTcpServer_Test();
+    Kitsunemimi::Network::UnixDomainSocket_UnixDomainServer_Test();
 }
