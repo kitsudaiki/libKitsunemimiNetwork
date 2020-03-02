@@ -7,7 +7,7 @@
  */
 
 #include "tls_tcp_socket_tls_tcp_server_test.h"
-#include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
@@ -23,18 +23,18 @@ namespace Network
  * processMessageTlsTcp-callback
  */
 uint64_t processMessageTlsTcp(void* target,
-                              MessageRingBuffer* recvBuffer,
+                              Kitsunemimi::RingBuffer* recvBuffer,
                               AbstractSocket*)
 {
     DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
-    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
+    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->usedSize);
 
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addDataToBuffer(targetBuffer, dataPointer, recvBuffer->readWriteDiff);
-    return recvBuffer->readWriteDiff;
+    addDataToBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    return recvBuffer->usedSize;
 }
 
 /**
@@ -127,7 +127,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
         TEST_EQUAL(recvMessage[2], sendMessage.at(2));
-        resetBuffer(m_buffer, 1000);
+        resetBuffer(*m_buffer, 1000);
     }
 }
 

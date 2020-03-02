@@ -8,6 +8,7 @@
 
 namespace Kitsunemimi
 {
+struct RingBuffer;
 class DataBuffer;
 namespace Network
 {
@@ -15,13 +16,12 @@ class TcpServer;
 class TcpSocket;
 class UnixDomainSocket;
 class UnixDomainServer;
-class MessageRingBuffer;
 class AbstractSocket;
 class AbstractServer;
 
-typedef std::chrono::microseconds  chronoMicroSec;
-typedef std::chrono::nanoseconds  chronoNanoSec;
-typedef std::chrono::seconds  chronoSec;
+typedef std::chrono::microseconds chronoMicroSec;
+typedef std::chrono::nanoseconds chronoNanoSec;
+typedef std::chrono::seconds chronoSec;
 typedef std::chrono::high_resolution_clock::time_point chronoTimePoint;
 typedef std::chrono::high_resolution_clock chronoClock;
 

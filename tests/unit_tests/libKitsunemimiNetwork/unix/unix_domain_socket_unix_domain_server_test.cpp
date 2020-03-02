@@ -7,7 +7,7 @@
  */
 
 #include "unix_domain_socket_unix_domain_server_test.h"
-#include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 #include <libKitsunemimiNetwork/unix/unix_domain_server.h>
@@ -21,18 +21,18 @@ namespace Network
  * processMessageUnixDomain-callback
  */
 uint64_t processMessageUnixDomain(void* target,
-                                  MessageRingBuffer* recvBuffer,
+                                  Kitsunemimi::RingBuffer* recvBuffer,
                                   AbstractSocket*)
 {
     DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
-    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->readWriteDiff);
+    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->usedSize);
 
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addDataToBuffer(targetBuffer, dataPointer, recvBuffer->readWriteDiff);
-    return recvBuffer->readWriteDiff;
+    addDataToBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    return recvBuffer->usedSize;
 }
 
 /**
@@ -77,6 +77,8 @@ UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
     TEST_EQUAL(m_server->initServer("/tmp/sock.uds"), true);
     TEST_EQUAL(m_server->startThread(), true);
 
+    usleep(100000);
+
     // init client
     m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
@@ -117,7 +119,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
         TEST_EQUAL(recvMessage[2], sendMessage.at(2));
-        resetBuffer(m_buffer, 1000);
+        resetBuffer(*m_buffer, 1000);
     }
 }
 

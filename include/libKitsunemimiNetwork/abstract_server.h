@@ -24,9 +24,9 @@
 
 namespace Kitsunemimi
 {
+struct RingBuffer;
 namespace Network
 {
-class MessageRingBuffer;
 class AbstractSocket;
 
 class AbstractServer : public Kitsunemimi::Thread

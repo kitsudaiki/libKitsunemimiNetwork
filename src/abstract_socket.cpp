@@ -7,6 +7,7 @@
  */
 
 #include <libKitsunemimiNetwork/abstract_socket.h>
+#include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <cleanup_thread.h>
 
@@ -22,6 +23,8 @@ Kitsunemimi::Network::CleanupThread* AbstractSocket::m_cleanup = nullptr;
  */
 AbstractSocket::AbstractSocket()
 {
+    m_recvBuffer = new Kitsunemimi::RingBuffer();
+
     if(m_cleanup == nullptr)
     {
         m_cleanup = new Kitsunemimi::Network::CleanupThread();
@@ -68,7 +71,7 @@ AbstractSocket::isClientSide() const
 void
 AbstractSocket::setMessageCallback(void* target,
                                    uint64_t (*processMessage)(void*,
-                                                              MessageRingBuffer*,
+                                                              Kitsunemimi::RingBuffer*,
                                                               AbstractSocket*))
 {
     m_target = target;
@@ -141,20 +144,12 @@ AbstractSocket::waitForMessage()
     }
 
     // calulate buffer-part for recv message
-    uint64_t writePosition = (m_recvBuffer.readPosition + m_recvBuffer.readWriteDiff)
-                             % m_recvBuffer.totalBufferSize;
-    if(m_recvBuffer.totalBufferSize == writePosition) {
-        writePosition = 0;
-    }
-
-    uint64_t spaceToEnd = m_recvBuffer.totalBufferSize - writePosition;
-    if(writePosition < m_recvBuffer.readPosition) {
-        spaceToEnd = m_recvBuffer.readPosition - writePosition;
-    }
+    const uint64_t writePosition = Kitsunemimi::getWritePosition(*m_recvBuffer);
+    const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd(*m_recvBuffer);
 
     // wait for incoming message
     long recvSize = recvData(m_socket,
-                             &m_recvBuffer.data[writePosition],
+                             &m_recvBuffer->data[writePosition],
                              spaceToEnd,
                              0);
 
@@ -166,13 +161,14 @@ AbstractSocket::waitForMessage()
     }
 
     // increase the
-    m_recvBuffer.readWriteDiff = (m_recvBuffer.readWriteDiff + static_cast<uint64_t>(recvSize));
+    m_recvBuffer->usedSize = (m_recvBuffer->usedSize + static_cast<uint64_t>(recvSize));
 
     // process message via callback-function
     uint64_t readBytes = 0;
-    do {
-        readBytes = m_processMessage(m_target, &m_recvBuffer, this);
-        moveBufferForward(m_recvBuffer, readBytes);
+    do
+    {
+        readBytes = m_processMessage(m_target, m_recvBuffer, this);
+        moveBufferForward(*m_recvBuffer, readBytes);
     }
     while(readBytes > 0);
 

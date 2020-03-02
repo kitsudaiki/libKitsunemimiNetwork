@@ -13,12 +13,12 @@
 
 namespace Kitsunemimi
 {
+struct RingBuffer;
 class DataBuffer;
 namespace Network
 {
 class TcpServer;
 class TcpSocket;
-class MessageRingBuffer;
 class AbstractSocket;
 
 class TcpSocket_TcpServer_Test
