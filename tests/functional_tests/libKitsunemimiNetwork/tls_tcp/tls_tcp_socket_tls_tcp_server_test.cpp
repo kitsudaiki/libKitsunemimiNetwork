@@ -118,7 +118,6 @@ TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
     usleep(100000);
     TEST_EQUAL(m_buffer->bufferPosition, 9);
 
-
     if(m_buffer->bufferPosition == 9)
     {
         DataBuffer* buffer = m_buffer;
@@ -139,15 +138,19 @@ TlsTcpSocket_TlsTcpServer_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+
     for(uint32_t i = 0; i < 99999; i++)
     {
         m_socketClientSide->sendMessage(sendMessage);
     }
+
     usleep(100000);
+
     uint64_t totalIncom = m_buffer->bufferPosition;
     DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
     TEST_EQUAL(dataBuffer->bufferPosition, 300000);
+
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)
     {
