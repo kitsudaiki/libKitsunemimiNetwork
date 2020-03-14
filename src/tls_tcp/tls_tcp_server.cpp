@@ -16,7 +16,7 @@ namespace Network
 {
 
 /**
- * constructor
+ * @brief constructor
  */
 TlsTcpServer::TlsTcpServer(void* target,
                            void (*processConnection)(void*, AbstractSocket*),
@@ -34,7 +34,7 @@ TlsTcpServer::TlsTcpServer(void* target,
 }
 
 /**
- * destructor
+ * @brief destructor
  */
 TlsTcpServer::~TlsTcpServer()
 {
@@ -42,7 +42,7 @@ TlsTcpServer::~TlsTcpServer()
 }
 
 /**
- * wait for new incoming tcp-connections
+ * @brief wait for new incoming tcp-connections
  *
  * @return new tcp-socket-socket-pointer for the new incoming connection
  */

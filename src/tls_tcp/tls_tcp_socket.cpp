@@ -16,7 +16,7 @@ namespace Network
 {
 
 /**
- * constructor for the socket-side of the tcp-connection
+ * @brief constructor for the socket-side of the tcp-connection
  *
  * @param address ipv4-adress of the server
  * @param port port where the server is listen
@@ -38,8 +38,8 @@ TlsTcpSocket::TlsTcpSocket(const std::string &address,
 }
 
 /**
- * constructor for the server-side of the tcp-connection, which is called by the
- * tcp-server for each incoming connection
+ * @brief constructor for the server-side of the tcp-connection, which is called by the
+ *        tcp-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
  * @param certFile path to certificate-file

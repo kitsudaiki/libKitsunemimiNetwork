@@ -16,7 +16,7 @@ namespace Network
 {
 
 /**
- * constructor
+ * @brief constructor
  */
 UnixDomainServer::UnixDomainServer(void* target,
                                    void (*processConnection)(void*, AbstractSocket*))
@@ -27,7 +27,7 @@ UnixDomainServer::UnixDomainServer(void* target,
 }
 
 /**
- * destructor
+ * @brief destructor
  */
 UnixDomainServer::~UnixDomainServer()
 {
@@ -35,7 +35,7 @@ UnixDomainServer::~UnixDomainServer()
 }
 
 /**
- * creates a server on a specific port
+ * @brief creates a server on a specific port
  *
  * @param port port-number where the server should be listen
  *
@@ -78,7 +78,7 @@ UnixDomainServer::initServer(const std::string socketFile)
 }
 
 /**
- * wait for new incoming unix-socket-connections
+ * @brief wait for new incoming unix-socket-connections
  *
  * @return new unix-socket-socket-pointer for the new incoming connection
  */
