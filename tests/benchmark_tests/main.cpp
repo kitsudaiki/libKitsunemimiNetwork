@@ -91,5 +91,5 @@ int main(int argc, char *argv[])
 
     Kitsunemimi::Network::TestSession testSession(address, port, type);
 
-    testSession.sendLoop();
+    testSession.runTest();
 }

@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <chrono>
+#include <mutex>
+#include <condition_variable>
+
+#include <libKitsunemimiCommon/test_helper/speed_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -26,17 +30,19 @@ typedef std::chrono::high_resolution_clock::time_point chronoTimePoint;
 typedef std::chrono::high_resolution_clock chronoClock;
 
 class TestSession
+        : public Kitsunemimi::SpeedTestHelper
 {
 public:
     TestSession(const std::string &address,
                 const uint16_t port,
                 const std::string &type);
-    void sendLoop();
+    void runTest();
+    double calculateSpeed(double duration);
 
     bool m_isClient = false;
     bool m_isTcp = false;
 
-    uint64_t m_size = 0;
+    uint64_t m_totalSize = 0;
     uint64_t m_sizeCounter = 0;
     uint8_t* m_dataBuffer = nullptr;
 
@@ -44,8 +50,9 @@ public:
     AbstractSocket* m_clientSession = nullptr;
     AbstractSocket* m_serverSession = nullptr;
 
-    std::chrono::high_resolution_clock::time_point m_start;
-    std::chrono::high_resolution_clock::time_point m_end;
+    TimerSlot m_timeSlot;
+    std::mutex m_cvMutex;
+    std::condition_variable m_cv;
 };
 
 } // namespace Network
