@@ -21,7 +21,7 @@ namespace Network
  *
  * @param socketFile
  */
-UnixDomainSocket::UnixDomainSocket(const std::string socketFile)
+UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
     : AbstractSocket()
 {
     m_socketFile = socketFile;

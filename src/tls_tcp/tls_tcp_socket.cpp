@@ -24,11 +24,11 @@ namespace Network
  * @param keyFile path to key-file
  * @param caFile path to ca-file
  */
-TlsTcpSocket::TlsTcpSocket(const std::string address,
+TlsTcpSocket::TlsTcpSocket(const std::string &address,
                            const uint16_t port,
-                           const std::string certFile,
-                           const std::string keyFile,
-                           const std::string caFile)
+                           const std::string &certFile,
+                           const std::string &keyFile,
+                           const std::string &caFile)
     : TcpSocket(address, port)
 {
     m_certFile = certFile;
@@ -47,9 +47,9 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
  * @param caFile path to ca-file
  */
 TlsTcpSocket::TlsTcpSocket(const int socketFd,
-                           const std::string certFile,
-                           const std::string keyFile,
-                           const std::string caFile)
+                           const std::string &certFile,
+                           const std::string &keyFile,
+                           const std::string &caFile)
     : TcpSocket(socketFd)
 {
     m_certFile = certFile;

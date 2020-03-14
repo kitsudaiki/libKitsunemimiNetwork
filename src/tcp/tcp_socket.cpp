@@ -21,7 +21,7 @@ namespace Network
  * @param address ipv4-adress of the server
  * @param port port where the server is listen
  */
-TcpSocket::TcpSocket(const std::string address,
+TcpSocket::TcpSocket(const std::string &address,
                      const uint16_t port)
     : AbstractSocket()
 {

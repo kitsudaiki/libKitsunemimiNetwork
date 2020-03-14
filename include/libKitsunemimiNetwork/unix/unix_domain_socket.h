@@ -22,7 +22,7 @@ class UnixDomainSocket : public AbstractSocket
     friend class UnixDomainServer;
 
 public:
-    UnixDomainSocket(const std::string socketFile);
+    UnixDomainSocket(const std::string &socketFile);
 
     bool initClientSide();
 
