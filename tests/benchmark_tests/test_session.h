@@ -1,3 +1,11 @@
+/**
+ *  @file       test_session.h
+ *
+ *  @author     Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *
+ *  @copyright  MIT License
+ */
+
 #ifndef TEST_SESSION_H
 #define TEST_SESSION_H
 

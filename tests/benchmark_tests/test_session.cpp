@@ -1,4 +1,12 @@
-﻿#include "test_session.h"
+﻿/**
+ *  @file       test_session.cpp
+ *
+ *  @author     Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *
+ *  @copyright  MIT License
+ */
+
+#include "test_session.h"
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
 #include <libKitsunemimiNetwork/tcp/tcp_socket.h>
@@ -26,15 +34,15 @@ uint64_t processMessageTcp(void* target,
 {
     TestSession* testClass = static_cast<TestSession*>(target);
 
+    // precheck
     if(recvBuffer->usedSize == 0) {
         return 0;
     }
 
-    //delete data;
-    testClass->m_sizeCounter += recvBuffer->usedSize;
-
     if(socket->isClientSide() == false)
     {
+        // handle test-message
+        testClass->m_sizeCounter += recvBuffer->usedSize;
         if(testClass->m_sizeCounter == testClass->m_totalSize)
         {
             testClass->m_sizeCounter = 0;
@@ -52,8 +60,6 @@ uint64_t processMessageTcp(void* target,
 void processConnection(void* target,
                        AbstractSocket* socket)
 {
-    std::cout<<"processConnection"<<std::endl;
-
     if(socket->isClientSide() == false)
     {
         TestSession* testClass = static_cast<TestSession*>(target);
@@ -64,32 +70,34 @@ void processConnection(void* target,
 }
 
 /**
- * @brief TestSession::TestSession
- * @param address
- * @param port
+ * @brief TestSession
  */
-TestSession::TestSession(const std::string &address,
+TestSession::TestSession(const std::string &,
                          const uint16_t port,
                          const std::string &type)
 {
     //Kitsunemimi::Persistence::initLogger("/tmp/", "benchmark", true, true);
+
+    // initialize global values
     m_totalSize = 1024l*1024l*1024l*10l;
     m_dataBuffer = new uint8_t[1024*1024];
-
     if(type == "tcp") {
         m_isTcp = true;
     } else {
         m_isTcp = false;
     }
 
+    // initialize time-slot
     m_timeSlot.unitName = "Gbits/s";
 
     if(port == 0)
     {
         m_isClient = true;
 
+        // create server
         if(m_isTcp)
         {
+            // initialize tcp-server
             m_timeSlot.name = "tcp-speed";
             TcpServer* tcpServer = new TcpServer(this, &processConnection);
             m_server = tcpServer;
@@ -98,6 +106,7 @@ TestSession::TestSession(const std::string &address,
         }
         else
         {
+            // initialize unix-domain-server
             m_timeSlot.name = "uds-speed";
             UnixDomainServer* udsServer = new UnixDomainServer(this, &processConnection);
             m_server = udsServer;
@@ -107,12 +116,14 @@ TestSession::TestSession(const std::string &address,
 
         usleep(100000);
 
+        // create client
         if(m_isTcp) {
             m_clientSession = new TcpSocket("127.0.0.1", 1234);
         } else {
             m_clientSession = new UnixDomainSocket(std::string("/tmp/sock.uds"));
         }
 
+        // start client
         assert(m_clientSession->initClientSide());
         m_clientSession->setMessageCallback(this, &processMessageTcp);
         assert(m_clientSession->startThread());
@@ -131,9 +142,11 @@ TestSession::runTest()
     {
         usleep(1000000);
 
+        // complete run
         for(int j = 0; j < 10; j++)
         {
-            std::cout<<"loop"<<std::endl;
+            std::cout<<"run loop"<<std::endl;
+            // single run
             m_timeSlot.startTimer();
             for(int i = 0; i < 10*8*1024; i++)
             {
@@ -151,11 +164,16 @@ TestSession::runTest()
     printResult();
 }
 
+/**
+ * @brief calculate speed
+ *
+ * @param duration duration in micro-seconds
+ * @return speed in GBit/s
+ */
 double
 TestSession::calculateSpeed(double duration)
 {
     duration /= 1000000.0;
-    std::cout<<"duration: "<<duration<<std::endl;
     const double speed = ((static_cast<double>(m_totalSize)
                           / (1024.0*1024.0*1024.0))
                           / duration) * 8.0;
