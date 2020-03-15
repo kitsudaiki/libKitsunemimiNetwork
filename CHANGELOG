@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0] - 2020-03-15
+
+### Added
+- speed-tests
+
+### Changed
+- renamed unit-tests to functional-tests
+
+### Removed
+- removed MessageRingBuffer, because it was moved as RingBuffer-struct to libKitsunemimiCommon
+
+
 ## [0.5.2] - 2020-01-18
 
 ### Fixed
