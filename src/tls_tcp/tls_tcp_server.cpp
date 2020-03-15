@@ -16,13 +16,13 @@ namespace Network
 {
 
 /**
- * constructor
+ * @brief constructor
  */
 TlsTcpServer::TlsTcpServer(void* target,
                            void (*processConnection)(void*, AbstractSocket*),
-                           const std::string certFile,
-                           const std::string keyFile,
-                           const std::string caFile)
+                           const std::string &certFile,
+                           const std::string &keyFile,
+                           const std::string &caFile)
     : TcpServer(target,
                 processConnection)
 {
@@ -34,7 +34,7 @@ TlsTcpServer::TlsTcpServer(void* target,
 }
 
 /**
- * destructor
+ * @brief destructor
  */
 TlsTcpServer::~TlsTcpServer()
 {
@@ -42,7 +42,7 @@ TlsTcpServer::~TlsTcpServer()
 }
 
 /**
- * wait for new incoming tcp-connections
+ * @brief wait for new incoming tcp-connections
  *
  * @return new tcp-socket-socket-pointer for the new incoming connection
  */

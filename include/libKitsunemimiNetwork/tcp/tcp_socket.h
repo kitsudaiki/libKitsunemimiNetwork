@@ -26,7 +26,7 @@ class TcpSocket : public AbstractSocket
     friend class TcpServer;
 
 public:
-    TcpSocket(const std::string address,
+    TcpSocket(const std::string &address,
               const uint16_t port);
 
     bool initClientSide();

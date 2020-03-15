@@ -16,7 +16,7 @@ namespace Network
 {
 
 /**
- * constructor
+ * @brief constructor
  */
 TcpServer::TcpServer(void* target,
                      void (*processConnection)(void*, AbstractSocket*))
@@ -27,7 +27,7 @@ TcpServer::TcpServer(void* target,
 }
 
 /**
- * destructor
+ * @brief destructor
  */
 TcpServer::~TcpServer()
 {
@@ -35,7 +35,7 @@ TcpServer::~TcpServer()
 }
 
 /**
- * creates a server on a specific port
+ * @brief creates a server on a specific port
  *
  * @param port port-number where the server should be listen
  *
@@ -88,7 +88,7 @@ TcpServer::initServer(const uint16_t port)
 }
 
 /**
- * wait for new incoming tcp-connections
+ * @brief wait for new incoming tcp-connections
  *
  * @return new tcp-socket-socket-pointer for the new incoming connection
  */

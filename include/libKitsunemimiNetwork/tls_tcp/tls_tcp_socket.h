@@ -29,11 +29,11 @@ class TlsTcpSocket : public TcpSocket
     friend class TlsTcpServer;
 
 public:
-    TlsTcpSocket(const std::string address,
+    TlsTcpSocket(const std::string &address,
                  const uint16_t port,
-                 const std::string certFile,
-                 const std::string keyFile,
-                 const std::string caFile="");
+                 const std::string &certFile,
+                 const std::string &keyFile,
+                 const std::string &caFile="");
     ~TlsTcpSocket();
 
     bool initClientSide();
@@ -48,9 +48,9 @@ protected:
     bool initOpenssl();
 
     TlsTcpSocket(const int socketFd,
-                 const std::string certFile,
-                 const std::string keyFile,
-                 const std::string caFile="");
+                 const std::string &certFile,
+                 const std::string &keyFile,
+                 const std::string &caFile="");
 
     long recvData(int,
                   void* bufferPosition,

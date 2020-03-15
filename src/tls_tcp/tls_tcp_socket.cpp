@@ -16,7 +16,7 @@ namespace Network
 {
 
 /**
- * constructor for the socket-side of the tcp-connection
+ * @brief constructor for the socket-side of the tcp-connection
  *
  * @param address ipv4-adress of the server
  * @param port port where the server is listen
@@ -24,11 +24,11 @@ namespace Network
  * @param keyFile path to key-file
  * @param caFile path to ca-file
  */
-TlsTcpSocket::TlsTcpSocket(const std::string address,
+TlsTcpSocket::TlsTcpSocket(const std::string &address,
                            const uint16_t port,
-                           const std::string certFile,
-                           const std::string keyFile,
-                           const std::string caFile)
+                           const std::string &certFile,
+                           const std::string &keyFile,
+                           const std::string &caFile)
     : TcpSocket(address, port)
 {
     m_certFile = certFile;
@@ -38,8 +38,8 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
 }
 
 /**
- * constructor for the server-side of the tcp-connection, which is called by the
- * tcp-server for each incoming connection
+ * @brief constructor for the server-side of the tcp-connection, which is called by the
+ *        tcp-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
  * @param certFile path to certificate-file
@@ -47,9 +47,9 @@ TlsTcpSocket::TlsTcpSocket(const std::string address,
  * @param caFile path to ca-file
  */
 TlsTcpSocket::TlsTcpSocket(const int socketFd,
-                           const std::string certFile,
-                           const std::string keyFile,
-                           const std::string caFile)
+                           const std::string &certFile,
+                           const std::string &keyFile,
+                           const std::string &caFile)
     : TcpSocket(socketFd)
 {
     m_certFile = certFile;

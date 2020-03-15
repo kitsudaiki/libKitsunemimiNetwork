@@ -33,7 +33,7 @@ AbstractSocket::AbstractSocket()
 }
 
 /**
- * @brief AbstractSocket::~AbstractSocket
+ * @brief destructor, which close the socket before deletion
  */
 AbstractSocket::~AbstractSocket()
 {
@@ -41,8 +41,9 @@ AbstractSocket::~AbstractSocket()
 }
 
 /**
- * @brief AbstractSocket::getType
- * @return
+ * @brief get socket-type
+ *
+ * @return socket-type enum
  */
 AbstractSocket::socketTypes
 AbstractSocket::getType()
@@ -61,7 +62,7 @@ AbstractSocket::isClientSide() const
 }
 
 /**
- * add new callback for incoming messages
+ * @brief add new callback for incoming messages
  *
  * @param target
  * @param processMessage
@@ -79,7 +80,7 @@ AbstractSocket::setMessageCallback(void* target,
 }
 
 /**
- * send a text-message over the socket
+ * @brief send a text-message over the socket
  *
  * @param message message to send
  *
@@ -93,7 +94,7 @@ AbstractSocket::sendMessage(const std::string &message)
 }
 
 /**
- * send a byte-buffer over the tcp-socket
+ * @brief send a byte-buffer over the tcp-socket
  *
  * @param message byte-buffer to send
  * @param numberOfBytes number of bytes to send
@@ -131,7 +132,7 @@ AbstractSocket::sendMessage(const void* message,
 }
 
 /**
- * wait for new incoming messages
+ * @brief wait for new incoming messages
  *
  * @return false, if receive failed or socket is aborted, else true
  */
@@ -176,7 +177,7 @@ AbstractSocket::waitForMessage()
 }
 
 /**
- * close the socket and schedule the deletion of the thread
+ * @brief close the socket and schedule the deletion of the thread
  *
  * @return false, if already closed, else true
  */
@@ -207,7 +208,7 @@ AbstractSocket::closeSocket()
 }
 
 /**
- * run-method for the thread-class
+ * @brief run-method for the thread-class
  */
 void
 AbstractSocket::run()

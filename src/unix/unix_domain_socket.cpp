@@ -17,11 +17,11 @@ namespace Network
 {
 
 /**
- * constructor for the socket-side of the unix-socket-connection
+ * @brief constructor for the socket-side of the unix-socket-connection
  *
  * @param socketFile
  */
-UnixDomainSocket::UnixDomainSocket(const std::string socketFile)
+UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
     : AbstractSocket()
 {
     m_socketFile = socketFile;
@@ -53,8 +53,8 @@ UnixDomainSocket::initClientSide()
 }
 
 /**
- * constructor for the server-side of the unix-socket-connection, which is called by the
- * unix-server for each incoming connection
+ * @brief constructor for the server-side of the unix-socket-connection, which is called by the
+ *        unix-server for each incoming connection
  *
  * @param socketFd file-descriptor of the socket-socket
  */
@@ -68,7 +68,7 @@ UnixDomainSocket::UnixDomainSocket(const int socketFd)
 }
 
 /**
- * init unix-socket and connect to the server
+ * @brief init unix-socket and connect to the server
  *
  * @return false, if socket-creation or connection to the server failed, else true
  */

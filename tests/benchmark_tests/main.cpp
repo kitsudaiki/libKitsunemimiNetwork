@@ -1,23 +1,9 @@
 /**
- * @file    main.cpp
+ *  @file       main.cpp
  *
- * @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *  @author     Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- * @copyright  Apache License Version 2.0
- *
- *      Copyright 2019 Tobias Anker
- *
- *      Licensed under the Apache License, Version 2.0 (the "License");
- *      you may not use this file except in compliance with the License.
- *      You may obtain a copy of the License at
- *
- *          http://www.apache.org/licenses/LICENSE-2.0
- *
- *      Unless required by applicable law or agreed to in writing, software
- *      distributed under the License is distributed on an "AS IS" BASIS,
- *      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *      See the License for the specific language governing permissions and
- *      limitations under the License.
+ *  @copyright  MIT License
  */
 
 #include <libKitsunemimiPersistence/logger/logger.h>
@@ -30,6 +16,7 @@ namespace argParser = boost::program_options;
 
 int main(int argc, char *argv[])
 {
+    // define arg-parser
     argParser::options_description desc("Allowed options");
     desc.add_options()
         (
@@ -53,6 +40,7 @@ int main(int argc, char *argv[])
         )
     ;
 
+    // exec arg-parser
     argParser::variables_map vm;
     argParser::store(argParser::parse_command_line(argc, argv, desc), vm);
     argParser::notify(vm);
@@ -64,10 +52,12 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    // init values
     uint16_t port = 0;
     std::string address = "";
     std::string type = "";
 
+    // get values from command line
     if(vm.count("address")) {
         address = vm["address"].as<std::string>();
     }
@@ -78,10 +68,12 @@ int main(int argc, char *argv[])
         type = vm["type"].as<std::string>();
     }
 
+    // debug-output
     std::cout<<"address: "<<address<<std::endl;
     std::cout<<"port: "<<(int)port<<std::endl;
     std::cout<<"type: "<<type<<std::endl;
 
+    // check type
     if(type != "tcp"
             && type != "uds")
     {
@@ -89,7 +81,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    // run test
     Kitsunemimi::Network::TestSession testSession(address, port, type);
-
-    testSession.sendLoop();
+    testSession.runTest();
 }
