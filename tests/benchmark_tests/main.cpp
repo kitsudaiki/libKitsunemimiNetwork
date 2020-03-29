@@ -10,7 +10,7 @@
 #include <boost/program_options.hpp>
 #include <test_session.h>
 
-using Kitsunemimi::Persistence::initLogger;
+using Kitsunemimi::Persistence::initConsoleLogger;
 namespace argParser = boost::program_options;
 
 

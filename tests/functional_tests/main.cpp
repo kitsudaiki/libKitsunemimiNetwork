@@ -12,11 +12,11 @@
 
 #include <libKitsunemimiPersistence/logger/logger.h>
 
-using Kitsunemimi::Persistence::initLogger;
+using Kitsunemimi::Persistence::initConsoleLogger;
 
 int main()
 {
-    //initLogger("/tmp", "testlog", true, true);
+    //initConsoleLogger(true);
 
     Kitsunemimi::Network::TcpSocket_TcpServer_Test();
     Kitsunemimi::Network::TlsTcpSocket_TlsTcpServer_Test();

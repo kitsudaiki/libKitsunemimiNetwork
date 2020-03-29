@@ -44,7 +44,9 @@ TcpSocket::initClientSide()
     }
 
     bool result = initSocket();
-    if(result == false) {
+    if(result == false)
+    {
+        LOG_ERROR("Faile to initialized tcp-socket client to targe: " + m_address);
         return false;
     }
 

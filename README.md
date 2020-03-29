@@ -19,13 +19,12 @@ name | repository | version | task
 g++ | g++ | 6.x | Compiler for the C++ code.
 qmake | qt5-qmake | 5.x | This package provides the tool qmake, to build the project
 boost-filesystem library | libboost-filesystem-dev | 1.6x | interactions with files and directories on the system
-sqlite3 library | libsqlite3-dev | 3.x | handling of sqlite databases
 ssl library | libssl-dev | 1.1.x | encryption for tls connections
 
 Installation on Ubuntu/Debian:
 
 ```bash
-sudo apt-get install g++ qt5-qmake libboost-filesystem-dev libsqlite3-dev libssl-dev
+sudo apt-get install g++ qt5-qmake libboost-filesystem-dev libssl-dev
 ```
 
 IMPORTANT: All my projects are only tested on Linux. 
@@ -34,7 +33,8 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.12.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiCommon | v0.12.1 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiPersistence | v0.8.1 | https://github.com/tobiasanker/libKitsunemimiPersistence.git
 
 HINT: These Kitsunemimi-Libraries will be downloaded and build automatically with the build-script below.
 
