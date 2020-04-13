@@ -25,13 +25,13 @@ uint64_t processMessageTcp(void* target,
                            AbstractSocket*)
 {
     DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
-    const uint8_t* dataPointer = getDataPointer(*recvBuffer, recvBuffer->usedSize);
+    const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
 
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addDataToBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    addData_DataBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
     return recvBuffer->usedSize;
 }
 
@@ -117,7 +117,7 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
         TEST_EQUAL(recvMessage[2], sendMessage.at(2));
-        resetBuffer(*m_buffer, 1000);
+        reset_DataBuffer(*m_buffer, 1000);
     }
 }
 
