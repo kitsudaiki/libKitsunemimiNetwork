@@ -145,8 +145,8 @@ AbstractSocket::waitForMessage()
     }
 
     // calulate buffer-part for recv message
-    const uint64_t writePosition = Kitsunemimi::getWritePosition(*m_recvBuffer);
-    const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd(*m_recvBuffer);
+    const uint64_t writePosition = Kitsunemimi::getWritePosition_RingBuffer(*m_recvBuffer);
+    const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd_RingBuffer(*m_recvBuffer);
 
     // wait for incoming message
     long recvSize = recvData(m_socket,
@@ -169,7 +169,7 @@ AbstractSocket::waitForMessage()
     do
     {
         readBytes = m_processMessage(m_target, m_recvBuffer, this);
-        moveBufferForward(*m_recvBuffer, readBytes);
+        moveForward_RingBuffer(*m_recvBuffer, readBytes);
     }
     while(readBytes > 0);
 
