@@ -33,8 +33,8 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.12.1 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
-libKitsunemimiPersistence | v0.8.1 | https://github.com/tobiasanker/libKitsunemimiPersistence.git
+libKitsunemimiCommon | v0.13.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiPersistence | v0.8.2 | https://github.com/tobiasanker/libKitsunemimiPersistence.git
 
 HINT: These Kitsunemimi-Libraries will be downloaded and build automatically with the build-script below.
 
