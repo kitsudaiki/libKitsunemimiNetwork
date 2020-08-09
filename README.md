@@ -16,15 +16,16 @@ This is a small library for network connections. It provides servers and clients
 
 name | repository | version | task
 --- | --- | --- | ---
-g++ | g++ | 6.x | Compiler for the C++ code.
-qmake | qt5-qmake | 5.x | This package provides the tool qmake, to build the project
-boost-filesystem library | libboost-filesystem-dev | 1.6x | interactions with files and directories on the system
-ssl library | libssl-dev | 1.1.x | encryption for tls connections
+g++ | g++ | >= 6.0 | Compiler for the C++ code.
+make | make | >= 4.0 | process the make-file, which is created by qmake to build the programm with g++
+qmake | qt5-qmake | >= 5.0 | This package provides the tool qmake, which is similar to cmake and create the make-file for compilation.
+boost-filesystem library | libboost-filesystem-dev | >= 1.6 | interactions with files and directories on the system
+ssl library | libssl-dev | >= 1.1 | encryption for tls connections
 
 Installation on Ubuntu/Debian:
 
 ```bash
-sudo apt-get install g++ qt5-qmake libboost-filesystem-dev libssl-dev
+sudo apt-get install g++ make qt5-qmake libboost-filesystem-dev libssl-dev
 ```
 
 IMPORTANT: All my projects are only tested on Linux. 
