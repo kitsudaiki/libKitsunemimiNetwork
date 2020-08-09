@@ -4,12 +4,11 @@ build:
   script:
     - echo Working on branch $CI_COMMIT_REF_NAME
     - apt-get update
-    - apt-get install -y openssl libssl-dev  libboost-filesystem-dev libsqlite3-dev
+    - apt-get install -y openssl libssl-dev  libboost-filesystem-dev
 
     - cd /builds/tobiasanker/libKitsunemimiNetwork
-    - ./build.sh
+    - ./build.sh test
 
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/tobiasanker/result'
     - /builds/tobiasanker/build/libKitsunemimiNetwork/tests/functional_tests/functional_tests
 
   tags:
