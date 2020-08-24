@@ -42,7 +42,7 @@ function get_required_kitsune_lib_repo () {
     ADDITIONAL_CONFIGS=$4
 
     # clone repo
-    git clone  https://github.com/tobiasanker/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
+    git clone  https://github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
     cd "$PARENT_DIR/$REPO_NAME"
     git checkout $TAG_OR_BRANCH
 
@@ -51,7 +51,7 @@ function get_required_kitsune_lib_repo () {
 
 #-----------------------------------------------------------------------------------------------------------------
 
-get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.15.0" 4 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.15.1" 4 "staticlib"
 
 get_required_kitsune_lib_repo "libKitsunemimiPersistence" "v0.10.0" 4 "staticlib"
 
