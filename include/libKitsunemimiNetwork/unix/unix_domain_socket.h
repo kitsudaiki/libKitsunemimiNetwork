@@ -17,7 +17,8 @@ namespace Network
 {
 class UnixDomainServer;
 
-class UnixDomainSocket : public AbstractSocket
+class UnixDomainSocket
+        : public AbstractSocket
 {
     friend class UnixDomainServer;
 

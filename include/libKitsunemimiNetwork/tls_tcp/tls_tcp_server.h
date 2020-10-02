@@ -20,7 +20,8 @@ namespace Kitsunemimi
 namespace Network
 {
 
-class TlsTcpServer : public TcpServer
+class TlsTcpServer
+        : public TcpServer
 {
 public:
     TlsTcpServer(void* target,

@@ -33,10 +33,12 @@ namespace Network
 {
 class CleanupThread;
 
-class AbstractSocket : public Kitsunemimi::Thread
+class AbstractSocket
+        : public Kitsunemimi::Thread
 {
 public:
-    enum socketTypes {
+    enum socketTypes
+    {
         UNDEFINED_TYPE = 0,
         UNIX_SOCKET = 1,
         TCP_SOCKET = 2,

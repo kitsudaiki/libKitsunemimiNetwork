@@ -51,9 +51,11 @@ uint64_t
 AbstractServer::getNumberOfSockets()
 {
     uint64_t result = 0;
+
     mutexLock();
     result = m_sockets.size();
     mutexUnlock();
+
     return result;
 }
 
@@ -66,6 +68,7 @@ AbstractSocket*
 AbstractServer::getPendingSocket()
 {
     AbstractSocket* result = nullptr;
+
     mutexLock();
     if(m_sockets.size() > 0)
     {
@@ -73,6 +76,7 @@ AbstractServer::getPendingSocket()
         m_sockets.pop_back();
     }
     mutexUnlock();
+
     return result;
 }
 
@@ -114,8 +118,7 @@ AbstractServer::closeServer()
 void
 AbstractServer::run()
 {
-    while(!m_abort)
-    {
+    while(!m_abort) {
         waitForIncomingConnection();
     }
 }

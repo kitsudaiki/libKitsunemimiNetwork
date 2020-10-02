@@ -24,7 +24,8 @@ namespace Network
 {
 class TlsTcpServer;
 
-class TlsTcpSocket : public TcpSocket
+class TlsTcpSocket
+        : public TcpSocket
 {
     friend class TlsTcpServer;
 

@@ -16,7 +16,8 @@ namespace Kitsunemimi
 namespace Network
 {
 
-class TcpServer : public AbstractServer
+class TcpServer
+        : public AbstractServer
 {
 public:
     TcpServer(void* target,

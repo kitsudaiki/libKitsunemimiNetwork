@@ -103,9 +103,7 @@ AbstractSocket::sendMessage(const void* message,
     }
 
     // send message
-    while(m_lock.test_and_set(std::memory_order_acquire)) {
-        asm("");
-    }
+    while(m_lock.test_and_set(std::memory_order_acquire)) { asm(""); }
 
     const ssize_t successfulSended = sendData(m_socket,
                                               message,
@@ -205,8 +203,7 @@ AbstractSocket::closeSocket()
 void
 AbstractSocket::run()
 {
-    while(!m_abort)
-    {
+    while(!m_abort) {
         waitForMessage();
     }
 }

@@ -42,7 +42,7 @@ UnixDomainServer::~UnixDomainServer()
  * @return false, if server creation failed, else true
  */
 bool
-UnixDomainServer::initServer(const std::string socketFile)
+UnixDomainServer::initServer(const std::string &socketFile)
 {
     m_socketFile = socketFile;
 
@@ -88,7 +88,7 @@ UnixDomainServer::waitForIncomingConnection()
     uint32_t length = sizeof(struct sockaddr_un);
 
     //make new connection
-    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
+    const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
         return nullptr;
