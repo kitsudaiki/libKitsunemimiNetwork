@@ -16,20 +16,12 @@ namespace Kitsunemimi
 namespace Network
 {
 
-Kitsunemimi::Network::CleanupThread* AbstractSocket::m_cleanup = nullptr;
-
 /**
  * @brief AbstractSocket::AbstractSocket
  */
 AbstractSocket::AbstractSocket()
 {
     m_recvBuffer = new Kitsunemimi::RingBuffer();
-
-    if(m_cleanup == nullptr)
-    {
-        m_cleanup = new Kitsunemimi::Network::CleanupThread();
-        m_cleanup->startThread();
-    }
 }
 
 /**
@@ -202,7 +194,7 @@ AbstractSocket::closeSocket()
     // when the other side of the connection triggers the close-process,
     // the thread would try to close itself, which would result into a deadlock.
     // That is the reason, why another thread sould process the delete of the socket-thread.
-    AbstractSocket::m_cleanup->addSocketForCleanup(this);
+    CleanupThread::getInstance()->addSocketForCleanup(this);
 
     return true;
 }
