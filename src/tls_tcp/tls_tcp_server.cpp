@@ -52,7 +52,7 @@ TlsTcpServer::waitForIncomingConnection()
     uint32_t length = sizeof(struct sockaddr_in);
 
     //make new connection
-    int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
+    const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
         return nullptr;

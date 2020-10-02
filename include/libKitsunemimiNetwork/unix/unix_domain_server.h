@@ -18,14 +18,15 @@ namespace Network
 {
 class UnixDomainSocket;
 
-class UnixDomainServer : public AbstractServer
+class UnixDomainServer
+        : public AbstractServer
 {
 public:
     UnixDomainServer(void* target,
                      void (*processConnection)(void*, AbstractSocket*));
     ~UnixDomainServer();
 
-    bool initServer(const std::string socketFile);
+    bool initServer(const std::string &socketFile);
     AbstractSocket* waitForIncomingConnection();
 
 private:

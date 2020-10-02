@@ -16,20 +16,12 @@ namespace Kitsunemimi
 namespace Network
 {
 
-Kitsunemimi::Network::CleanupThread* AbstractSocket::m_cleanup = nullptr;
-
 /**
  * @brief AbstractSocket::AbstractSocket
  */
 AbstractSocket::AbstractSocket()
 {
     m_recvBuffer = new Kitsunemimi::RingBuffer();
-
-    if(m_cleanup == nullptr)
-    {
-        m_cleanup = new Kitsunemimi::Network::CleanupThread();
-        m_cleanup->startThread();
-    }
 }
 
 /**
@@ -111,9 +103,7 @@ AbstractSocket::sendMessage(const void* message,
     }
 
     // send message
-    while(m_lock.test_and_set(std::memory_order_acquire)) {
-        asm("");
-    }
+    while(m_lock.test_and_set(std::memory_order_acquire)) { asm(""); }
 
     const ssize_t successfulSended = sendData(m_socket,
                                               message,
@@ -202,7 +192,7 @@ AbstractSocket::closeSocket()
     // when the other side of the connection triggers the close-process,
     // the thread would try to close itself, which would result into a deadlock.
     // That is the reason, why another thread sould process the delete of the socket-thread.
-    AbstractSocket::m_cleanup->addSocketForCleanup(this);
+    CleanupThread::getInstance()->addSocketForCleanup(this);
 
     return true;
 }
@@ -213,8 +203,7 @@ AbstractSocket::closeSocket()
 void
 AbstractSocket::run()
 {
-    while(!m_abort)
-    {
+    while(!m_abort) {
         waitForMessage();
     }
 }

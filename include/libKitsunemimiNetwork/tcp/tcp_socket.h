@@ -21,7 +21,8 @@ namespace Network
 {
 class TcpServer;
 
-class TcpSocket : public AbstractSocket
+class TcpSocket
+        : public AbstractSocket
 {
     friend class TcpServer;
 

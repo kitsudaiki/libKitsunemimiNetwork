@@ -25,10 +25,27 @@ namespace Kitsunemimi
 namespace Network
 {
 
+Kitsunemimi::Network::CleanupThread* CleanupThread::m_instance = nullptr;
+
 /**
  * constructor
  */
 CleanupThread::CleanupThread() {}
+
+/**
+ * @brief static methode to get instance of the interface
+ *
+ * @return pointer to the static instance
+ */
+CleanupThread*
+CleanupThread::getInstance()
+{
+    if(m_instance == nullptr) {
+        m_instance = new CleanupThread();
+    }
+
+    return m_instance;
+}
 
 /**
  * @brief CleanupThread::addSocketForCleanup

@@ -108,7 +108,6 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
     usleep(10000);
     TEST_EQUAL(m_buffer->bufferPosition, 9);
 
-
     if(m_buffer->bufferPosition == 9)
     {
         DataBuffer* buffer = m_buffer;
@@ -133,11 +132,13 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
     {
         m_socketClientSide->sendMessage(sendMessage);
     }
+
     usleep(10000);
     uint64_t totalIncom = m_buffer->bufferPosition;
     DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
     TEST_EQUAL(dataBuffer->bufferPosition, 300000);
+
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)
     {
@@ -149,6 +150,7 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
             numberOfPois++;
         }
     }
+
     TEST_EQUAL(numberOfPois, 100000);
 }
 

@@ -162,6 +162,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkBigDataTransfer()
             numberOfPois++;
         }
     }
+
     TEST_EQUAL(numberOfPois, 100000);
 }
 

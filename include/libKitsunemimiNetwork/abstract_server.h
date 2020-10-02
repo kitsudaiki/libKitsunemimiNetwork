@@ -29,10 +29,12 @@ namespace Network
 {
 class AbstractSocket;
 
-class AbstractServer : public Kitsunemimi::Thread
+class AbstractServer
+        : public Kitsunemimi::Thread
 {
 public:
-    enum serverTypes {
+    enum serverTypes
+    {
         UNDEFINED_TYPE = 0,
         UNIX_SERVER = 1,
         TCP_SERVER = 2,

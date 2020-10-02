@@ -101,6 +101,8 @@ TlsTcpSocket::initClientSide()
 bool
 TlsTcpSocket::initOpenssl()
 {
+    int result = 0;
+
     // common ssl-init
     SSL_load_error_strings();
     OpenSSL_add_ssl_algorithms();
@@ -124,7 +126,7 @@ TlsTcpSocket::initOpenssl()
     SSL_CTX_set_options(m_ctx, SSL_OP_SINGLE_DH_USE);
 
     // set certificate
-    int result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
+    result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
         LOG_ERROR("Failed to load certificate file for ssl-encrytion. File path: " + m_certFile);

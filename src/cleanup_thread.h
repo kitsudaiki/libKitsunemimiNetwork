@@ -22,7 +22,7 @@ class AbstractSocket;
 class CleanupThread : public Kitsunemimi::Thread
 {
 public:
-    CleanupThread();
+    static CleanupThread* getInstance();
 
     void addSocketForCleanup(AbstractSocket *socket);
 
@@ -30,7 +30,10 @@ protected:
     void run();
 
 private:
+    CleanupThread();
+
     std::queue<AbstractSocket*> m_cleanupQueue;
+    static CleanupThread* m_instance;
 };
 
 } // namespace Network

@@ -101,7 +101,8 @@ TcpSocket::initSocket()
 
     // set server-address
     memset(&address, 0, sizeof(address));
-    if((addr = inet_addr(m_address.c_str())) != INADDR_NONE) {
+    if((addr = inet_addr(m_address.c_str())) != INADDR_NONE)
+    {
         memcpy(reinterpret_cast<char*>(&address.sin_addr), &addr, sizeof(addr));
     }
     else
@@ -113,6 +114,7 @@ TcpSocket::initSocket()
             LOG_ERROR("Failed to get host by address: " + m_address);
             return false;
         }
+
         memcpy(reinterpret_cast<char*>(&address.sin_addr),
                hostInfo->h_addr,
                static_cast<size_t>(hostInfo->h_length));
