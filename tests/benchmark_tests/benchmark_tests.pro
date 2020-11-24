@@ -18,18 +18,12 @@ LIBS += -L../../../libKitsunemimiArgs/src/debug -lKitsunemimiArgs
 LIBS += -L../../../libKitsunemimiArgs/src/release -lKitsunemimiArgs
 INCLUDEPATH += ../../../libKitsunemimiArgs/include
 
-LIBS += -L../../../libKitsunemimiNetwork/src -lKitsunemimiNetwork
-LIBS += -L../../../libKitsunemimiNetwork/src/debug -lKitsunemimiNetwork
-LIBS += -L../../../libKitsunemimiNetwork/src/release -lKitsunemimiNetwork
-INCLUDEPATH += ../../../libKitsunemimiNetwork/include
-
 LIBS += -L../../../libKitsunemimiPersistence/src -lKitsunemimiPersistence
 LIBS += -L../../../libKitsunemimiPersistence/src/debug -lKitsunemimiPersistence
 LIBS += -L../../../libKitsunemimiPersistence/src/release -lKitsunemimiPersistence
 INCLUDEPATH += ../../../libKitsunemimiPersistence/include
 
-LIBS +=  -lssl -lcrypt
-LIBS +=  -lboost_filesystem -lboost_system -lsqlite3
+LIBS +=  -lboost_filesystem -lboost_system -lssl -lcrypt
 
 
 SOURCES += \

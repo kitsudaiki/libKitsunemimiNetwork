@@ -23,7 +23,6 @@ INCLUDEPATH += $$PWD \
 HEADERS += \
     ../include/libKitsunemimiNetwork/tcp/tcp_server.h \
     ../include/libKitsunemimiNetwork/message_ring_buffer.h \
-    cleanup_thread.h \
     ../include/libKitsunemimiNetwork/abstract_server.h \
     ../include/libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h \
     ../include/libKitsunemimiNetwork/tcp/tcp_socket.h \
@@ -33,7 +32,6 @@ HEADERS += \
     ../include/libKitsunemimiNetwork/unix/unix_domain_socket.h
 
 SOURCES += \
-    cleanup_thread.cpp \
     tcp/tcp_server.cpp \
     abstract_server.cpp \
     tls_tcp/tls_tcp_server.cpp \

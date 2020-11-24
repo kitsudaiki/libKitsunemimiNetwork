@@ -7,8 +7,7 @@
  */
 
 #include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
-#include <iostream>
-#include <cleanup_thread.h>
+#include <libKitsunemimiCommon/threading/cleanup_thread.h>
 #include <libKitsunemimiPersistence/logger/logger.h>
 
 namespace Kitsunemimi
