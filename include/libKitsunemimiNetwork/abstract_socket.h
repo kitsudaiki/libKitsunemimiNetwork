@@ -31,7 +31,6 @@ namespace Kitsunemimi
 struct RingBuffer;
 namespace Network
 {
-class CleanupThread;
 
 class AbstractSocket
         : public Kitsunemimi::Thread
@@ -62,8 +61,6 @@ public:
                      const uint64_t numberOfBytes);
 
     bool closeSocket();
-
-    static Kitsunemimi::Network::CleanupThread* m_cleanup;
 
 protected:
     bool m_isConnected = false;

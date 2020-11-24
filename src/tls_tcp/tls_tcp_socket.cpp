@@ -7,7 +7,7 @@
  */
 
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
-#include <cleanup_thread.h>
+#include <libKitsunemimiCommon/threading/cleanup_thread.h>
 #include <libKitsunemimiPersistence/logger/logger.h>
 
 namespace Kitsunemimi

@@ -8,8 +8,7 @@
 
 #include <libKitsunemimiNetwork/abstract_socket.h>
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
-
-#include <cleanup_thread.h>
+#include <libKitsunemimiCommon/threading/cleanup_thread.h>
 
 namespace Kitsunemimi
 {
@@ -20,6 +19,7 @@ namespace Network
  * @brief AbstractSocket::AbstractSocket
  */
 AbstractSocket::AbstractSocket()
+    : Kitsunemimi::Thread()
 {
     m_recvBuffer = new Kitsunemimi::RingBuffer();
 }
@@ -192,7 +192,7 @@ AbstractSocket::closeSocket()
     // when the other side of the connection triggers the close-process,
     // the thread would try to close itself, which would result into a deadlock.
     // That is the reason, why another thread sould process the delete of the socket-thread.
-    CleanupThread::getInstance()->addSocketForCleanup(this);
+    CleanupThread::getInstance()->addThreadForCleanup(this);
 
     return true;
 }
@@ -203,7 +203,7 @@ AbstractSocket::closeSocket()
 void
 AbstractSocket::run()
 {
-    while(!m_abort) {
+    while(m_abort == false) {
         waitForMessage();
     }
 }
