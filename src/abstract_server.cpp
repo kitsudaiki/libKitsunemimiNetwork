@@ -105,7 +105,7 @@ AbstractServer::closeServer()
     }
 
     // stop thread
-    stopThread();
+    scheduleThreadForDeletion();
 
     LOG_INFO("Successfully closed server");
 
