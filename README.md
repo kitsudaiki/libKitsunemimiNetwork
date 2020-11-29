@@ -121,7 +121,7 @@ void processConnectionTlsTcp(void* target,
     socket->setMessageCallback(target, &processMessageTlsTcp);
 
     // start the thread of the socket
-    socket->start();
+    socket->startThread();
 }
 
 // init the demo-buffer from above
@@ -138,7 +138,7 @@ server = new TlsTcpServer(buffer,                      // <- demo-buffer, which 
 server->initServer(12345);
 // start the thread, so it can create a socket for every incoming 
 //    connection in the background
-server->start();
+server->startThread();
 
 // create a client which works as client and connect to the server
 socketClientSide = new TlsTcpSocket("127.0.0.1",   // <- server-address
@@ -149,7 +149,7 @@ socketClientSide = new TlsTcpSocket("127.0.0.1",   // <- server-address
 //    it doesn't need the following two lines. These init the buffer
 //    for incoming messages and starting the thread of the client-socket
 socketClientSide->addNetworkTrigger(buffer, &processMessageTlsTcp);
-socketClientSide->start();
+socketClientSide->startThread();
 //..
 
 // get socket on server-side, which was spawned by the incoming connection
@@ -162,6 +162,9 @@ if(server->getNumberOfSockets() > 0)
 socketClientSide->sendMessage(std::string("any message"));
 // instead of socketClientSide you can use socketServerSide the same way
 
+// teminate connectioin
+socketClientSide->closeSocket();
+socketClientSide->scheduleThreadForDeletion();
 ```
 
 
