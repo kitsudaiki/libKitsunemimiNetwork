@@ -188,12 +188,6 @@ AbstractSocket::closeSocket()
         m_socket = 0;
     }
 
-    // add socket-thread to the cleanup-thread, because if the socket triggers the close by itself,
-    // when the other side of the connection triggers the close-process,
-    // the thread would try to close itself, which would result into a deadlock.
-    // That is the reason, why another thread sould process the delete of the socket-thread.
-    CleanupThread::getInstance()->addThreadForCleanup(this);
-
     return true;
 }
 

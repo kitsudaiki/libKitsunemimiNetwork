@@ -104,9 +104,6 @@ AbstractServer::closeServer()
         m_serverSocket = 0;
     }
 
-    // stop thread
-    scheduleThreadForDeletion();
-
     LOG_INFO("Successfully closed server");
 
     return true;

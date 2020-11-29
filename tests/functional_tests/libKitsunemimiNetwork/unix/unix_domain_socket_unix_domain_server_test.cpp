@@ -163,10 +163,10 @@ void
 UnixDomainSocket_UnixDomainServer_Test::cleanupTestCase()
 {
     TEST_EQUAL(m_socketServerSide->closeSocket(), true);
-    m_socketServerSide->closeSocket();
     TEST_EQUAL(m_server->closeServer(), true);
+    TEST_EQUAL(m_socketServerSide->scheduleThreadForDeletion(), true);
+    TEST_EQUAL(m_server->scheduleThreadForDeletion(), true);
 
-    delete m_server;
     delete m_buffer;
 }
 
