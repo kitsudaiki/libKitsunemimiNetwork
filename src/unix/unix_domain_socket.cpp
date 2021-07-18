@@ -87,6 +87,7 @@ UnixDomainSocket::initSocket()
     // set other informations
     address.sun_family = AF_LOCAL;
     strncpy(address.sun_path, m_socketFile.c_str(), m_socketFile.size());
+    address.sun_path[m_socketFile.size()] = '\0';
 
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)

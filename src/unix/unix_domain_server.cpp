@@ -57,6 +57,7 @@ UnixDomainServer::initServer(const std::string &socketFile)
     unlink(m_socketFile.c_str());
     m_server.sun_family = AF_LOCAL;
     strncpy(m_server.sun_path, m_socketFile.c_str(), m_socketFile.size());
+    m_server.sun_path[m_socketFile.size()] = '\0';
 
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
