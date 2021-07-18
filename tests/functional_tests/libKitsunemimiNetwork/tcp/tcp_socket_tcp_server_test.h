@@ -14,7 +14,7 @@
 namespace Kitsunemimi
 {
 struct RingBuffer;
-class DataBuffer;
+struct DataBuffer;
 namespace Network
 {
 class TcpServer;

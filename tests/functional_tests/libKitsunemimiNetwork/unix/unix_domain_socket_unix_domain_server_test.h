@@ -13,7 +13,7 @@
 
 namespace Kitsunemimi
 {
-class DataBuffer;
+struct DataBuffer;
 namespace Network
 {
 class UnixDomainServer;
