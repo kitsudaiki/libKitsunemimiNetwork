@@ -72,12 +72,26 @@ UnixDomainSocket_UnixDomainServer_Test::initTestCase()
 void
 UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
 {
+    // check too long path
+    TEST_EQUAL(m_server->initServer("/tmp/sock.uds11111111111111111111111"
+                                    "111111111111111111111111111111111111"
+                                    "111111111111111111111111111111111111"
+                                    "111111111111111111111111111111111111"
+                                    "111111111111111111111111111111111111"), false);
     // init server
     TEST_EQUAL(m_server->getType(), AbstractServer::UNIX_SERVER);
     TEST_EQUAL(m_server->initServer("/tmp/sock.uds"), true);
     TEST_EQUAL(m_server->startThread(), true);
 
     usleep(100000);
+
+    // check too long path
+    UnixDomainSocket failSocket("/tmp/sock.uds11111111111111111111111"
+                                "111111111111111111111111111111111111"
+                                "111111111111111111111111111111111111"
+                                "111111111111111111111111111111111111"
+                                "111111111111111111111111111111111111");
+    TEST_EQUAL(failSocket.initClientSide(), false);
 
     // init client
     m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");

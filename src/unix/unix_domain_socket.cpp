@@ -76,6 +76,14 @@ UnixDomainSocket::initSocket()
 {
     struct sockaddr_un address;
 
+    // check file-path length to avoid conflics, when copy to the address
+    if(m_socketFile.size() > 100)
+    {
+        LOG_ERROR("Failed to create a unix-socket, "
+                  "because the filename is longer then 100 characters: " + m_socketFile);
+        return false;
+    }
+
     // create socket
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
     if(m_socket < 0)
@@ -87,6 +95,7 @@ UnixDomainSocket::initSocket()
     // set other informations
     address.sun_family = AF_LOCAL;
     strncpy(address.sun_path, m_socketFile.c_str(), m_socketFile.size());
+    address.sun_path[m_socketFile.size()] = '\0';
 
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)

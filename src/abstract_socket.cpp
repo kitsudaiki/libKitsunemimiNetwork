@@ -139,10 +139,10 @@ AbstractSocket::waitForMessage()
     const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd_RingBuffer(*m_recvBuffer);
 
     // wait for incoming message
-    long recvSize = recvData(m_socket,
-                             &m_recvBuffer->data[writePosition],
-                             spaceToEnd,
-                             0);
+    const long recvSize = recvData(m_socket,
+                                   &m_recvBuffer->data[writePosition],
+                                   spaceToEnd,
+                                   0);
 
     // handle error-cases
     if(recvSize <= 0

@@ -46,6 +46,14 @@ UnixDomainServer::initServer(const std::string &socketFile)
 {
     m_socketFile = socketFile;
 
+    // check file-path length to avoid conflics, when copy to the sockaddr_un-object
+    if(m_socketFile.size() > 100)
+    {
+        LOG_ERROR("Failed to create a unix-socket, "
+                  "because the filename is longer then 100 characters: " + m_socketFile);
+        return false;
+    }
+
     // create socket
     m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if(m_serverSocket < 0)
@@ -57,6 +65,7 @@ UnixDomainServer::initServer(const std::string &socketFile)
     unlink(m_socketFile.c_str());
     m_server.sun_family = AF_LOCAL;
     strncpy(m_server.sun_path, m_socketFile.c_str(), m_socketFile.size());
+    m_server.sun_path[m_socketFile.size()] = '\0';
 
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
