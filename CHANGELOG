@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.6] - 2021-07-28
+
+### Fixed
+- fixed broken string handling while creating unix-socket
+
+
 ## [0.6.5] - 2020-11-29
 
 ### Changed
