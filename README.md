@@ -89,7 +89,6 @@ Example to create server and socket:
 
 TlsTcpServer* server = nullptr;
 TlsTcpSocket* socketClientSide = nullptr;
-TlsTcpSocket* socketServerSide = nullptr;
 
 // callback for new incoming messages
 uint64_t processMessageTlsTcp(void* target,
@@ -125,7 +124,7 @@ void processConnectionTlsTcp(void* target,
 }
 
 // init the demo-buffer from above
-Common::DataBuffer* buffer = new Common::DataBuffer(1000);
+Kitsunemimi::DataBuffer* buffer = new Kitsunemimi::DataBuffer(1000);
 
 // create server
 server = new TlsTcpServer(buffer,                      // <- demo-buffer, which is forwarded to the 
@@ -150,13 +149,6 @@ socketClientSide = new TlsTcpSocket("127.0.0.1",   // <- server-address
 //    for incoming messages and starting the thread of the client-socket
 socketClientSide->addNetworkTrigger(buffer, &processMessageTlsTcp);
 socketClientSide->startThread();
-//..
-
-// get socket on server-side, which was spawned by the incoming connection
-if(server->getNumberOfSockets() > 0)
-{
-    socketServerSide = static_cast<TlsTcpSocket*>(m_server->getSocket(0));
-}
 
 // send data
 socketClientSide->sendMessage(std::string("any message"));
