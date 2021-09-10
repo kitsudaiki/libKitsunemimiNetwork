@@ -88,10 +88,8 @@ UnixDomainServer::initServer(const std::string &socketFile)
 
 /**
  * @brief wait for new incoming unix-socket-connections
- *
- * @return new unix-socket-socket-pointer for the new incoming connection
  */
-AbstractSocket*
+void
 UnixDomainServer::waitForIncomingConnection()
 {
     uint32_t length = sizeof(struct sockaddr_un);
@@ -100,13 +98,13 @@ UnixDomainServer::waitForIncomingConnection()
     const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
-        return nullptr;
+        return;
     }
 
     if(fd < 0)
     {
         LOG_ERROR("Failed accept incoming connection on unix-server with address: " + m_socketFile);
-        return nullptr;
+        return;
     }
 
     LOG_INFO("Successfully accepted incoming connection on unix-socket server with "
@@ -115,13 +113,6 @@ UnixDomainServer::waitForIncomingConnection()
     // create new socket-object from file-descriptor
     UnixDomainSocket* unixSocket = new UnixDomainSocket(fd);
     m_processConnection(m_target, unixSocket);
-
-    // append new socket to the list
-    mutexLock();
-    m_sockets.push_back(unixSocket);
-    mutexUnlock();
-
-    return unixSocket;
 }
 
 } // namespace Network

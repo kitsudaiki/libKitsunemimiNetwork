@@ -6,9 +6,9 @@
  *  @copyright MIT License
  */
 
-#include <libKitsunemimiNetwork/tcp/tcp_socket_tcp_server_test.h>
-#include <libKitsunemimiNetwork/unix/unix_domain_socket_unix_domain_server_test.h>
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h>
+#include <libKitsunemimiNetwork/tcp/tcp_test.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_test.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_test.h>
 
 #include <libKitsunemimiPersistence/logger/logger.h>
 
@@ -18,7 +18,7 @@ int main()
 {
     //initConsoleLogger(true);
 
-    Kitsunemimi::Network::UnixDomainSocket_UnixDomainServer_Test();
-    Kitsunemimi::Network::TcpSocket_TcpServer_Test();
-    Kitsunemimi::Network::TlsTcpSocket_TlsTcpServer_Test();
+    Kitsunemimi::Network::UnixDomain_Test();
+    Kitsunemimi::Network::Tcp_Test();
+    Kitsunemimi::Network::TlsTcp_Test();
 }

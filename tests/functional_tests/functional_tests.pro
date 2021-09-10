@@ -22,12 +22,12 @@ LIBS +=  -lboost_filesystem -lboost_system -lssl -lcrypt
 
 HEADERS += \
     cert_init.h \
-    libKitsunemimiNetwork/tcp/tcp_socket_tcp_server_test.h \
-    libKitsunemimiNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.h \
-    libKitsunemimiNetwork/unix/unix_domain_socket_unix_domain_server_test.h
+    libKitsunemimiNetwork/tcp/tcp_test.h \
+    libKitsunemimiNetwork/tls_tcp/tls_tcp_test.h \
+    libKitsunemimiNetwork/unix/unix_domain_test.h
 
 SOURCES += \
-    main.cpp \
-    libKitsunemimiNetwork/tcp/tcp_socket_tcp_server_test.cpp \
-    libKitsunemimiNetwork/tls_tcp/tls_tcp_socket_tls_tcp_server_test.cpp \
-    libKitsunemimiNetwork/unix/unix_domain_socket_unix_domain_server_test.cpp
+    libKitsunemimiNetwork/tcp/tcp_test.cpp \
+    libKitsunemimiNetwork/tls_tcp/tls_tcp_test.cpp \
+    libKitsunemimiNetwork/unix/unix_domain_test.cpp \
+    main.cpp

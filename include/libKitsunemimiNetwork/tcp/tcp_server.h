@@ -25,7 +25,7 @@ public:
     ~TcpServer();
 
     bool initServer(const uint16_t port);
-    AbstractSocket* waitForIncomingConnection();
+    void waitForIncomingConnection();
 
 protected:
     uint16_t m_port = 0;

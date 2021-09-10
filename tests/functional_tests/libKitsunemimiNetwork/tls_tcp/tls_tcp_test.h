@@ -19,11 +19,14 @@ namespace Network
 class TlsTcpServer;
 class TlsTcpSocket;
 
-class TlsTcpSocket_TlsTcpServer_Test
+class TlsTcp_Test
         : public Kitsunemimi::CompareTestHelper
 {
 public:
-    TlsTcpSocket_TlsTcpServer_Test();
+    TlsTcp_Test();
+
+    DataBuffer* m_buffer = nullptr;
+    TlsTcpSocket* m_socketServerSide = nullptr;
 
 private:
     void initTestCase();
@@ -34,8 +37,6 @@ private:
 
     TlsTcpServer* m_server = nullptr;
     TlsTcpSocket* m_socketClientSide = nullptr;
-    TlsTcpSocket* m_socketServerSide = nullptr;
-    DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

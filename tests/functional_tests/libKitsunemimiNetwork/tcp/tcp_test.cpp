@@ -6,7 +6,7 @@
  *  @copyright MIT License
  */
 
-#include "tcp_socket_tcp_server_test.h"
+#include "tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
@@ -24,14 +24,13 @@ uint64_t processMessageTcp(void* target,
                            Kitsunemimi::RingBuffer* recvBuffer,
                            AbstractSocket*)
 {
-    DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
+    Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
-
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addData_DataBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    addData_DataBuffer(*targetTest->m_buffer, dataPointer, recvBuffer->usedSize);
     return recvBuffer->usedSize;
 }
 
@@ -41,13 +40,15 @@ uint64_t processMessageTcp(void* target,
 void processConnectionTcp(void* target,
                           AbstractSocket* socket)
 {
+    Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
+    targetTest->m_socketServerSide = static_cast<TcpSocket*>(socket);
     socket->setMessageCallback(target, &processMessageTcp);
     socket->startThread();
 }
 
 
-TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
-    Kitsunemimi::CompareTestHelper("TcpSocket_TcpServer_Test")
+Tcp_Test::Tcp_Test() :
+    Kitsunemimi::CompareTestHelper("Tcp_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -60,17 +61,17 @@ TcpSocket_TcpServer_Test::TcpSocket_TcpServer_Test() :
  * initTestCase
  */
 void
-TcpSocket_TcpServer_Test::initTestCase()
+Tcp_Test::initTestCase()
 {
     m_buffer = new DataBuffer(1000);
-    m_server = new TcpServer(m_buffer, &processConnectionTcp);
+    m_server = new TcpServer(this, &processConnectionTcp);
 }
 
 /**
  * checkConnectionInit
  */
 void
-TcpSocket_TcpServer_Test::checkConnectionInit()
+Tcp_Test::checkConnectionInit()
 {
     // init server
     TEST_EQUAL(m_server->getType(), AbstractServer::TCP_SERVER);
@@ -84,22 +85,13 @@ TcpSocket_TcpServer_Test::checkConnectionInit()
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
     usleep(100000);
-
-    TEST_EQUAL(m_server->getNumberOfSockets(), 1);
-
-    if(m_server->getNumberOfSockets() == 1)
-    {
-        m_socketServerSide = static_cast<TcpSocket*>(m_server->getPendingSocket());
-        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::TCP_SOCKET);
-        TEST_EQUAL(m_server->getNumberOfSockets(), 0);
-    }
 }
 
 /**
  * checkLittleDataTransfer
  */
 void
-TcpSocket_TcpServer_Test::checkLittleDataTransfer()
+Tcp_Test::checkLittleDataTransfer()
 {
     usleep(10000);
 
@@ -124,16 +116,15 @@ TcpSocket_TcpServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-TcpSocket_TcpServer_Test::checkBigDataTransfer()
+Tcp_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
-    for(uint32_t i = 0; i < 99999; i++)
-    {
+    for(uint32_t i = 0; i < 99999; i++) {
         m_socketClientSide->sendMessage(sendMessage);
     }
 
-    usleep(10000);
+    usleep(100000);
     uint64_t totalIncom = m_buffer->bufferPosition;
     DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
@@ -158,7 +149,7 @@ TcpSocket_TcpServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-TcpSocket_TcpServer_Test::cleanupTestCase()
+Tcp_Test::cleanupTestCase()
 {
     TEST_EQUAL(m_socketServerSide->closeSocket(), true);
     TEST_EQUAL(m_server->closeServer(), true);

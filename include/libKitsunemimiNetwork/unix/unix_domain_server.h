@@ -27,7 +27,7 @@ public:
     ~UnixDomainServer();
 
     bool initServer(const std::string &socketFile);
-    AbstractSocket* waitForIncomingConnection();
+    void waitForIncomingConnection();
 
 private:
     std::string m_socketFile = "";
