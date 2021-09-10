@@ -31,7 +31,7 @@ public:
                  const std::string &caFile = "");
     ~TlsTcpServer();
 
-    AbstractSocket* waitForIncomingConnection();
+    void waitForIncomingConnection();
 
 private:
     std::string m_caFile = "";

@@ -89,10 +89,9 @@ TcpServer::initServer(const uint16_t port)
 
 /**
  * @brief wait for new incoming tcp-connections
- *
- * @return new tcp-socket-socket-pointer for the new incoming connection
  */
-AbstractSocket* TcpServer::waitForIncomingConnection()
+void
+TcpServer::waitForIncomingConnection()
 {
     uint32_t length = sizeof(struct sockaddr_in);
 
@@ -100,14 +99,14 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
     const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
-        return nullptr;
+        return;
     }
 
     if(fd < 0)
     {
         LOG_ERROR("Failed accept incoming connection on tcp-server with "
-                      "port: " + std::to_string(m_port));
-        return nullptr;
+                  "port: " + std::to_string(m_port));
+        return;
     }
 
     LOG_INFO("Successfully accepted incoming connection on tcp-socket server with "
@@ -116,13 +115,6 @@ AbstractSocket* TcpServer::waitForIncomingConnection()
     // create new socket-object from file-descriptor
     TcpSocket* tcpSocket = new TcpSocket(fd);
     m_processConnection(m_target, tcpSocket);
-
-    // append new socket to the list
-    mutexLock();
-    m_sockets.push_back(tcpSocket);
-    mutexUnlock();
-
-    return tcpSocket;
 }
 
 } // namespace Network

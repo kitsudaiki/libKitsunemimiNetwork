@@ -35,49 +35,14 @@ AbstractServer::~AbstractServer()
 }
 
 /**
- * @brief AbstractServer::getType
- * @return
+ * @brief get type of the server
+ *
+ * @return type of server
  */
 AbstractServer::serverTypes
 AbstractServer::getType()
 {
     return m_type;
-}
-
-/**
- * get the number of sockets which are registered at the server
- */
-uint64_t
-AbstractServer::getNumberOfSockets()
-{
-    uint64_t result = 0;
-
-    mutexLock();
-    result = m_sockets.size();
-    mutexUnlock();
-
-    return result;
-}
-
-/**
- * get a specific tcp-socket from the server
- *
- * @return tcp-socket-pointer
- */
-AbstractSocket*
-AbstractServer::getPendingSocket()
-{
-    AbstractSocket* result = nullptr;
-
-    mutexLock();
-    if(m_sockets.size() > 0)
-    {
-        result = m_sockets.back();
-        m_sockets.pop_back();
-    }
-    mutexUnlock();
-
-    return result;
 }
 
 /**

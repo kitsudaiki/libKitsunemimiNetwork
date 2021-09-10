@@ -6,7 +6,7 @@
  *  @copyright MIT License
  */
 
-#include "tls_tcp_socket_tls_tcp_server_test.h"
+#include "tls_tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
@@ -26,14 +26,14 @@ uint64_t processMessageTlsTcp(void* target,
                               Kitsunemimi::RingBuffer* recvBuffer,
                               AbstractSocket*)
 {
-    DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
+    TlsTcp_Test* targetTest = static_cast<TlsTcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
 
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addData_DataBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    addData_DataBuffer(*targetTest->m_buffer, dataPointer, recvBuffer->usedSize);
     return recvBuffer->usedSize;
 }
 
@@ -43,13 +43,15 @@ uint64_t processMessageTlsTcp(void* target,
 void processConnectionTlsTcp(void* target,
                              AbstractSocket* socket)
 {
+    TlsTcp_Test* targetTest = static_cast<TlsTcp_Test*>(target);
+    targetTest->m_socketServerSide = static_cast<TlsTcpSocket*>(socket);
     socket->setMessageCallback(target, &processMessageTlsTcp);
     socket->startThread();
 }
 
 
-TlsTcpSocket_TlsTcpServer_Test::TlsTcpSocket_TlsTcpServer_Test() :
-    Kitsunemimi::CompareTestHelper("TlsTcpSocket_TlsTcpServer_Test")
+TlsTcp_Test::TlsTcp_Test() :
+    Kitsunemimi::CompareTestHelper("TlsTcp_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -62,12 +64,12 @@ TlsTcpSocket_TlsTcpServer_Test::TlsTcpSocket_TlsTcpServer_Test() :
  * initTestCase
  */
 void
-TlsTcpSocket_TlsTcpServer_Test::initTestCase()
+TlsTcp_Test::initTestCase()
 {
     writeTestCerts();
 
     m_buffer = new DataBuffer(1000);
-    m_server = new TlsTcpServer(m_buffer,
+    m_server = new TlsTcpServer(this,
                                 &processConnectionTlsTcp,
                                 std::string("/tmp/cert.pem"),
                                 std::string("/tmp/key.pem"));
@@ -77,7 +79,7 @@ TlsTcpSocket_TlsTcpServer_Test::initTestCase()
  * checkConnectionInit
  */
 void
-TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
+TlsTcp_Test::checkConnectionInit()
 {
     // init server
     TEST_EQUAL(m_server->getType(), AbstractServer::TLS_TCP_SERVER);
@@ -94,22 +96,13 @@ TlsTcpSocket_TlsTcpServer_Test::checkConnectionInit()
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
 
     usleep(100000);
-
-    TEST_EQUAL(m_server->getNumberOfSockets(), 1);
-
-    if(m_server->getNumberOfSockets() == 1)
-    {
-        m_socketServerSide = static_cast<TlsTcpSocket*>(m_server->getPendingSocket());
-        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
-        TEST_EQUAL(m_server->getNumberOfSockets(), 0);
-    }
 }
 
 /**
  * checkLittleDataTransfer
  */
 void
-TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
+TlsTcp_Test::checkLittleDataTransfer()
 {
     usleep(100000);
 
@@ -134,17 +127,16 @@ TlsTcpSocket_TlsTcpServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-TlsTcpSocket_TlsTcpServer_Test::checkBigDataTransfer()
+TlsTcp_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
 
-    for(uint32_t i = 0; i < 99999; i++)
-    {
+    for(uint32_t i = 0; i < 99999; i++) {
         m_socketClientSide->sendMessage(sendMessage);
     }
 
-    usleep(100000);
+    usleep(1000000);
 
     uint64_t totalIncom = m_buffer->bufferPosition;
     DataBuffer* dataBuffer = m_buffer;
@@ -170,7 +162,7 @@ TlsTcpSocket_TlsTcpServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-TlsTcpSocket_TlsTcpServer_Test::cleanupTestCase()
+TlsTcp_Test::cleanupTestCase()
 {
     TEST_EQUAL(m_socketServerSide->closeSocket(), true);
     TEST_EQUAL(m_server->closeServer(), true);

@@ -21,11 +21,14 @@ class TcpServer;
 class TcpSocket;
 class AbstractSocket;
 
-class TcpSocket_TcpServer_Test
+class Tcp_Test
         : public Kitsunemimi::CompareTestHelper
 {
 public:
-    TcpSocket_TcpServer_Test();
+    Tcp_Test();
+
+    DataBuffer* m_buffer = nullptr;
+    TcpSocket* m_socketServerSide = nullptr;
 
 private:
     void initTestCase();
@@ -36,8 +39,6 @@ private:
 
     TcpServer* m_server = nullptr;
     TcpSocket* m_socketClientSide = nullptr;
-    TcpSocket* m_socketServerSide = nullptr;
-    DataBuffer* m_buffer = nullptr;
 };
 
 } // namespace Network

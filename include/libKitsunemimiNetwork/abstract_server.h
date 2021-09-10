@@ -47,11 +47,8 @@ public:
 
     serverTypes getType();
 
-    virtual AbstractSocket* waitForIncomingConnection() = 0;
+    virtual void waitForIncomingConnection() = 0;
     bool closeServer();
-
-    uint64_t getNumberOfSockets();
-    AbstractSocket* getPendingSocket();
 
 protected:
     void run();
@@ -62,8 +59,6 @@ protected:
     // callback-parameter
     void* m_target = nullptr;
     void (*m_processConnection)(void*, AbstractSocket*);
-
-    std::vector<AbstractSocket*> m_sockets;
 };
 
 } // namespace Network

@@ -1,4 +1,4 @@
-/**
+﻿/**
  *  @file    unix_domain_socket_unix_domain_server_test.cpp
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
@@ -6,7 +6,7 @@
  *  @copyright MIT License
  */
 
-#include "unix_domain_socket_unix_domain_server_test.h"
+#include "unix_domain_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 #include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
@@ -24,14 +24,13 @@ uint64_t processMessageUnixDomain(void* target,
                                   Kitsunemimi::RingBuffer* recvBuffer,
                                   AbstractSocket*)
 {
-    DataBuffer* targetBuffer = static_cast<DataBuffer*>(target);
+    UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
-
     if(dataPointer == nullptr) {
         return 0;
     }
 
-    addData_DataBuffer(*targetBuffer, dataPointer, recvBuffer->usedSize);
+    addData_DataBuffer(*targetTest->m_buffer, dataPointer, recvBuffer->usedSize);
     return recvBuffer->usedSize;
 }
 
@@ -41,13 +40,15 @@ uint64_t processMessageUnixDomain(void* target,
 void processConnectionUnixDomain(void* target,
                                  AbstractSocket* socket)
 {
+    UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
+    targetTest->m_socketServerSide = static_cast<UnixDomainSocket*>(socket);
     socket->setMessageCallback(target, &processMessageUnixDomain);
     socket->startThread();
 }
 
 
-UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test() :
-    Kitsunemimi::CompareTestHelper("UnixDomainSocket_UnixDomainServer_Test")
+UnixDomain_Test::UnixDomain_Test() :
+    Kitsunemimi::CompareTestHelper("UnixDomain_Test")
 {
     initTestCase();
     checkConnectionInit();
@@ -60,17 +61,17 @@ UnixDomainSocket_UnixDomainServer_Test::UnixDomainSocket_UnixDomainServer_Test()
  * initTestCase
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::initTestCase()
+UnixDomain_Test::initTestCase()
 {
     m_buffer = new DataBuffer(1000);
-    m_server = new UnixDomainServer(m_buffer, &processConnectionUnixDomain);
+    m_server = new UnixDomainServer(this, &processConnectionUnixDomain);
 }
 
 /**
  * checkConnectionInit
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
+UnixDomain_Test::checkConnectionInit()
 {
     // check too long path
     TEST_EQUAL(m_server->initServer("/tmp/sock.uds11111111111111111111111"
@@ -100,22 +101,13 @@ UnixDomainSocket_UnixDomainServer_Test::checkConnectionInit()
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
 
     usleep(100000);
-
-    TEST_EQUAL(m_server->getNumberOfSockets(), 1);
-
-    if(m_server->getNumberOfSockets() == 1)
-    {
-        m_socketServerSide = static_cast<UnixDomainSocket*>(m_server->getPendingSocket());
-        TEST_EQUAL(m_socketServerSide->getType(), AbstractSocket::UNIX_SOCKET);
-        TEST_EQUAL(m_server->getNumberOfSockets(), 0);
-    }
 }
 
 /**
  * checkLittleDataTransfer
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
+UnixDomain_Test::checkLittleDataTransfer()
 {
     usleep(100000);
 
@@ -140,12 +132,11 @@ UnixDomainSocket_UnixDomainServer_Test::checkLittleDataTransfer()
  * checkBigDataTransfer
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
+UnixDomain_Test::checkBigDataTransfer()
 {
     std::string sendMessage = "poi";
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
-    for(uint32_t i = 0; i < 99999; i++)
-    {
+    for(uint32_t i = 0; i < 99999; i++) {
         m_socketClientSide->sendMessage(sendMessage);
     }
 
@@ -174,7 +165,7 @@ UnixDomainSocket_UnixDomainServer_Test::checkBigDataTransfer()
  * cleanupTestCase
  */
 void
-UnixDomainSocket_UnixDomainServer_Test::cleanupTestCase()
+UnixDomain_Test::cleanupTestCase()
 {
     TEST_EQUAL(m_socketServerSide->closeSocket(), true);
     TEST_EQUAL(m_server->closeServer(), true);
