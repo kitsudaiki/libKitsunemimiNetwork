@@ -10,9 +10,7 @@
 #include <libKitsunemimiNetwork/unix/unix_domain_test.h>
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_test.h>
 
-#include <libKitsunemimiPersistence/logger/logger.h>
-
-using Kitsunemimi::Persistence::initConsoleLogger;
+#include <libKitsunemimiCommon/logger.h>
 
 int main()
 {

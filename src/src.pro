@@ -2,18 +2,13 @@ QT       -= qt core gui
 
 TARGET = KitsunemimiNetwork
 TEMPLATE = lib
-CONFIG += c++14
+CONFIG += c++17
 VERSION = 0.6.6
 
 LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
 LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
 LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
 INCLUDEPATH += ../../libKitsunemimiCommon/include
-
-LIBS += -L../../libKitsunemimiPersistence/src -lKitsunemimiPersistence
-LIBS += -L../../libKitsunemimiPersistence/src/debug -lKitsunemimiPersistence
-LIBS += -L../../libKitsunemimiPersistence/src/release -lKitsunemimiPersistence
-INCLUDEPATH += ../../libKitsunemimiPersistence/include
 
 LIBS +=  -lssl -lcrypt
 
