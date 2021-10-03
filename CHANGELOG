@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.7] - 2021-10-03
+
+### Changed
+- update from c++14 to c++17
+
+
 ## [0.6.6] - 2021-07-28
 
 ### Fixed
