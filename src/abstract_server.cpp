@@ -8,9 +8,7 @@
 
 #include <libKitsunemimiNetwork/abstract_server.h>
 #include <libKitsunemimiNetwork/abstract_socket.h>
-#include <libKitsunemimiPersistence/logger/logger.h>
-
-using namespace Kitsunemimi::Persistence;
+#include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
 {

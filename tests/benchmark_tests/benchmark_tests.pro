@@ -3,7 +3,7 @@ include(../../defaults.pri)
 QT -= qt core gui
 
 CONFIG   -= app_bundle
-CONFIG += c++14 console
+CONFIG += c++17 console
 
 LIBS += -L../../src -lKitsunemimiNetwork
 INCLUDEPATH += $$PWD
@@ -18,12 +18,8 @@ LIBS += -L../../../libKitsunemimiArgs/src/debug -lKitsunemimiArgs
 LIBS += -L../../../libKitsunemimiArgs/src/release -lKitsunemimiArgs
 INCLUDEPATH += ../../../libKitsunemimiArgs/include
 
-LIBS += -L../../../libKitsunemimiPersistence/src -lKitsunemimiPersistence
-LIBS += -L../../../libKitsunemimiPersistence/src/debug -lKitsunemimiPersistence
-LIBS += -L../../../libKitsunemimiPersistence/src/release -lKitsunemimiPersistence
-INCLUDEPATH += ../../../libKitsunemimiPersistence/include
 
-LIBS +=  -lboost_filesystem -lboost_system -lssl -lcrypt
+LIBS += -lssl -lcrypt
 
 
 SOURCES += \

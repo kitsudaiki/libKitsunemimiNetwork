@@ -2,7 +2,7 @@
 #define CERT_INIT_H
 
 #include <iostream>
-#include <libKitsunemimiPersistence/files/text_file.h>
+#include <libKitsunemimiCommon/files/text_file.h>
 
 namespace Kitsunemimi
 {
@@ -62,8 +62,8 @@ const std::string testKey = "-----BEGIN PRIVATE KEY-----\n"
 void writeTestCerts()
 {
     std::string errorMessage = "";
-    Persistence::writeFile("/tmp/cert.pem", testCert, errorMessage, true);
-    Persistence::writeFile("/tmp/key.pem", testKey, errorMessage, true);
+    Kitsunemimi::writeFile("/tmp/cert.pem", testCert, errorMessage, true);
+    Kitsunemimi::writeFile("/tmp/key.pem", testKey, errorMessage, true);
 }
 
 } // namespace Network

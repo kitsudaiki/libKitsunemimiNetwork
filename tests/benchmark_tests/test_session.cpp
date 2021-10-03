@@ -18,7 +18,7 @@
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 #include <libKitsunemimiCommon/common_items/table_item.h>
 
-#include <libKitsunemimiPersistence/logger/logger.h>
+#include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
 {
