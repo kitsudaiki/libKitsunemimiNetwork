@@ -22,8 +22,9 @@ namespace Network
  * @param port port where the server is listen
  */
 TcpSocket::TcpSocket(const std::string &address,
-                     const uint16_t port)
-    : AbstractSocket()
+                     const uint16_t port,
+                     const std::string &threadName)
+    : AbstractSocket(threadName)
 {
     m_address = address;
     m_port = port;
@@ -62,8 +63,9 @@ TcpSocket::initClientSide()
  *
  * @param socketFd file-descriptor of the socket-socket
  */
-TcpSocket::TcpSocket(const int socketFd)
-    : AbstractSocket()
+TcpSocket::TcpSocket(const int socketFd,
+                     const std::string &threadName)
+    : AbstractSocket(threadName)
 {
     m_socket = socketFd;
     m_isClientSide = false;

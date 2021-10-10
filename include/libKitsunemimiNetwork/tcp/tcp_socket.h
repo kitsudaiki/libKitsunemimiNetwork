@@ -28,7 +28,8 @@ class TcpSocket
 
 public:
     TcpSocket(const std::string &address,
-              const uint16_t port);
+              const uint16_t port,
+              const std::string &threadName);
 
     bool initClientSide();
 
@@ -37,7 +38,8 @@ protected:
     uint16_t m_port = 0;
     sockaddr_in m_socketAddr;
 
-    TcpSocket(const int socketFd);
+    TcpSocket(const int socketFd,
+              const std::string &threadName);
 
     bool initSocket();
     long recvData(int socket,

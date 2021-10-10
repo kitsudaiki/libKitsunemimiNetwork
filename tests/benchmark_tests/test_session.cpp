@@ -99,7 +99,9 @@ TestSession::TestSession(const std::string &,
         {
             // initialize tcp-server
             m_timeSlot.name = "tcp-speed";
-            TcpServer* tcpServer = new TcpServer(this, &processConnection);
+            TcpServer* tcpServer = new TcpServer(this,
+                                                 &processConnection,
+                                                 "test-server");
             m_server = tcpServer;
             assert(tcpServer->initServer(1234));
             assert(m_server->startThread());
@@ -108,7 +110,9 @@ TestSession::TestSession(const std::string &,
         {
             // initialize unix-domain-server
             m_timeSlot.name = "uds-speed";
-            UnixDomainServer* udsServer = new UnixDomainServer(this, &processConnection);
+            UnixDomainServer* udsServer = new UnixDomainServer(this,
+                                                               &processConnection,
+                                                               "test-server");
             m_server = udsServer;
             assert(udsServer->initServer("/tmp/sock.uds"));
             assert(m_server->startThread());
@@ -118,9 +122,9 @@ TestSession::TestSession(const std::string &,
 
         // create client
         if(m_isTcp) {
-            m_clientSession = new TcpSocket("127.0.0.1", 1234);
+            m_clientSession = new TcpSocket("127.0.0.1", 1234, "test-client");
         } else {
-            m_clientSession = new UnixDomainSocket(std::string("/tmp/sock.uds"));
+            m_clientSession = new UnixDomainSocket(std::string("/tmp/sock.uds"), "test-client");
         }
 
         // start client

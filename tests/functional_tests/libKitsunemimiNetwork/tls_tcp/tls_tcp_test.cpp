@@ -71,6 +71,7 @@ TlsTcp_Test::initTestCase()
     m_buffer = new DataBuffer(1000);
     m_server = new TlsTcpServer(this,
                                 &processConnectionTlsTcp,
+                                "TlsTcp_Test",
                                 std::string("/tmp/cert.pem"),
                                 std::string("/tmp/key.pem"));
 }
@@ -89,6 +90,7 @@ TlsTcp_Test::checkConnectionInit()
     // init client
     m_socketClientSide = new TlsTcpSocket("127.0.0.1",
                                           12345,
+                                          "TlsTcp_Test_client",
                                           "/tmp/cert.pem",
                                           "/tmp/key.pem");
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
@@ -109,12 +111,12 @@ TlsTcp_Test::checkLittleDataTransfer()
     std::string sendMessage("poipoipoi");
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(100000);
-    TEST_EQUAL(m_buffer->bufferPosition, 9);
+    TEST_EQUAL(m_buffer->usedBufferSize, 9);
 
-    if(m_buffer->bufferPosition == 9)
+    if(m_buffer->usedBufferSize == 9)
     {
         DataBuffer* buffer = m_buffer;
-        uint64_t bufferSize = buffer->bufferPosition;
+        uint64_t bufferSize = buffer->usedBufferSize;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
@@ -138,10 +140,10 @@ TlsTcp_Test::checkBigDataTransfer()
 
     usleep(1000000);
 
-    uint64_t totalIncom = m_buffer->bufferPosition;
+    uint64_t totalIncom = m_buffer->usedBufferSize;
     DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
-    TEST_EQUAL(dataBuffer->bufferPosition, 300000);
+    TEST_EQUAL(dataBuffer->usedBufferSize, 300000);
 
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)

@@ -32,6 +32,7 @@ class TlsTcpSocket
 public:
     TlsTcpSocket(const std::string &address,
                  const uint16_t port,
+                 const std::string &threadName,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile="");
@@ -49,6 +50,7 @@ protected:
     bool initOpenssl();
 
     TlsTcpSocket(const int socketFd,
+                 const std::string &threadName,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile="");

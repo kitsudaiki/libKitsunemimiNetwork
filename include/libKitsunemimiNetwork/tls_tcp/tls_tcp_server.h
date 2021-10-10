@@ -26,6 +26,7 @@ class TlsTcpServer
 public:
     TlsTcpServer(void* target,
                  void (*processConnection)(void*, AbstractSocket*),
+                 const std::string &threadName,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile = "");

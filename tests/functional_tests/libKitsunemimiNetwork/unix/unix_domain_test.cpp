@@ -64,7 +64,7 @@ void
 UnixDomain_Test::initTestCase()
 {
     m_buffer = new DataBuffer(1000);
-    m_server = new UnixDomainServer(this, &processConnectionUnixDomain);
+    m_server = new UnixDomainServer(this, &processConnectionUnixDomain, "UnixDomain_Test");
 }
 
 /**
@@ -91,11 +91,12 @@ UnixDomain_Test::checkConnectionInit()
                                 "111111111111111111111111111111111111"
                                 "111111111111111111111111111111111111"
                                 "111111111111111111111111111111111111"
-                                "111111111111111111111111111111111111");
+                                "111111111111111111111111111111111111",
+                                "fail1");
     TEST_EQUAL(failSocket.initClientSide(), false);
 
     // init client
-    m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds");
+    m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds", "UnixDomain_Test_client");
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
@@ -114,12 +115,12 @@ UnixDomain_Test::checkLittleDataTransfer()
     std::string sendMessage("poipoipoi");
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(100000);
-    TEST_EQUAL(m_buffer->bufferPosition, 9);
+    TEST_EQUAL(m_buffer->usedBufferSize, 9);
 
-    if(m_buffer->bufferPosition == 9)
+    if(m_buffer->usedBufferSize == 9)
     {
         DataBuffer* buffer = m_buffer;
-        uint64_t bufferSize = buffer->bufferPosition;
+        uint64_t bufferSize = buffer->usedBufferSize;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
@@ -141,10 +142,10 @@ UnixDomain_Test::checkBigDataTransfer()
     }
 
     usleep(10000);
-    uint64_t totalIncom = m_buffer->bufferPosition;
+    uint64_t totalIncom = m_buffer->usedBufferSize;
     DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
-    TEST_EQUAL(dataBuffer->bufferPosition, 300000);
+    TEST_EQUAL(dataBuffer->usedBufferSize, 300000);
 
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)

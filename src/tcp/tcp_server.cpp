@@ -19,9 +19,11 @@ namespace Network
  * @brief constructor
  */
 TcpServer::TcpServer(void* target,
-                     void (*processConnection)(void*, AbstractSocket*))
+                     void (*processConnection)(void*, AbstractSocket*),
+                     const std::string &threadName)
     : AbstractServer(target,
-                     processConnection)
+                     processConnection,
+                     threadName)
 {
     m_type = TCP_SERVER;
 }
@@ -113,7 +115,8 @@ TcpServer::waitForIncomingConnection()
                  "port : " + std::to_string(m_port));
 
     // create new socket-object from file-descriptor
-    TcpSocket* tcpSocket = new TcpSocket(fd);
+    const std::string name = getThreadName() + "_client" + std::to_string(fd);
+    TcpSocket* tcpSocket = new TcpSocket(fd, name);
     m_processConnection(m_target, tcpSocket);
 }
 

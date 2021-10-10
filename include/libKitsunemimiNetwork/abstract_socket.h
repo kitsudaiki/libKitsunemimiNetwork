@@ -44,7 +44,7 @@ public:
         TLS_TCP_SOCKET = 3
     };
 
-    AbstractSocket();
+    AbstractSocket(const std::string &threadName);
     ~AbstractSocket();
 
     void setMessageCallback(void *target,

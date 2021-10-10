@@ -20,8 +20,9 @@ namespace Network
  *
  * @param socketFile
  */
-UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
-    : AbstractSocket()
+UnixDomainSocket::UnixDomainSocket(const std::string &socketFile,
+                                   const std::string &threadName)
+    : AbstractSocket(threadName)
 {
     m_socketFile = socketFile;
     m_isClientSide = true;
@@ -57,8 +58,9 @@ UnixDomainSocket::initClientSide()
  *
  * @param socketFd file-descriptor of the socket-socket
  */
-UnixDomainSocket::UnixDomainSocket(const int socketFd)
-    : AbstractSocket()
+UnixDomainSocket::UnixDomainSocket(const int socketFd,
+                                   const std::string &threadName)
+    : AbstractSocket(threadName)
 {
     m_socket = socketFd;
     m_isClientSide = false;

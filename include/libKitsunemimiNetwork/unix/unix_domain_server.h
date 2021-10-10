@@ -23,7 +23,8 @@ class UnixDomainServer
 {
 public:
     UnixDomainServer(void* target,
-                     void (*processConnection)(void*, AbstractSocket*));
+                     void (*processConnection)(void*, AbstractSocket*),
+                     const std::string &threadName);
     ~UnixDomainServer();
 
     bool initServer(const std::string &socketFile);

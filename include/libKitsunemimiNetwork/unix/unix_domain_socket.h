@@ -23,7 +23,8 @@ class UnixDomainSocket
     friend class UnixDomainServer;
 
 public:
-    UnixDomainSocket(const std::string &socketFile);
+    UnixDomainSocket(const std::string &socketFile,
+                     const std::string &threadName);
 
     bool initClientSide();
 
@@ -31,7 +32,8 @@ protected:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
 
-    UnixDomainSocket(const int socketFd);
+    UnixDomainSocket(const int socketFd,
+                     const std::string &threadName);
 
     bool initSocket();
     long recvData(int socket,

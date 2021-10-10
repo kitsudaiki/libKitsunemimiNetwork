@@ -21,7 +21,8 @@ class TcpServer
 {
 public:
     TcpServer(void* target,
-              void (*processConnection)(void*, AbstractSocket*));
+              void (*processConnection)(void*, AbstractSocket*),
+              const std::string &threadName);
     ~TcpServer();
 
     bool initServer(const uint16_t port);

@@ -18,8 +18,8 @@ namespace Network
 /**
  * @brief AbstractSocket::AbstractSocket
  */
-AbstractSocket::AbstractSocket()
-    : Kitsunemimi::Thread()
+AbstractSocket::AbstractSocket(const std::string &threadName)
+    : Kitsunemimi::Thread(threadName)
 {
     m_recvBuffer = new Kitsunemimi::RingBuffer();
 }
