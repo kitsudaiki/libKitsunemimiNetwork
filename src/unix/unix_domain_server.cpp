@@ -19,9 +19,11 @@ namespace Network
  * @brief constructor
  */
 UnixDomainServer::UnixDomainServer(void* target,
-                                   void (*processConnection)(void*, AbstractSocket*))
+                                   void (*processConnection)(void*, AbstractSocket*),
+                                   const std::string &threadName)
     : AbstractServer(target,
-                     processConnection)
+                     processConnection,
+                     threadName)
 {
     m_type = UNIX_SERVER;
 }
@@ -111,7 +113,8 @@ UnixDomainServer::waitForIncomingConnection()
                  "address : " + m_socketFile);
 
     // create new socket-object from file-descriptor
-    UnixDomainSocket* unixSocket = new UnixDomainSocket(fd);
+    const std::string name = getThreadName() + "_client" + std::to_string(fd);
+    UnixDomainSocket* unixSocket = new UnixDomainSocket(fd, name);
     m_processConnection(m_target, unixSocket);
 }
 

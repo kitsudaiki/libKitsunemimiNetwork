@@ -42,7 +42,8 @@ public:
     };
 
     AbstractServer(void* target,
-                   void (*processConnection)(void*, AbstractSocket*));
+                   void (*processConnection)(void*, AbstractSocket*),
+                   const std::string &threadName);
     ~AbstractServer();
 
     serverTypes getType();

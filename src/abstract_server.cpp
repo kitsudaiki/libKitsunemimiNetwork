@@ -19,7 +19,9 @@ namespace Network
  * @brief AbstractServer::AbstractServer
  */
 AbstractServer::AbstractServer(void* target,
-                               void (*processConnection)(void*, AbstractSocket*))
+                               void (*processConnection)(void*, AbstractSocket*),
+                               const std::string &threadName)
+    : Kitsunemimi::Thread(threadName)
 {
     m_target = target;
     m_processConnection = processConnection;

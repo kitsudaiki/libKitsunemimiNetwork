@@ -20,11 +20,13 @@ namespace Network
  */
 TlsTcpServer::TlsTcpServer(void* target,
                            void (*processConnection)(void*, AbstractSocket*),
+                           const std::string &threadName,
                            const std::string &certFile,
                            const std::string &keyFile,
                            const std::string &caFile)
     : TcpServer(target,
-                processConnection)
+                processConnection,
+                threadName)
 {
     m_certFile = certFile;
     m_keyFile = keyFile;
@@ -64,7 +66,9 @@ TlsTcpServer::waitForIncomingConnection()
     }
 
     // create new socket-object from file-descriptor
+    const std::string name = getThreadName() + "_client" + std::to_string(fd);
     TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
+                                               name,
                                                m_certFile,
                                                m_keyFile,
                                                m_caFile);

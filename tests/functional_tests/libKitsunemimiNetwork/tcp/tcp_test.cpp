@@ -64,7 +64,7 @@ void
 Tcp_Test::initTestCase()
 {
     m_buffer = new DataBuffer(1000);
-    m_server = new TcpServer(this, &processConnectionTcp);
+    m_server = new TcpServer(this, &processConnectionTcp, "Tcp_Test");
 }
 
 /**
@@ -79,7 +79,7 @@ Tcp_Test::checkConnectionInit()
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
-    m_socketClientSide = new TcpSocket("127.0.0.1", 12345);
+    m_socketClientSide = new TcpSocket("127.0.0.1", 12345, "Tcp_Test_client");
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->initClientSide(), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
@@ -98,12 +98,12 @@ Tcp_Test::checkLittleDataTransfer()
     std::string sendMessage("poipoipoi");
     TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
     usleep(10000);
-    TEST_EQUAL(m_buffer->bufferPosition, 9);
+    TEST_EQUAL(m_buffer->usedBufferSize, 9);
 
-    if(m_buffer->bufferPosition == 9)
+    if(m_buffer->usedBufferSize == 9)
     {
         DataBuffer* buffer = m_buffer;
-        uint64_t bufferSize = buffer->bufferPosition;
+        uint64_t bufferSize = buffer->usedBufferSize;
         char recvMessage[bufferSize];
         memcpy(recvMessage, buffer->data, bufferSize);
         TEST_EQUAL(bufferSize, 9);
@@ -125,10 +125,10 @@ Tcp_Test::checkBigDataTransfer()
     }
 
     usleep(100000);
-    uint64_t totalIncom = m_buffer->bufferPosition;
+    uint64_t totalIncom = m_buffer->usedBufferSize;
     DataBuffer* dataBuffer = m_buffer;
     TEST_EQUAL(totalIncom, 300000);
-    TEST_EQUAL(dataBuffer->bufferPosition, 300000);
+    TEST_EQUAL(dataBuffer->usedBufferSize, 300000);
 
     uint32_t numberOfPois = 0;
     for(uint32_t i = 0; i < 300000; i=i+3)
