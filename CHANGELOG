@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.0] - 2021-10-28
+
+### Changed
+- servers now require a base-name for naming the threads for server and clients
+
+
 ## [0.6.7] - 2021-10-03
 
 ### Changed
