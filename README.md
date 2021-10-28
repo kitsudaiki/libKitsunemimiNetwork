@@ -33,7 +33,7 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.20.0 |  https://github.com/kitsudaiki/libKitsunemimiCommon.git
+libKitsunemimiCommon | v0.22.0 |  https://github.com/kitsudaiki/libKitsunemimiCommon.git
 
 HINT: These Kitsunemimi-Libraries will be downloaded and build automatically with the build-script below.
 
@@ -127,7 +127,8 @@ Kitsunemimi::DataBuffer* buffer = new Kitsunemimi::DataBuffer(1000);
 // create server
 server = new TlsTcpServer(buffer,                      // <- demo-buffer, which is forwarded to the 
                                                        //        target void-pointer in the callback
-                          &processConnectionTlsTcp,
+                          &processConnectionTlsTcp,    // <- callback for new incoming connections
+                          "tls-thread"                 // <- base-name for threads of server and clients
                           "/tmp/cert.pem",
                           "/tmp/key.pem");   // <- callback-method for new incoming connections
                                     
