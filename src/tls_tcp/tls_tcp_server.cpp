@@ -60,13 +60,16 @@ TlsTcpServer::waitForIncomingConnection()
 
     if(fd < 0)
     {
-        LOG_ERROR("Failed accept incoming connection on encrypted tcp-server with "
-                      "port: " + std::to_string(m_port));
+        ErrorContainer error;
+        error.errorMessage = "Failed accept incoming connection on tcp-server with port: "
+                             + std::to_string(m_port);
+        error.possibleSolution = "(no solution known)";
+        LOG_ERROR(error);
         return;
     }
 
     // create new socket-object from file-descriptor
-    const std::string name = getThreadName() + "_client" + std::to_string(fd);
+    const std::string name = getThreadName() + "_client";
     TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
                                                name,
                                                m_certFile,

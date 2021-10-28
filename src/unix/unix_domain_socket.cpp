@@ -81,8 +81,13 @@ UnixDomainSocket::initSocket()
     // check file-path length to avoid conflics, when copy to the address
     if(m_socketFile.size() > 100)
     {
-        LOG_ERROR("Failed to create a unix-socket, "
-                  "because the filename is longer then 100 characters: " + m_socketFile);
+        ErrorContainer error;
+        error.errorMessage = "Failed to create a unix-socket, "
+                             "because the filename is longer then 100 characters: '"
+                             + m_socketFile
+                             + "'";
+        error.possibleSolution = "use a shorter name";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -90,7 +95,10 @@ UnixDomainSocket::initSocket()
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        LOG_ERROR("Failed to create a unix-socket");
+        ErrorContainer error;
+        error.errorMessage = "Failed to create a unix-socket";
+        error.possibleSolution = "Maybe no permissions to create a unix-socket on the system";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -102,7 +110,14 @@ UnixDomainSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        LOG_ERROR("Failed to connect unix-socket to server with addresse: " + m_socketFile);
+        ErrorContainer error;
+        error.errorMessage = "Failed to connect unix-socket to server with addresse: '"
+                             + m_socketFile
+                             + "'";
+        error.possibleSolution = "check your write-permissions for the location '"
+                                 + m_socketFile
+                                 + "'";
+        LOG_ERROR(error);
         return false;
     }
 

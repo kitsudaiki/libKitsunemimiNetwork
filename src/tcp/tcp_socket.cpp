@@ -44,10 +44,7 @@ TcpSocket::initClientSide()
         return true;
     }
 
-    bool result = initSocket();
-    if(result == false)
-    {
-        LOG_ERROR("Faile to initialized tcp-socket client to targe: " + m_address);
+    if(initSocket() == false) {
         return false;
     }
 
@@ -89,7 +86,10 @@ TcpSocket::initSocket()
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        LOG_ERROR("Failed to create a tcp-socket");
+        ErrorContainer error;
+        error.errorMessage = "Failed to create a tcp-socket";
+        error.possibleSolution = "Maybe no permissions to create a tcp-socket on the system";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -97,7 +97,10 @@ TcpSocket::initSocket()
     int optval = 1;
     if(setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
     {
-        LOG_ERROR("Failed to initialize tcp-socket for addresse: " + m_address);
+        ErrorContainer error;
+        error.errorMessage = "'setsockopt'-function failed";
+        error.possibleSolution = "(no solution known)";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -113,7 +116,10 @@ TcpSocket::initSocket()
         hostInfo = gethostbyname(m_address.c_str());
         if(hostInfo == nullptr)
         {
-            LOG_ERROR("Failed to get host by address: " + m_address);
+            ErrorContainer error;
+            error.errorMessage = "Failed to get host by address: " + m_address;
+            error.possibleSolution = "Check DNS, which is necessary to resolve the address";
+            LOG_ERROR(error);
             return false;
         }
 
@@ -129,7 +135,10 @@ TcpSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        LOG_ERROR("Failed to connect tcp-socket to server with addresse: " + m_address);
+        ErrorContainer error;
+        error.errorMessage = "Failed to initialized tcp-socket client to target: " + m_address;
+        error.possibleSolution = "Check if the target-server is running and reable";
+        LOG_ERROR(error);
         return false;
     }
 

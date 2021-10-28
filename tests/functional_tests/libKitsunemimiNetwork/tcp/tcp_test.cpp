@@ -11,6 +11,7 @@
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
 #include <libKitsunemimiNetwork/tcp/tcp_socket.h>
+#include <libKitsunemimiCommon/threading/thread_handler.h>
 
 namespace Kitsunemimi
 {

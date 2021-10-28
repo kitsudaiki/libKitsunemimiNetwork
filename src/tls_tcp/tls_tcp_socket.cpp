@@ -120,9 +120,11 @@ TlsTcpSocket::initOpenssl()
 
     // init ssl-context
     m_ctx = SSL_CTX_new(method);
-    if(!m_ctx)
+    if(m_ctx == nullptr)
     {
-        LOG_ERROR("Failed to create ssl-context object");
+        ErrorContainer error;
+        error.errorMessage = "Failed to create ssl-context object";
+        LOG_ERROR(error);
         return false;
     }
     SSL_CTX_set_options(m_ctx, SSL_OP_SINGLE_DH_USE);
@@ -131,7 +133,12 @@ TlsTcpSocket::initOpenssl()
     result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        LOG_ERROR("Failed to load certificate file for ssl-encrytion. File path: " + m_certFile);
+        ErrorContainer error;
+        error.errorMessage = "Failed to load certificate file for ssl-encrytion. File path: "
+                             + m_certFile;
+        error.possibleSolution = "check if file '" + m_certFile+ "' exist and "
+                                 "contains a valid certificate";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -139,7 +146,11 @@ TlsTcpSocket::initOpenssl()
     result = SSL_CTX_use_PrivateKey_file(m_ctx, m_keyFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        LOG_ERROR("Failed to load key file for ssl-encrytion. File path: " + m_keyFile);
+        ErrorContainer error;
+        error.errorMessage = "Failed to load key file for ssl-encrytion. File path: " + m_keyFile;
+        error.possibleSolution = "check if file '" + m_keyFile+ "' exist and "
+                                 "contains a valid key";
+        LOG_ERROR(error);
         return false;
     }
 
@@ -149,7 +160,11 @@ TlsTcpSocket::initOpenssl()
         result = SSL_CTX_load_verify_locations(m_ctx, m_caFile.c_str(), nullptr);
         if(result <= 0)
         {
-            LOG_ERROR("Failed to load ca file for ssl-encrytion. File path: " + m_caFile);
+            ErrorContainer error;
+            error.errorMessage = "Failed to load CA file for ssl-encrytion. File path: " + m_caFile;
+            error.possibleSolution = "check if file '" + m_caFile+ "' exist and "
+                                     "contains a valid CA";
+            LOG_ERROR(error);
             return false;
         }
 
@@ -161,7 +176,10 @@ TlsTcpSocket::initOpenssl()
     m_ssl = SSL_new(m_ctx);
     if (m_ssl == nullptr)
     {
-        LOG_ERROR("Failed to ini ssl");
+        ErrorContainer error;
+        error.errorMessage = "Failed to ini ssl";
+        error.possibleSolution = "(no solution known)";
+        LOG_ERROR(error);
         return false;
     }
     SSL_set_fd(m_ssl, m_socket);
@@ -184,7 +202,11 @@ TlsTcpSocket::initOpenssl()
         result = SSL_connect(m_ssl);
         if(result <= 0)
         {
-            LOG_ERROR("Failed to perform ssl-handshake (client-side)");
+            ErrorContainer error;
+            error.errorMessage = "Failed to perform ssl-handshake (client-side)";
+            error.possibleSolution = "Maybe the server is only plain TCP-server "
+                                     "or doesn't support TLS";
+            LOG_ERROR(error);
             return false;
         }
     }
@@ -194,7 +216,11 @@ TlsTcpSocket::initOpenssl()
         int result = SSL_accept(m_ssl);
         if(result <= 0)
         {
-            LOG_ERROR("Failed to perform ssl-handshake (server-side)");
+            ErrorContainer error;
+            error.errorMessage = "Failed to perform ssl-handshake (client-side)";
+            error.possibleSolution = "Maybe the incoming client is only plain TCP-client "
+                                     "or doesn't support TLS";
+            LOG_ERROR(error);
             return false;
         }
     }
@@ -236,16 +262,15 @@ TlsTcpSocket::sendData(int,
 bool
 TlsTcpSocket::cleanupOpenssl()
 {
-    if(m_ssl == nullptr
-            || m_ctx == nullptr)
+    if(m_ssl != nullptr)
     {
-        LOG_ERROR("Failed to perform ssl-handshake (server-side)");
-        return false;
+        SSL_shutdown(m_ssl);
+        SSL_free(m_ssl);
     }
 
-    SSL_shutdown(m_ssl);
-    SSL_free(m_ssl);
-    SSL_CTX_free(m_ctx);
+    if(m_ctx == nullptr) {
+        SSL_CTX_free(m_ctx);
+    }
 
     ERR_free_strings();
     EVP_cleanup();
