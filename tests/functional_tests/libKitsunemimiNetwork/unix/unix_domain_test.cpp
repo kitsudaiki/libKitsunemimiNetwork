@@ -73,15 +73,17 @@ UnixDomain_Test::initTestCase()
 void
 UnixDomain_Test::checkConnectionInit()
 {
+    ErrorContainer error;
     // check too long path
     TEST_EQUAL(m_server->initServer("/tmp/sock.uds11111111111111111111111"
                                     "111111111111111111111111111111111111"
                                     "111111111111111111111111111111111111"
                                     "111111111111111111111111111111111111"
-                                    "111111111111111111111111111111111111"), false);
+                                    "111111111111111111111111111111111111",
+                                    error), false);
     // init server
     TEST_EQUAL(m_server->getType(), AbstractServer::UNIX_SERVER);
-    TEST_EQUAL(m_server->initServer("/tmp/sock.uds"), true);
+    TEST_EQUAL(m_server->initServer("/tmp/sock.uds", error), true);
     TEST_EQUAL(m_server->startThread(), true);
 
     usleep(100000);
@@ -93,12 +95,12 @@ UnixDomain_Test::checkConnectionInit()
                                 "111111111111111111111111111111111111"
                                 "111111111111111111111111111111111111",
                                 "fail1");
-    TEST_EQUAL(failSocket.initClientSide(), false);
+    TEST_EQUAL(failSocket.initClientSide(error), false);
 
     // init client
     m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds", "UnixDomain_Test_client");
-    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
-    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::UNIX_SOCKET);
 
     usleep(100000);
@@ -111,9 +113,10 @@ void
 UnixDomain_Test::checkLittleDataTransfer()
 {
     usleep(100000);
+    ErrorContainer error;
 
     std::string sendMessage("poipoipoi");
-    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage, error), true);
     usleep(100000);
     TEST_EQUAL(m_buffer->usedBufferSize, 9);
 
@@ -135,10 +138,12 @@ UnixDomain_Test::checkLittleDataTransfer()
 void
 UnixDomain_Test::checkBigDataTransfer()
 {
+    ErrorContainer error;
+
     std::string sendMessage = "poi";
-    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage, error), true);
     for(uint32_t i = 0; i < 99999; i++) {
-        m_socketClientSide->sendMessage(sendMessage);
+        m_socketClientSide->sendMessage(sendMessage, error);
     }
 
     usleep(10000);

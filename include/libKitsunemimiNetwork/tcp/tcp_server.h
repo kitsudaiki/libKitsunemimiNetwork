@@ -25,8 +25,8 @@ public:
               const std::string &threadName);
     ~TcpServer();
 
-    bool initServer(const uint16_t port);
-    void waitForIncomingConnection();
+    bool initServer(const uint16_t port, ErrorContainer &error);
+    bool waitForIncomingConnection(ErrorContainer &error);
 
 protected:
     uint16_t m_port = 0;

@@ -25,6 +25,7 @@
 #include <atomic>
 
 #include <libKitsunemimiCommon/threading/thread.h>
+#include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
 {
@@ -52,13 +53,14 @@ public:
                                                        Kitsunemimi::RingBuffer*,
                                                        AbstractSocket*));
 
-    virtual bool initClientSide() = 0;
+    virtual bool initClientSide(ErrorContainer &error) = 0;
     socketTypes getType();
     bool isClientSide() const;
 
-    bool sendMessage(const std::string &message);
-    bool sendMessage(const void *message,
-                     const uint64_t numberOfBytes);
+    bool sendMessage(const std::string &message, ErrorContainer &error);
+    bool sendMessage(const void* message,
+                     const uint64_t numberOfBytes,
+                     ErrorContainer &error);
 
     bool closeSocket();
 
@@ -77,7 +79,7 @@ protected:
     void run();
     bool waitForMessage();
 
-    virtual bool initSocket() = 0;
+    virtual bool initSocket(ErrorContainer &error) = 0;
     virtual long recvData(int socket,
                           void* bufferPosition,
                           const size_t bufferSize,

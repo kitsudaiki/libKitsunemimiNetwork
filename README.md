@@ -123,6 +123,7 @@ void processConnectionTlsTcp(void* target,
 
 // init the demo-buffer from above
 Kitsunemimi::DataBuffer* buffer = new Kitsunemimi::DataBuffer(1000);
+ErrorContainer error;
 
 // create server
 server = new TlsTcpServer(buffer,                      // <- demo-buffer, which is forwarded to the 
@@ -133,7 +134,7 @@ server = new TlsTcpServer(buffer,                      // <- demo-buffer, which 
                           "/tmp/key.pem");   // <- callback-method for new incoming connections
                                     
 // let the server listen on port 12345
-server->initServer(12345);
+server->initServer(12345, error);
 // start the thread, so it can create a socket for every incoming 
 //    connection in the background
 server->startThread();
@@ -150,7 +151,7 @@ socketClientSide->addNetworkTrigger(buffer, &processMessageTlsTcp);
 socketClientSide->startThread();
 
 // send data
-socketClientSide->sendMessage(std::string("any message"));
+socketClientSide->sendMessage(std::string("any message"), error);
 // instead of socketClientSide you can use socketServerSide the same way
 
 // teminate connectioin

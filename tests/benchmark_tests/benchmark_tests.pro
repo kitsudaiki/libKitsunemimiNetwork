@@ -19,7 +19,7 @@ LIBS += -L../../../libKitsunemimiArgs/src/release -lKitsunemimiArgs
 INCLUDEPATH += ../../../libKitsunemimiArgs/include
 
 
-LIBS += -lssl -lcrypt
+LIBS += -lssl
 
 
 SOURCES += \

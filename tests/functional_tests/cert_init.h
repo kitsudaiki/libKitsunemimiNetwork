@@ -61,9 +61,9 @@ const std::string testKey = "-----BEGIN PRIVATE KEY-----\n"
 
 void writeTestCerts()
 {
-    std::string errorMessage = "";
-    Kitsunemimi::writeFile("/tmp/cert.pem", testCert, errorMessage, true);
-    Kitsunemimi::writeFile("/tmp/key.pem", testKey, errorMessage, true);
+    ErrorContainer error;
+    Kitsunemimi::writeFile("/tmp/cert.pem", testCert, error, true);
+    Kitsunemimi::writeFile("/tmp/key.pem", testKey, error, true);
 }
 
 } // namespace Network

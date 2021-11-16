@@ -45,9 +45,11 @@ TlsTcpServer::~TlsTcpServer()
 
 /**
  * @brief wait for new incoming tcp-connections
+ *
+ * @param error reference for error-output
  */
-void
-TlsTcpServer::waitForIncomingConnection()
+bool
+TlsTcpServer::waitForIncomingConnection(ErrorContainer &error)
 {
     uint32_t length = sizeof(struct sockaddr_in);
 
@@ -55,17 +57,15 @@ TlsTcpServer::waitForIncomingConnection()
     const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
-        return;
+        return true;
     }
 
     if(fd < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed accept incoming connection on tcp-server with port: "
                              + std::to_string(m_port);
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
-        return;
+        return false;
     }
 
     // create new socket-object from file-descriptor
@@ -75,16 +75,18 @@ TlsTcpServer::waitForIncomingConnection()
                                                m_certFile,
                                                m_keyFile,
                                                m_caFile);
-    if(tcpSocket->initOpenssl() == false)
+    if(tcpSocket->initOpenssl(error) == false)
     {
         delete tcpSocket;
-        return;
+        return false;
     }
 
     LOG_INFO("Successfully accepted incoming connection on encrypted tcp-socket server with "
-                 "port : " + std::to_string(m_port));
+             "port : " + std::to_string(m_port));
 
     m_processConnection(m_target, tcpSocket);
+
+    return true;
 }
 
 } // namespace Network

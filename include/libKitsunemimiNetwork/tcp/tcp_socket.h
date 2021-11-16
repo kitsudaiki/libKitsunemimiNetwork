@@ -31,7 +31,7 @@ public:
               const uint16_t port,
               const std::string &threadName);
 
-    bool initClientSide();
+    bool initClientSide(ErrorContainer &error);
 
 protected:
     std::string m_address = "";
@@ -41,7 +41,7 @@ protected:
     TcpSocket(const int socketFd,
               const std::string &threadName);
 
-    bool initSocket();
+    bool initSocket(ErrorContainer &error);
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,

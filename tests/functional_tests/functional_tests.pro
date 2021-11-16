@@ -13,7 +13,7 @@ LIBS += -L../../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
 LIBS += -L../../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
 INCLUDEPATH += ../../../libKitsunemimiCommon/include
 
-LIBS += -lssl -lcrypt
+LIBS += -lssl
 
 HEADERS += \
     cert_init.h \

@@ -44,8 +44,9 @@ AbstractSocket::getType()
 }
 
 /**
- * @brief AbstractSocket::isClientSide
- * @return
+ * @brief check if socket is on client-side
+ *
+ * @return true, if socket is on client-side of the connection
  */
 bool
 AbstractSocket::isClientSide() const
@@ -75,14 +76,15 @@ AbstractSocket::setMessageCallback(void* target,
  * @brief send a text-message over the socket
  *
  * @param message message to send
+ * @param error reference for error-output
  *
  * @return false, if send failed or send was incomplete, else true
  */
 bool
-AbstractSocket::sendMessage(const std::string &message)
+AbstractSocket::sendMessage(const std::string &message, ErrorContainer &error)
 {
     const uint64_t messageLength = message.length();
-    return sendMessage(static_cast<const void*>(message.c_str()), messageLength);
+    return sendMessage(static_cast<const void*>(message.c_str()), messageLength, error);
 }
 
 /**
@@ -90,15 +92,19 @@ AbstractSocket::sendMessage(const std::string &message)
  *
  * @param message byte-buffer to send
  * @param numberOfBytes number of bytes to send
+ * @param error reference for error-output
  *
  * @return false, if send failed or send was incomplete, else true
  */
 bool
 AbstractSocket::sendMessage(const void* message,
-                            const uint64_t numberOfBytes)
+                            const uint64_t numberOfBytes,
+                            ErrorContainer &error)
 {
     // precheck if socket is connected
-    if(m_socket == 0) {
+    if(m_socket == 0)
+    {
+        error.errorMessage = "socket is not connected";
         return false;
     }
 
@@ -131,7 +137,7 @@ AbstractSocket::waitForMessage()
 {
     // precheck
     if(m_abort) {
-        return false;
+        return true;
     }
 
     // calulate buffer-part for recv message
@@ -148,7 +154,7 @@ AbstractSocket::waitForMessage()
     if(recvSize <= 0
             || m_abort)
     {
-        return false;
+        return true;
     }
 
     // increase the
