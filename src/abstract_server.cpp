@@ -80,8 +80,14 @@ AbstractServer::closeServer()
 void
 AbstractServer::run()
 {
-    while(!m_abort) {
-        waitForIncomingConnection();
+    ErrorContainer error;
+    while(m_abort == false)
+    {
+        if(waitForIncomingConnection(error) == false)
+        {
+            LOG_ERROR(error);
+            error.alreadyPrinted = false;
+        }
     }
 }
 

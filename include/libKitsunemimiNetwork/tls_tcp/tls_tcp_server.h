@@ -32,7 +32,7 @@ public:
                  const std::string &caFile = "");
     ~TlsTcpServer();
 
-    void waitForIncomingConnection();
+    bool waitForIncomingConnection(ErrorContainer &error);
 
 private:
     std::string m_caFile = "";

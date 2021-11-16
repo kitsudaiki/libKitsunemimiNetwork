@@ -35,16 +35,18 @@ TcpSocket::TcpSocket(const std::string &address,
 /**
  * @brief init socket on client-side
  *
+ * @param error reference for error-output
+ *
  * @return true, if successful, else false
  */
 bool
-TcpSocket::initClientSide()
+TcpSocket::initClientSide(ErrorContainer &error)
 {
     if(m_isConnected) {
         return true;
     }
 
-    if(initSocket() == false) {
+    if(initSocket(error) == false) {
         return false;
     }
 
@@ -73,10 +75,12 @@ TcpSocket::TcpSocket(const int socketFd,
 /**
  * @brief init tcp-socket and connect to the server
  *
+ * @param error reference for error-output
+ *
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-TcpSocket::initSocket()
+TcpSocket::initSocket(ErrorContainer &error)
 {
     struct sockaddr_in address;
     struct hostent* hostInfo;
@@ -86,10 +90,8 @@ TcpSocket::initSocket()
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to create a tcp-socket";
         error.possibleSolution = "Maybe no permissions to create a tcp-socket on the system";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -97,10 +99,8 @@ TcpSocket::initSocket()
     int optval = 1;
     if(setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "'setsockopt'-function failed";
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -116,10 +116,8 @@ TcpSocket::initSocket()
         hostInfo = gethostbyname(m_address.c_str());
         if(hostInfo == nullptr)
         {
-            ErrorContainer error;
             error.errorMessage = "Failed to get host by address: " + m_address;
             error.possibleSolution = "Check DNS, which is necessary to resolve the address";
-            LOG_ERROR(error);
             return false;
         }
 
@@ -135,10 +133,8 @@ TcpSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to initialized tcp-socket client to target: " + m_address;
         error.possibleSolution = "Check if the target-server is running and reable";
-        LOG_ERROR(error);
         return false;
     }
 

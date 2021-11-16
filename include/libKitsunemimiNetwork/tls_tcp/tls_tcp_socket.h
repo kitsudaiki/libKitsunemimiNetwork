@@ -38,7 +38,7 @@ public:
                  const std::string &caFile="");
     ~TlsTcpSocket();
 
-    bool initClientSide();
+    bool initClientSide(ErrorContainer &error);
 
 protected:
     SSL_CTX* m_ctx;
@@ -47,7 +47,7 @@ protected:
     std::string m_keyFile = "";
     std::string m_caFile = "";
 
-    bool initOpenssl();
+    bool initOpenssl(ErrorContainer &error);
 
     TlsTcpSocket(const int socketFd,
                  const std::string &threadName,

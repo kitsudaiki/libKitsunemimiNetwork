@@ -21,6 +21,7 @@
 #include <vector>
 
 #include <libKitsunemimiCommon/threading/thread.h>
+#include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
 {
@@ -48,7 +49,7 @@ public:
 
     serverTypes getType();
 
-    virtual void waitForIncomingConnection() = 0;
+    virtual bool waitForIncomingConnection(ErrorContainer &error) = 0;
     bool closeServer();
 
 protected:

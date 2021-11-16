@@ -10,7 +10,7 @@ LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
 LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
 INCLUDEPATH += ../../libKitsunemimiCommon/include
 
-LIBS +=  -lssl -lcrypt
+LIBS +=  -lssl
 
 INCLUDEPATH += $$PWD \
                $$PWD/../include

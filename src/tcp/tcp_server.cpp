@@ -40,11 +40,12 @@ TcpServer::~TcpServer()
  * @brief creates a server on a specific port
  *
  * @param port port-number where the server should be listen
+ * @param error reference for error-output
  *
  * @return false, if server creation failed, else true
  */
 bool
-TcpServer::initServer(const uint16_t port)
+TcpServer::initServer(const uint16_t port, ErrorContainer &error)
 {
     m_port = port;
 
@@ -52,10 +53,8 @@ TcpServer::initServer(const uint16_t port)
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(m_serverSocket < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to create a tcp-socket";
         error.possibleSolution = "Maybe no permissions to create a tcp-server on the system";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -63,11 +62,9 @@ TcpServer::initServer(const uint16_t port)
     int enable = 1;
     if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)))
     {
-        ErrorContainer error;
         error.errorMessage = "Failed set socket-options for tcp-server on port: "
                              + std::to_string(m_port);
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -80,20 +77,16 @@ TcpServer::initServer(const uint16_t port)
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to bind tcp-socket to port: " + std::to_string(m_port);
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
         return false;
     }
 
     // start listening for incoming connections
     if(listen(m_serverSocket, 5) == -1)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed listen on tcp-socket on port: " + std::to_string(m_port);
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -104,9 +97,11 @@ TcpServer::initServer(const uint16_t port)
 
 /**
  * @brief wait for new incoming tcp-connections
+ *
+ * @param error reference for error-output
  */
-void
-TcpServer::waitForIncomingConnection()
+bool
+TcpServer::waitForIncomingConnection(ErrorContainer &error)
 {
     uint32_t length = sizeof(struct sockaddr_in);
 
@@ -114,17 +109,15 @@ TcpServer::waitForIncomingConnection()
     const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
-        return;
+        return true;
     }
 
     if(fd < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed accept incoming connection on tcp-server with port: "
                              + std::to_string(m_port);
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
-        return;
+        return false;
     }
 
     LOG_INFO("Successfully accepted incoming connection on tcp-socket server with port : "
@@ -134,6 +127,8 @@ TcpServer::waitForIncomingConnection()
     const std::string name = getThreadName() + "_client";
     TcpSocket* tcpSocket = new TcpSocket(fd, name);
     m_processConnection(m_target, tcpSocket);
+
+    return true;
 }
 
 } // namespace Network

@@ -26,7 +26,7 @@ public:
     UnixDomainSocket(const std::string &socketFile,
                      const std::string &threadName);
 
-    bool initClientSide();
+    bool initClientSide(ErrorContainer &error);
 
 protected:
     std::string m_socketFile = "";
@@ -35,7 +35,7 @@ protected:
     UnixDomainSocket(const int socketFd,
                      const std::string &threadName);
 
-    bool initSocket();
+    bool initSocket(ErrorContainer &error);
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,

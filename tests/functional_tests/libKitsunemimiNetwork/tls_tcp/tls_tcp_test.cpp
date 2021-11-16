@@ -82,9 +82,11 @@ TlsTcp_Test::initTestCase()
 void
 TlsTcp_Test::checkConnectionInit()
 {
+    ErrorContainer error;
+
     // init server
     TEST_EQUAL(m_server->getType(), AbstractServer::TLS_TCP_SERVER);
-    TEST_EQUAL(m_server->initServer(12345), true);
+    TEST_EQUAL(m_server->initServer(12345, error), true);
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
@@ -93,8 +95,8 @@ TlsTcp_Test::checkConnectionInit()
                                           "TlsTcp_Test_client",
                                           "/tmp/cert.pem",
                                           "/tmp/key.pem");
-    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
-    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
 
     usleep(100000);
@@ -107,9 +109,10 @@ void
 TlsTcp_Test::checkLittleDataTransfer()
 {
     usleep(100000);
+    ErrorContainer error;
 
     std::string sendMessage("poipoipoi");
-    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage, error), true);
     usleep(100000);
     TEST_EQUAL(m_buffer->usedBufferSize, 9);
 
@@ -131,11 +134,13 @@ TlsTcp_Test::checkLittleDataTransfer()
 void
 TlsTcp_Test::checkBigDataTransfer()
 {
+    ErrorContainer error;
+
     std::string sendMessage = "poi";
-    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage, error), true);
 
     for(uint32_t i = 0; i < 99999; i++) {
-        m_socketClientSide->sendMessage(sendMessage);
+        m_socketClientSide->sendMessage(sendMessage, error);
     }
 
     usleep(1000000);

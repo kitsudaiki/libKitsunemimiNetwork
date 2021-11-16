@@ -27,8 +27,8 @@ public:
                      const std::string &threadName);
     ~UnixDomainServer();
 
-    bool initServer(const std::string &socketFile);
-    void waitForIncomingConnection();
+    bool initServer(const std::string &socketFile, ErrorContainer &error);
+    bool waitForIncomingConnection(ErrorContainer &error);
 
 private:
     std::string m_socketFile = "";

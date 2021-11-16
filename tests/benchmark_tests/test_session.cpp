@@ -76,7 +76,8 @@ TestSession::TestSession(const std::string &,
                          const uint16_t port,
                          const std::string &type)
 {
-    //Kitsunemimi::Persistence::initLogger("/tmp/", "benchmark", true, true);
+    Kitsunemimi::initConsoleLogger(true);
+    ErrorContainer error;
 
     // initialize global values
     m_totalSize = 1024l*1024l*1024l*10l;
@@ -103,7 +104,7 @@ TestSession::TestSession(const std::string &,
                                                  &processConnection,
                                                  "test-server");
             m_server = tcpServer;
-            assert(tcpServer->initServer(1234));
+            assert(tcpServer->initServer(1234, error));
             assert(m_server->startThread());
         }
         else
@@ -114,7 +115,7 @@ TestSession::TestSession(const std::string &,
                                                                &processConnection,
                                                                "test-server");
             m_server = udsServer;
-            assert(udsServer->initServer("/tmp/sock.uds"));
+            assert(udsServer->initServer("/tmp/sock.uds", error));
             assert(m_server->startThread());
         }
 
@@ -128,7 +129,7 @@ TestSession::TestSession(const std::string &,
         }
 
         // start client
-        assert(m_clientSession->initClientSide());
+        assert(m_clientSession->initClientSide(error));
         m_clientSession->setMessageCallback(this, &processMessageTcp);
         assert(m_clientSession->startThread());
     }
@@ -141,6 +142,7 @@ void
 TestSession::runTest()
 {
     std::unique_lock<std::mutex> lock(m_cvMutex);
+    ErrorContainer error;
 
     if(m_isClient)
     {
@@ -154,7 +156,7 @@ TestSession::runTest()
             m_timeSlot.startTimer();
             for(int i = 0; i < 10*8*1024; i++)
             {
-                assert(m_clientSession->sendMessage(m_dataBuffer, 128*1024));
+                assert(m_clientSession->sendMessage(m_dataBuffer, 128*1024, error));
             }
             m_cv.wait(lock);
 

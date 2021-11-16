@@ -74,15 +74,17 @@ Tcp_Test::initTestCase()
 void
 Tcp_Test::checkConnectionInit()
 {
+    ErrorContainer error;
+
     // init server
     TEST_EQUAL(m_server->getType(), AbstractServer::TCP_SERVER);
-    TEST_EQUAL(m_server->initServer(12345), true);
+    TEST_EQUAL(m_server->initServer(12345, error), true);
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
     m_socketClientSide = new TcpSocket("127.0.0.1", 12345, "Tcp_Test_client");
-    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
-    TEST_EQUAL(m_socketClientSide->initClientSide(), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
+    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
 
     usleep(100000);
@@ -95,9 +97,10 @@ void
 Tcp_Test::checkLittleDataTransfer()
 {
     usleep(10000);
+    ErrorContainer error;
 
     std::string sendMessage("poipoipoi");
-    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage, error), true);
     usleep(10000);
     TEST_EQUAL(m_buffer->usedBufferSize, 9);
 
@@ -119,10 +122,12 @@ Tcp_Test::checkLittleDataTransfer()
 void
 Tcp_Test::checkBigDataTransfer()
 {
+    ErrorContainer error;
+
     std::string sendMessage = "poi";
-    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage), true);
+    TEST_EQUAL(m_socketClientSide->sendMessage(sendMessage, error), true);
     for(uint32_t i = 0; i < 99999; i++) {
-        m_socketClientSide->sendMessage(sendMessage);
+        m_socketClientSide->sendMessage(sendMessage, error);
     }
 
     usleep(100000);

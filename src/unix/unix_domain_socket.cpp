@@ -32,16 +32,18 @@ UnixDomainSocket::UnixDomainSocket(const std::string &socketFile,
 /**
  * @brief init socket on client-side
  *
+ * @param error reference for error-output
+ *
  * @return true, if successful, else false
  */
 bool
-UnixDomainSocket::initClientSide()
+UnixDomainSocket::initClientSide(ErrorContainer &error)
 {
     if(m_isConnected) {
         return true;
     }
 
-    bool result = initSocket();
+    bool result = initSocket(error);
     if(result == false) {
         return false;
     }
@@ -71,23 +73,23 @@ UnixDomainSocket::UnixDomainSocket(const int socketFd,
 /**
  * @brief init unix-socket and connect to the server
  *
+ * @param error reference for error-output
+ *
  * @return false, if socket-creation or connection to the server failed, else true
  */
 bool
-UnixDomainSocket::initSocket()
+UnixDomainSocket::initSocket(ErrorContainer &error)
 {
     struct sockaddr_un address;
 
     // check file-path length to avoid conflics, when copy to the address
     if(m_socketFile.size() > 100)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to create a unix-socket, "
                              "because the filename is longer then 100 characters: '"
                              + m_socketFile
                              + "'";
         error.possibleSolution = "use a shorter name";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -95,10 +97,8 @@ UnixDomainSocket::initSocket()
     m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
     if(m_socket < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to create a unix-socket";
         error.possibleSolution = "Maybe no permissions to create a unix-socket on the system";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -110,14 +110,12 @@ UnixDomainSocket::initSocket()
     // create connection
     if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to connect unix-socket to server with addresse: '"
                              + m_socketFile
                              + "'";
         error.possibleSolution = "check your write-permissions for the location '"
                                  + m_socketFile
                                  + "'";
-        LOG_ERROR(error);
         return false;
     }
 

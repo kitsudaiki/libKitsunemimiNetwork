@@ -40,24 +40,23 @@ UnixDomainServer::~UnixDomainServer()
  * @brief creates a server on a specific port
  *
  * @param port port-number where the server should be listen
+ * @param error reference for error-output
  *
  * @return false, if server creation failed, else true
  */
 bool
-UnixDomainServer::initServer(const std::string &socketFile)
+UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &error)
 {
     m_socketFile = socketFile;
 
     // check file-path length to avoid conflics, when copy to the sockaddr_un-object
     if(m_socketFile.size() > 100)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to create a unix-server, "
                              "because the filename is longer then 100 characters: '"
                              + m_socketFile
                              + "'";
         error.possibleSolution = "use a shorter name";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -65,10 +64,8 @@ UnixDomainServer::initServer(const std::string &socketFile)
     m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
     if(m_serverSocket < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to create a unix-socket";
         error.possibleSolution = "Maybe no permissions to create a unix-socket on the system";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -80,20 +77,16 @@ UnixDomainServer::initServer(const std::string &socketFile)
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed to bind unix-socket to addresse: '" + m_socketFile + "'";
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
         return false;
     }
 
     // start listening for incoming connections
     if(listen(m_serverSocket, 5) == -1)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed listen on unix-socket on addresse: '" + m_socketFile + "'";
         error.possibleSolution = "(no solution known)";
-        LOG_ERROR(error);
         return false;
     }
 
@@ -104,9 +97,11 @@ UnixDomainServer::initServer(const std::string &socketFile)
 
 /**
  * @brief wait for new incoming unix-socket-connections
+ *
+ * @param error reference for error-output
  */
-void
-UnixDomainServer::waitForIncomingConnection()
+bool
+UnixDomainServer::waitForIncomingConnection(ErrorContainer &error)
 {
     uint32_t length = sizeof(struct sockaddr_un);
 
@@ -114,17 +109,16 @@ UnixDomainServer::waitForIncomingConnection()
     const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
     if(m_abort) {
-        return;
+        return true;
     }
 
     if(fd < 0)
     {
-        ErrorContainer error;
         error.errorMessage = "Failed accept incoming connection on unix-server with address: '"
                              + m_socketFile
                              + "'";
         error.possibleSolution = "(no solution known)";
-        return;
+        return false;
     }
 
     LOG_INFO("Successfully accepted incoming connection on unix-socket server with address: '"
@@ -135,6 +129,8 @@ UnixDomainServer::waitForIncomingConnection()
     const std::string name = getThreadName() + "_client";
     UnixDomainSocket* unixSocket = new UnixDomainSocket(fd, name);
     m_processConnection(m_target, unixSocket);
+
+    return true;
 }
 
 } // namespace Network
