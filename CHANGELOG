@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.0] - 2021-11-17
+
+### Changed
+- updated some function-call with error-container for more output in case of errors
+
+
 ## [0.7.0] - 2021-10-28
 
 ### Changed
