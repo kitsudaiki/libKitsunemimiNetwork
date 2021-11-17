@@ -125,7 +125,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     m_ctx = SSL_CTX_new(method);
     if(m_ctx == nullptr)
     {
-        error.errorMessage = "Failed to create ssl-context object";
+        error.addMeesage( "Failed to create ssl-context object");
         return false;
     }
     SSL_CTX_set_options(m_ctx, SSL_OP_SINGLE_DH_USE);
@@ -134,10 +134,11 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        error.errorMessage = "Failed to load certificate file for ssl-encrytion. File path: "
-                             + m_certFile;
-        error.possibleSolution = "check if file '" + m_certFile+ "' exist and "
-                                 "contains a valid certificate";
+        error.addMeesage("Failed to load certificate file for ssl-encrytion. File path: \""
+                         + m_certFile
+                         + "\"");
+        error.addSolution("check if file \"" + m_certFile+ "\" exist and "
+                           "contains a valid certificate");
         return false;
     }
 
@@ -145,9 +146,8 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     result = SSL_CTX_use_PrivateKey_file(m_ctx, m_keyFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        error.errorMessage = "Failed to load key file for ssl-encrytion. File path: " + m_keyFile;
-        error.possibleSolution = "check if file '" + m_keyFile+ "' exist and "
-                                 "contains a valid key";
+        error.addMeesage("Failed to load key file for ssl-encrytion. File path: " + m_keyFile);
+        error.addSolution("check if file \"" + m_keyFile+ "\" exist and contains a valid key");
         return false;
     }
 
@@ -157,9 +157,8 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
         result = SSL_CTX_load_verify_locations(m_ctx, m_caFile.c_str(), nullptr);
         if(result <= 0)
         {
-            error.errorMessage = "Failed to load CA file for ssl-encrytion. File path: " + m_caFile;
-            error.possibleSolution = "check if file '" + m_caFile+ "' exist and "
-                                     "contains a valid CA";
+            error.addMeesage("Failed to load CA file for ssl-encrytion. File path: " + m_caFile);
+            error.addSolution("check if file \"" + m_caFile+ "\" exist and contains a valid CA");
             return false;
         }
 
@@ -171,8 +170,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     m_ssl = SSL_new(m_ctx);
     if (m_ssl == nullptr)
     {
-        error.errorMessage = "Failed to ini ssl";
-        error.possibleSolution = "(no solution known)";
+        error.addMeesage("Failed to ini ssl");
         return false;
     }
     SSL_set_fd(m_ssl, m_socket);
@@ -195,9 +193,8 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
         result = SSL_connect(m_ssl);
         if(result <= 0)
         {
-            error.errorMessage = "Failed to perform ssl-handshake (client-side)";
-            error.possibleSolution = "Maybe the server is only plain TCP-server "
-                                     "or doesn't support TLS";
+            error.addMeesage("Failed to perform ssl-handshake (client-side)");
+            error.addSolution("Maybe the server is only plain TCP-server or doesn't support TLS");
             return false;
         }
     }
@@ -207,9 +204,9 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
         int result = SSL_accept(m_ssl);
         if(result <= 0)
         {
-            error.errorMessage = "Failed to perform ssl-handshake (client-side)";
-            error.possibleSolution = "Maybe the incoming client is only plain TCP-client "
-                                     "or doesn't support TLS";
+            error.addMeesage("Failed to perform ssl-handshake (client-side)");
+            error.addSolution("Maybe the incoming client is only plain TCP-client "
+                              "or doesn't support TLS");
             return false;
         }
     }

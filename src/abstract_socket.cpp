@@ -104,7 +104,7 @@ AbstractSocket::sendMessage(const void* message,
     // precheck if socket is connected
     if(m_socket == 0)
     {
-        error.errorMessage = "socket is not connected";
+        error.addMeesage("socket is not connected");
         return false;
     }
 

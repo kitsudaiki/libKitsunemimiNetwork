@@ -86,7 +86,7 @@ AbstractServer::run()
         if(waitForIncomingConnection(error) == false)
         {
             LOG_ERROR(error);
-            error.alreadyPrinted = false;
+            error._alreadyPrinted = false;
         }
     }
 }

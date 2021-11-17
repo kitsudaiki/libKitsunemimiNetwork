@@ -53,8 +53,8 @@ TcpServer::initServer(const uint16_t port, ErrorContainer &error)
     m_serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(m_serverSocket < 0)
     {
-        error.errorMessage = "Failed to create a tcp-socket";
-        error.possibleSolution = "Maybe no permissions to create a tcp-server on the system";
+        error.addMeesage("Failed to create a tcp-socket");
+        error.addSolution("Maybe no permissions to create a tcp-server on the system");
         return false;
     }
 
@@ -62,9 +62,8 @@ TcpServer::initServer(const uint16_t port, ErrorContainer &error)
     int enable = 1;
     if(setsockopt(m_serverSocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)))
     {
-        error.errorMessage = "Failed set socket-options for tcp-server on port: "
-                             + std::to_string(m_port);
-        error.possibleSolution = "(no solution known)";
+        error.addMeesage("Failed set socket-options for tcp-server on port: "
+                         + std::to_string(m_port));
         return false;
     }
 
@@ -77,16 +76,14 @@ TcpServer::initServer(const uint16_t port, ErrorContainer &error)
     // bind to port
     if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
-        error.errorMessage = "Failed to bind tcp-socket to port: " + std::to_string(m_port);
-        error.possibleSolution = "(no solution known)";
+        error.addMeesage("Failed to bind tcp-socket to port: " + std::to_string(m_port));
         return false;
     }
 
     // start listening for incoming connections
     if(listen(m_serverSocket, 5) == -1)
     {
-        error.errorMessage = "Failed listen on tcp-socket on port: " + std::to_string(m_port);
-        error.possibleSolution = "(no solution known)";
+        error.addMeesage("Failed listen on tcp-socket on port: " + std::to_string(m_port));
         return false;
     }
 
@@ -114,9 +111,8 @@ TcpServer::waitForIncomingConnection(ErrorContainer &error)
 
     if(fd < 0)
     {
-        error.errorMessage = "Failed accept incoming connection on tcp-server with port: "
-                             + std::to_string(m_port);
-        error.possibleSolution = "(no solution known)";
+        error.addMeesage("Failed accept incoming connection on tcp-server with port: "
+                         + std::to_string(m_port));
         return false;
     }
 

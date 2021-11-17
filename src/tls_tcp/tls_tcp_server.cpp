@@ -62,9 +62,8 @@ TlsTcpServer::waitForIncomingConnection(ErrorContainer &error)
 
     if(fd < 0)
     {
-        error.errorMessage = "Failed accept incoming connection on tcp-server with port: "
-                             + std::to_string(m_port);
-        error.possibleSolution = "(no solution known)";
+        error.addMeesage("Failed accept incoming connection on tcp-server with port: "
+                         + std::to_string(m_port));
         return false;
     }
 
