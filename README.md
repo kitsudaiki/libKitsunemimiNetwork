@@ -85,6 +85,8 @@ Example to create server and socket:
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
 #include <libKitsunemimiCommon/buffer/data_buffer.h>
 
+using namespace Kitsunemimi::Network;
+
 TlsTcpServer* server = nullptr;
 TlsTcpSocket* socketClientSide = nullptr;
 
@@ -95,7 +97,7 @@ uint64_t processMessageTlsTcp(void* target,
 {
 	// here in this example the demo-buffer, which was registered in the server
 	// is converted back from the void-pointer into the original object-pointer
-    Common::DataBuffer* targetBuffer = static_cast<Common::DataBuffer*>(target);
+    Kitsunemimi::DataBuffer* targetBuffer = static_cast<Kitsunemimi::DataBuffer*>(target);
 
     // get data from the message-ring-buffer
     const uint8_t* dataPointer = getDataPointer(*recvBuffer, numberOfBytesToRead);

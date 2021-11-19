@@ -3,7 +3,7 @@ QT       -= qt core gui
 TARGET = KitsunemimiNetwork
 TEMPLATE = lib
 CONFIG += c++17
-VERSION = 0.8.0
+VERSION = 0.8.1
 
 LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
 LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon

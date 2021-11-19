@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.1] - 2021-11-19
+
+### Fixed
+- removed memory-leak in client create/delete
+
+
 ## [0.8.0] - 2021-11-17
 
 ### Changed
