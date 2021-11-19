@@ -21,7 +21,6 @@ namespace Network
 AbstractSocket::AbstractSocket(const std::string &threadName)
     : Kitsunemimi::Thread(threadName)
 {
-    m_recvBuffer = new Kitsunemimi::RingBuffer();
 }
 
 /**
@@ -141,12 +140,12 @@ AbstractSocket::waitForMessage()
     }
 
     // calulate buffer-part for recv message
-    const uint64_t writePosition = Kitsunemimi::getWritePosition_RingBuffer(*m_recvBuffer);
-    const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd_RingBuffer(*m_recvBuffer);
+    const uint64_t writePosition = Kitsunemimi::getWritePosition_RingBuffer(m_recvBuffer);
+    const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd_RingBuffer(m_recvBuffer);
 
     // wait for incoming message
     const long recvSize = recvData(m_socket,
-                                   &m_recvBuffer->data[writePosition],
+                                   &m_recvBuffer.data[writePosition],
                                    spaceToEnd,
                                    0);
 
@@ -158,14 +157,14 @@ AbstractSocket::waitForMessage()
     }
 
     // increase the
-    m_recvBuffer->usedSize = (m_recvBuffer->usedSize + static_cast<uint64_t>(recvSize));
+    m_recvBuffer.usedSize = (m_recvBuffer.usedSize + static_cast<uint64_t>(recvSize));
 
     // process message via callback-function
     uint64_t readBytes = 0;
     do
     {
-        readBytes = m_processMessage(m_target, m_recvBuffer, this);
-        moveForward_RingBuffer(*m_recvBuffer, readBytes);
+        readBytes = m_processMessage(m_target, &m_recvBuffer, this);
+        moveForward_RingBuffer(m_recvBuffer, readBytes);
     }
     while(readBytes > 0);
 

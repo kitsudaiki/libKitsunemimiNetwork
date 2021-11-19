@@ -1,8 +1,8 @@
 include(../../defaults.pri)
 
-QT -= qt core gui
+QT       -= qt core gui
 
-CONFIG   -= app_bundle
+CONFIG -= app_bundle
 CONFIG += c++17 console
 
 LIBS += -L../../src -lKitsunemimiNetwork
@@ -13,19 +13,14 @@ LIBS += -L../../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
 LIBS += -L../../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
 INCLUDEPATH += ../../../libKitsunemimiCommon/include
 
-LIBS += -L../../../libKitsunemimiArgs/src -lKitsunemimiArgs
-LIBS += -L../../../libKitsunemimiArgs/src/debug -lKitsunemimiArgs
-LIBS += -L../../../libKitsunemimiArgs/src/release -lKitsunemimiArgs
-INCLUDEPATH += ../../../libKitsunemimiArgs/include
-
-
 LIBS += -lssl
 
+HEADERS += \
+    cert_init.h \
+    libKitsunemimiNetwork/tcp/tcp_test.h \
+    libKitsunemimiNetwork/unix/unix_domain_test.h
 
 SOURCES += \
-    main.cpp \
-    test_session.cpp
-
-HEADERS += \
-    test_session.h
-
+    libKitsunemimiNetwork/tcp/tcp_test.cpp \
+    libKitsunemimiNetwork/unix/unix_domain_test.cpp \
+    main.cpp
