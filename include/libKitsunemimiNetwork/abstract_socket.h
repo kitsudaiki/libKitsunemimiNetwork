@@ -26,6 +26,7 @@
 
 #include <libKitsunemimiCommon/threading/thread.h>
 #include <libKitsunemimiCommon/logger.h>
+#include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
 namespace Kitsunemimi
 {
@@ -69,7 +70,7 @@ protected:
     bool m_isClientSide = false;
     int m_socket = 0;
     socketTypes m_type = UNDEFINED_TYPE;
-    Kitsunemimi::RingBuffer* m_recvBuffer = nullptr;
+    Kitsunemimi::RingBuffer m_recvBuffer;
     std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
 
     // callback-parameter

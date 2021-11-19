@@ -5,6 +5,6 @@ CONFIG += c++14
 
 SUBDIRS = \
     functional_tests \
-    benchmark_tests
+    memory_leak_tests
 
 tests.depends = src
