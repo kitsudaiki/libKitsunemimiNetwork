@@ -26,10 +26,7 @@ AbstractSocket::AbstractSocket(const std::string &threadName)
 /**
  * @brief destructor, which close the socket before deletion
  */
-AbstractSocket::~AbstractSocket()
-{
-    closeSocket();
-}
+AbstractSocket::~AbstractSocket() {}
 
 /**
  * @brief get socket-type

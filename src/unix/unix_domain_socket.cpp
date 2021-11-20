@@ -30,6 +30,14 @@ UnixDomainSocket::UnixDomainSocket(const std::string &socketFile,
 }
 
 /**
+ * @brief destructor
+ */
+UnixDomainSocket::~UnixDomainSocket()
+{
+    closeSocket();
+}
+
+/**
  * @brief init socket on client-side
  *
  * @param error reference for error-output

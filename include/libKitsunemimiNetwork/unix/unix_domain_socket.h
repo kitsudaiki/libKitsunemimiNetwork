@@ -25,6 +25,7 @@ class UnixDomainSocket
 public:
     UnixDomainSocket(const std::string &socketFile,
                      const std::string &threadName);
+    ~UnixDomainSocket();
 
     bool initClientSide(ErrorContainer &error);
 

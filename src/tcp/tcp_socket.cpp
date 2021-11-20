@@ -33,6 +33,14 @@ TcpSocket::TcpSocket(const std::string &address,
 }
 
 /**
+ * @brief destructor
+ */
+TcpSocket::~TcpSocket()
+{
+    closeSocket();
+}
+
+/**
  * @brief init socket on client-side
  *
  * @param error reference for error-output
