@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.2] - 2021-11-20
+
+### Fixed
+- fixed an order-problem while closing and deleting a socket-class, which could result into crashes when closing
+
+
 ## [0.8.1] - 2021-11-19
 
 ### Fixed
