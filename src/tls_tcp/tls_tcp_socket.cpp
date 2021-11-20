@@ -67,6 +67,7 @@ TlsTcpSocket::TlsTcpSocket(const int socketFd,
  */
 TlsTcpSocket::~TlsTcpSocket()
 {
+    closeSocket();
     cleanupOpenssl();
 }
 

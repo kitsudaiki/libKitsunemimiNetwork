@@ -30,6 +30,7 @@ public:
     TcpSocket(const std::string &address,
               const uint16_t port,
               const std::string &threadName);
+    ~TcpSocket();
 
     bool initClientSide(ErrorContainer &error);
 
