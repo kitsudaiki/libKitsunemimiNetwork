@@ -190,6 +190,16 @@ AbstractSocket::closeSocket()
         m_socket = 0;
     }
 
+    // make sure, that the thread is out of the function recvData before further
+    // deleteing the thread (maximum wait-time = 10ms)
+    int32_t timeout = 100;
+    while(m_isfullyClosed == false
+          && timeout > 0)
+    {
+        usleep(100);
+        timeout--;
+    }
+
     return true;
 }
 
@@ -202,6 +212,7 @@ AbstractSocket::run()
     while(m_abort == false) {
         waitForMessage();
     }
+    m_isfullyClosed = true;
 }
 
 } // namespace Network

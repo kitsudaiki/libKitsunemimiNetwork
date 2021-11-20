@@ -89,6 +89,9 @@ protected:
                              const void* bufferPosition,
                              const size_t bufferSize,
                              int flags) = 0;
+
+private:
+    bool m_isfullyClosed = false;
 };
 
 } // namespace Network
