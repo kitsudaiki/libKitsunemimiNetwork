@@ -22,35 +22,36 @@ namespace Kitsunemimi
 {
 namespace Network
 {
-class TlsTcpServer;
 
 class TlsTcpSocket
-        : public TcpSocket
 {
-    friend class TlsTcpServer;
-
 public:
     TlsTcpSocket(const std::string &address,
                  const uint16_t port,
-                 const std::string &threadName,
                  const std::string &certFile,
                  const std::string &keyFile,
-                 const std::string &caFile="");
+                 const std::string &caFile = "");
+    TlsTcpSocket();
     ~TlsTcpSocket();
 
-    bool initClientSide(ErrorContainer &error);
-
-protected:
+    std::string m_address = "";
+    uint16_t m_port = 0;
     SSL_CTX* m_ctx;
     SSL* m_ssl;
+    sockaddr_in m_socketAddr;
     std::string m_certFile = "";
     std::string m_keyFile = "";
     std::string m_caFile = "";
+    bool m_isConnected = false;
+    bool m_isClientSide = false;
+    int m_socketFd = 0;
+    uint32_t m_type = 0;
 
     bool initOpenssl(ErrorContainer &error);
+    bool initClientSide(ErrorContainer &error);
+    bool initSocket(ErrorContainer &error);
 
     TlsTcpSocket(const int socketFd,
-                 const std::string &threadName,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile="");

@@ -19,7 +19,8 @@ namespace Network
 {
 class TcpServer;
 class TcpSocket;
-class AbstractSocket;
+template<class>
+class NetSocket;
 
 class Tcp_Test
         : public Kitsunemimi::MemoryLeakTestHelpter

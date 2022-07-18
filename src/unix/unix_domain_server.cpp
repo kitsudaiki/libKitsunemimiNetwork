@@ -8,6 +8,7 @@
 
 #include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 #include <libKitsunemimiNetwork/unix/unix_domain_server.h>
+#include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
@@ -17,15 +18,19 @@ namespace Network
 
 /**
  * @brief constructor
+ *
+ * @param socketFile file for the unix-domain-socket
  */
-UnixDomainServer::UnixDomainServer(void* target,
-                                   void (*processConnection)(void*, AbstractSocket*),
-                                   const std::string &threadName)
-    : AbstractServer(target,
-                     processConnection,
-                     threadName)
+UnixDomainServer::UnixDomainServer(const std::string &socketFile)
 {
-    m_type = UNIX_SERVER;
+    m_socketFile = socketFile;
+
+    type = 1;
+}
+
+UnixDomainServer::UnixDomainServer()
+{
+
 }
 
 /**
@@ -33,22 +38,18 @@ UnixDomainServer::UnixDomainServer(void* target,
  */
 UnixDomainServer::~UnixDomainServer()
 {
-    closeServer();
 }
 
 /**
  * @brief creates a server on a specific port
  *
- * @param port port-number where the server should be listen
  * @param error reference for error-output
  *
  * @return false, if server creation failed, else true
  */
 bool
-UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &error)
+UnixDomainServer::initServer(ErrorContainer &error)
 {
-    m_socketFile = socketFile;
-
     // check file-path length to avoid conflics, when copy to the sockaddr_un-object
     if(m_socketFile.size() > 100)
     {
@@ -61,8 +62,8 @@ UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &erro
     }
 
     // create socket
-    m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
-    if(m_serverSocket < 0)
+    serverFd = socket(AF_LOCAL, SOCK_STREAM, 0);
+    if(serverFd < 0)
     {
         error.addMeesage("Failed to create a unix-socket");
         error.addSolution("Maybe no permissions to create a unix-socket on the system");
@@ -75,14 +76,14 @@ UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &erro
     m_server.sun_path[m_socketFile.size()] = '\0';
 
     // bind to port
-    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
+    if(bind(serverFd, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
     {
         error.addMeesage("Failed to bind unix-socket to addresse: \"" + m_socketFile + "\"");
         return false;
     }
 
     // start listening for incoming connections
-    if(listen(m_serverSocket, 5) == -1)
+    if(listen(serverFd, 5) == -1)
     {
         error.addMeesage("Failed listen on unix-socket on addresse: \"" + m_socketFile + "\"");
         return false;
@@ -99,14 +100,15 @@ UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &erro
  * @param error reference for error-output
  */
 bool
-UnixDomainServer::waitForIncomingConnection(ErrorContainer &error)
+UnixDomainServer::waitForIncomingConnection(bool* abort,
+                                            ErrorContainer &error)
 {
     uint32_t length = sizeof(struct sockaddr_un);
 
     //make new connection
-    const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
+    const int fd = accept(serverFd, reinterpret_cast<struct sockaddr*>(&m_server), &length);
 
-    if(m_abort) {
+    if(*abort) {
         return true;
     }
 
@@ -123,9 +125,11 @@ UnixDomainServer::waitForIncomingConnection(ErrorContainer &error)
              + "\"");
 
     // create new socket-object from file-descriptor
-    const std::string name = getThreadName() + "_client";
-    UnixDomainSocket* unixSocket = new UnixDomainSocket(fd, name);
-    m_processConnection(m_target, unixSocket);
+    const std::string name = "UDS_socket";    
+    UnixDomainSocket unixSocket(fd);
+    NetSocket<UnixDomainSocket>* netSocket = new NetSocket<UnixDomainSocket>(std::move(unixSocket),
+                                                                             name);
+    m_processConnection(m_target, netSocket);
 
     return true;
 }

@@ -19,6 +19,12 @@ namespace Network
 class UnixDomainServer;
 class UnixDomainSocket;
 
+template<class>
+class NetSocket;
+
+template<class>
+class NetServer;
+
 class UnixDomain_Test
         : public Kitsunemimi::MemoryLeakTestHelpter
 {

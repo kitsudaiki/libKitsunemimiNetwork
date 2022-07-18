@@ -27,16 +27,21 @@ namespace Network
  */
 TlsTcpSocket::TlsTcpSocket(const std::string &address,
                            const uint16_t port,
-                           const std::string &threadName,
                            const std::string &certFile,
                            const std::string &keyFile,
                            const std::string &caFile)
-    : TcpSocket(address, port, threadName)
 {
+    m_address = address;
+    m_port = port;
     m_certFile = certFile;
     m_keyFile = keyFile;
     m_caFile = caFile;
-    m_type = TLS_TCP_SOCKET;
+    m_type = 3;
+}
+
+TlsTcpSocket::TlsTcpSocket()
+{
+
 }
 
 /**
@@ -49,16 +54,15 @@ TlsTcpSocket::TlsTcpSocket(const std::string &address,
  * @param caFile path to ca-file
  */
 TlsTcpSocket::TlsTcpSocket(const int socketFd,
-                           const std::string &threadName,
                            const std::string &certFile,
                            const std::string &keyFile,
                            const std::string &caFile)
-    : TcpSocket(socketFd, threadName)
 {
+    m_socketFd = socketFd;
     m_certFile = certFile;
     m_keyFile = keyFile;
     m_caFile = caFile;
-    m_type = TLS_TCP_SOCKET;
+    m_type = 3;
     m_isConnected = true;
 }
 
@@ -67,8 +71,77 @@ TlsTcpSocket::TlsTcpSocket(const int socketFd,
  */
 TlsTcpSocket::~TlsTcpSocket()
 {
-    closeSocket();
     cleanupOpenssl();
+}
+
+/**
+ * @brief init tcp-socket and connect to the server
+ *
+ * @param error reference for error-output
+ *
+ * @return false, if socket-creation or connection to the server failed, else true
+ */
+bool
+TlsTcpSocket::initSocket(ErrorContainer &error)
+{
+    struct sockaddr_in address;
+    struct hostent* hostInfo;
+    unsigned long addr;
+
+    // create socket
+    m_socketFd = socket(AF_INET, SOCK_STREAM, 0);
+    if(m_socketFd < 0)
+    {
+        error.addMeesage("Failed to create a tcp-socket");
+        error.addSolution("Maybe no permissions to create a tcp-socket on the system");
+        return false;
+    }
+
+    // set TCP_NODELAY for sure
+    int optval = 1;
+    if(setsockopt(m_socketFd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
+    {
+        error.addMeesage("'setsockopt'-function failed");
+        return false;
+    }
+
+    // set server-address
+    memset(&address, 0, sizeof(address));
+    if((addr = inet_addr(m_address.c_str())) != INADDR_NONE)
+    {
+        memcpy(reinterpret_cast<char*>(&address.sin_addr), &addr, sizeof(addr));
+    }
+    else
+    {
+        // get server-connection via host-name instead of ip-address
+        hostInfo = gethostbyname(m_address.c_str());
+        if(hostInfo == nullptr)
+        {
+            error.addMeesage("Failed to get host by address: " + m_address);
+            error.addSolution("Check DNS, which is necessary to resolve the address");
+            return false;
+        }
+
+        memcpy(reinterpret_cast<char*>(&address.sin_addr),
+               hostInfo->h_addr,
+               static_cast<size_t>(hostInfo->h_length));
+    }
+
+    // set other informations
+    address.sin_family = AF_INET;
+    address.sin_port = htons(m_port);
+
+    // create connection
+    if(connect(m_socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
+    {
+        error.addMeesage("Failed to initialized tcp-socket client to target: " + m_address);
+        error.addSolution("Check if the target-server is running and reable");
+        return false;
+    }
+
+    m_socketAddr = address;
+
+    return true;
 }
 
 /**
@@ -174,7 +247,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
         error.addMeesage("Failed to ini ssl");
         return false;
     }
-    SSL_set_fd(m_ssl, m_socket);
+    SSL_set_fd(m_ssl, m_socketFd);
 
     // enable certificate validation, if ca-file was set
     if(m_caFile != "")

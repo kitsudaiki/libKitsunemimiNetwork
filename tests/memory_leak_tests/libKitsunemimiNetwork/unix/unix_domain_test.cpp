@@ -22,7 +22,7 @@ namespace Network
  */
 uint64_t processMessageUnixDomain(void* target,
                                   Kitsunemimi::RingBuffer* recvBuffer,
-                                  AbstractSocket*)
+                                  NetSocket<UnixDomainSocket>*)
 {
     UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -38,7 +38,7 @@ uint64_t processMessageUnixDomain(void* target,
  * processConnectionUnixDomain-callback
  */
 void processConnectionUnixDomain(void* target,
-                                 AbstractSocket* socket)
+                                 NetSocket<UnixDomainSocket>* socket)
 {
     UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
     targetTest->m_socketServerSide = static_cast<UnixDomainSocket*>(socket);

@@ -9,33 +9,31 @@
 #ifndef UNIX_DOMAIN_SOCKET_H
 #define UNIX_DOMAIN_SOCKET_H
 
-#include <libKitsunemimiNetwork/abstract_socket.h>
+#include <libKitsunemimiNetwork/net_socket.h>
 
 namespace Kitsunemimi
 {
 namespace Network
 {
-class UnixDomainServer;
 
 class UnixDomainSocket
-        : public AbstractSocket
 {
-    friend class UnixDomainServer;
 
 public:
-    UnixDomainSocket(const std::string &socketFile,
-                     const std::string &threadName);
+    UnixDomainSocket(const std::string &socketFile);
+    UnixDomainSocket();
     ~UnixDomainSocket();
 
-    bool initClientSide(ErrorContainer &error);
-
-protected:
     std::string m_socketFile = "";
     sockaddr_un m_socketAddr;
+    bool m_isConnected = false;
+    bool m_isClientSide = false;
+    int m_socketFd = 0;
+    uint32_t m_type = 0;
 
-    UnixDomainSocket(const int socketFd,
-                     const std::string &threadName);
+    UnixDomainSocket(const int socketFd);
 
+    bool initClientSide(ErrorContainer &error);
     bool initSocket(ErrorContainer &error);
     long recvData(int socket,
                   void* bufferPosition,

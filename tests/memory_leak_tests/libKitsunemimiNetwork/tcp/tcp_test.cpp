@@ -23,7 +23,7 @@ namespace Network
  */
 uint64_t processMessageTcp(void* target,
                            Kitsunemimi::RingBuffer* recvBuffer,
-                           AbstractSocket*)
+                           NetSocket*)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -39,7 +39,7 @@ uint64_t processMessageTcp(void* target,
  * processConnectionTcp-callback
  */
 void processConnectionTcp(void* target,
-                          AbstractSocket* socket)
+                          NetSocket* socket)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     targetTest->m_socketServerSide = static_cast<TcpSocket*>(socket);
