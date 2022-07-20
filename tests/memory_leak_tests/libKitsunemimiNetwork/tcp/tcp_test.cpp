@@ -12,6 +12,8 @@
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
 #include <libKitsunemimiNetwork/tcp/tcp_socket.h>
 #include <libKitsunemimiCommon/threading/thread_handler.h>
+#include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/net_server.h>
 
 namespace Kitsunemimi
 {
@@ -23,7 +25,7 @@ namespace Network
  */
 uint64_t processMessageTcp(void* target,
                            Kitsunemimi::RingBuffer* recvBuffer,
-                           NetSocket*)
+                           NetSocket<TcpSocket>*)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -39,10 +41,10 @@ uint64_t processMessageTcp(void* target,
  * processConnectionTcp-callback
  */
 void processConnectionTcp(void* target,
-                          NetSocket* socket)
+                          NetSocket<TcpSocket>* socket)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
-    targetTest->m_socketServerSide = static_cast<TcpSocket*>(socket);
+    targetTest->m_socketServerSide = socket;
     socket->setMessageCallback(target, &processMessageTcp);
     socket->startThread();
 }
@@ -51,10 +53,16 @@ void processConnectionTcp(void* target,
 Tcp_Test::Tcp_Test()
     : Kitsunemimi::MemoryLeakTestHelpter("Tcp_Test")
 {
-    ErrorContainer* error = nullptr;
+    ErrorContainer* error = new ErrorContainer();
 
     // init for one-time-allocations
-    m_server = new TcpServer(this, &processConnectionTcp, "Tcp_Test");
+    TcpServer tcpServer2(12345);
+    tcpServer2.initServer(*error);
+    m_server = new NetServer<TcpServer>(std::move(tcpServer2),
+                                        this,
+                                        &processConnectionTcp,
+                                        "Tcp_Test");
+
     m_server->scheduleThreadForDeletion();
     sleep(2);
 
@@ -62,13 +70,20 @@ Tcp_Test::Tcp_Test()
     REINIT_TEST();
     m_buffer = new DataBuffer(1000);
     error = new ErrorContainer();
-    m_server = new TcpServer(this, &processConnectionTcp, "Tcp_Test");
-    m_server->initServer(12345, *error);
+    TcpServer tcpServer(12345);
+    tcpServer.initServer(*error);
+    m_server = new NetServer<TcpServer>(std::move(tcpServer),
+                                        this,
+                                        &processConnectionTcp,
+                                        "Tcp_Test");
     m_server->startThread();
 
         // test client create and delete
-        m_socketClientSide = new TcpSocket("127.0.0.1", 12345, "Tcp_Test_client");
-        m_socketClientSide->initClientSide(*error);
+        TcpSocket tcpSocket("127.0.0.1", 12345);
+        tcpSocket.initClientSide(*error);
+        m_socketClientSide = new NetSocket<TcpSocket>(std::move(tcpSocket),
+                                                      "Tcp_Test_client");
+
         sleep(2);
 
             // send messages

@@ -11,6 +11,8 @@
 
 #include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 #include <libKitsunemimiNetwork/unix/unix_domain_server.h>
+#include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/net_server.h>
 
 namespace Kitsunemimi
 {
@@ -41,7 +43,7 @@ void processConnectionUnixDomain(void* target,
                                  NetSocket<UnixDomainSocket>* socket)
 {
     UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
-    targetTest->m_socketServerSide = static_cast<UnixDomainSocket*>(socket);
+    targetTest->m_socketServerSide = socket;
     socket->setMessageCallback(target, &processMessageUnixDomain);
     socket->startThread();
 }
@@ -53,7 +55,14 @@ UnixDomain_Test::UnixDomain_Test()
     ErrorContainer* error = nullptr;
 
     // init for one-time-allocations
-    m_server = new UnixDomainServer(this, &processConnectionUnixDomain, "UnixDomain_Test");
+    error = new ErrorContainer();
+
+    UnixDomainServer udsServer2("/tmp/sock.uds");
+    udsServer2.initServer(*error);
+    m_server = new NetServer<UnixDomainServer>(std::move(udsServer2),
+                                               this,
+                                               &processConnectionUnixDomain,
+                                               "UnixDomain_Test");
     m_server->scheduleThreadForDeletion();
     sleep(2);
 
@@ -61,19 +70,19 @@ UnixDomain_Test::UnixDomain_Test()
     REINIT_TEST();
     m_buffer = new DataBuffer(1000);
     error = new ErrorContainer();
-    m_server = new UnixDomainServer(this, &processConnectionUnixDomain, "UnixDomain_Test");
-    m_server->initServer("/tmp/sock.uds11111111111111111111111"
-                         "111111111111111111111111111111111111"
-                         "111111111111111111111111111111111111"
-                         "111111111111111111111111111111111111"
-                         "111111111111111111111111111111111111",
-                         *error);
-    m_server->initServer("/tmp/sock.uds", *error);
+    UnixDomainServer udsServer("/tmp/sock.uds");
+    udsServer.initServer(*error);
+    m_server = new NetServer<UnixDomainServer>(std::move(udsServer),
+                                               this,
+                                               &processConnectionUnixDomain,
+                                               "UnixDomain_Test");
     m_server->startThread();
 
         // test client create and delete
-        m_socketClientSide = new UnixDomainSocket("/tmp/sock.uds", "UnixDomain_Test_client");
-        m_socketClientSide->initClientSide(*error);
+        UnixDomainSocket udsSocket("/tmp/sock.uds");
+        udsSocket.initClientSide(*error);
+        m_socketClientSide = new NetSocket<UnixDomainSocket>(std::move(udsSocket),
+                                                             "UnixDomain_Test_client");
         sleep(2);
 
             // send messages
