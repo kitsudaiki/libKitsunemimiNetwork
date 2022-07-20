@@ -50,7 +50,7 @@ public:
     std::string m_keyFile = "";
 
     int serverFd = 0;
-    serverTypes type;
+    uint32_t type = 0;
 
     // callback-parameter for new incoming connections
     void* m_target = nullptr;

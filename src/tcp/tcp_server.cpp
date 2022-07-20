@@ -7,8 +7,6 @@
  */
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
-#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
-#include <libKitsunemimiNetwork/net_socket.h>
 
 namespace Kitsunemimi
 {
@@ -23,13 +21,10 @@ namespace Network
 TcpServer::TcpServer(const uint16_t port)
 {
     m_port = port;
-    type = static_cast<serverTypes>(2);
+    type = 2;
 }
 
-TcpServer::TcpServer()
-{
-
-}
+TcpServer::TcpServer() {}
 
 /**
  * @brief destructor
@@ -85,43 +80,6 @@ TcpServer::initServer(ErrorContainer &error)
     }
 
     LOG_INFO("Successfully initialized tcp-socket server on port: " + std::to_string(m_port));
-
-    return true;
-}
-
-/**
- * @brief wait for new incoming tcp-connections
- *
- * @param error reference for error-output
- */
-bool
-TcpServer::waitForIncomingConnection(bool* abort,
-                                     ErrorContainer &error)
-{
-    uint32_t length = sizeof(struct sockaddr_in);
-
-    //make new connection
-    const int fd = accept(serverFd, reinterpret_cast<struct sockaddr*>(&m_server), &length);
-
-    if(*abort) {
-        return true;
-    }
-
-    if(fd < 0)
-    {
-        error.addMeesage("Failed accept incoming connection on tcp-server with port: "
-                         + std::to_string(m_port));
-        return false;
-    }
-
-    LOG_INFO("Successfully accepted incoming connection on tcp-socket server with port : "
-             + std::to_string(m_port));
-
-    // create new socket-object from file-descriptor
-    const std::string name = "TCP_socket";
-    TcpSocket tcpSocket(fd);
-    NetSocket<TcpSocket>* netSocket = new NetSocket<TcpSocket>(std::move(tcpSocket), name);
-    m_processConnection(m_target, netSocket);
 
     return true;
 }

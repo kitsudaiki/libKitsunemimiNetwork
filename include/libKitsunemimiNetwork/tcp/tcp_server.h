@@ -20,16 +20,14 @@
 
 #include <libKitsunemimiCommon/logger.h>
 
+#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
+
 namespace Kitsunemimi
 {
 namespace Network
 {
-class TcpSocket;
-
 template<class>
 class NetSocket;
-
-enum serverTypes : unsigned int;
 
 class TcpServer
 {
@@ -39,14 +37,9 @@ public:
     ~TcpServer();
 
     bool initServer(ErrorContainer &error);
-    bool waitForIncomingConnection(bool* abort, ErrorContainer &error);
 
     int serverFd = 0;
-    serverTypes type;
-
-    // callback-parameter for new incoming connections
-    void* m_target = nullptr;
-    void (*m_processConnection)(void*, NetSocket<TcpSocket>*);
+    uint32_t type = 0;;
 
     uint16_t m_port = 0;
     struct sockaddr_in m_server;

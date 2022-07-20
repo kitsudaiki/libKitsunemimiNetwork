@@ -30,10 +30,7 @@ TcpSocket::TcpSocket(const std::string &address,
     m_type = 2;
 }
 
-TcpSocket::TcpSocket()
-{
-
-}
+TcpSocket::TcpSocket() {}
 
 /**
  * @brief destructor

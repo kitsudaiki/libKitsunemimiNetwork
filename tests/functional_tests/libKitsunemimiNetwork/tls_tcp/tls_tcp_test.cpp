@@ -85,7 +85,7 @@ TlsTcp_Test::checkConnectionInit()
                               std::string("/tmp/cert.pem"),
                               std::string("/tmp/key.pem"));
     TEST_EQUAL(tlsTcpServer.initServer(error), true);
-    m_server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
+    /*m_server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
                                            this,
                                            &processConnectionTlsTcp,
                                            "TlsTcp_Test");
@@ -103,7 +103,7 @@ TlsTcp_Test::checkConnectionInit()
     TEST_EQUAL(tlsTcpSocket.initClientSide(error), true);
     m_socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket),
                                                      "Tcp_Test_client");
-    TEST_EQUAL(m_socketClientSide->getType(), 3);
+    TEST_EQUAL(m_socketClientSide->getType(), 3);*/
 
     usleep(100000);
 }

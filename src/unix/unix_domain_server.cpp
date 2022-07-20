@@ -6,9 +6,7 @@
  *  @copyright MIT License
  */
 
-#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 #include <libKitsunemimiNetwork/unix/unix_domain_server.h>
-#include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
@@ -24,21 +22,15 @@ namespace Network
 UnixDomainServer::UnixDomainServer(const std::string &socketFile)
 {
     m_socketFile = socketFile;
-
     type = 1;
 }
 
-UnixDomainServer::UnixDomainServer()
-{
-
-}
+UnixDomainServer::UnixDomainServer() {}
 
 /**
  * @brief destructor
  */
-UnixDomainServer::~UnixDomainServer()
-{
-}
+UnixDomainServer::~UnixDomainServer() {}
 
 /**
  * @brief creates a server on a specific port
@@ -94,45 +86,6 @@ UnixDomainServer::initServer(ErrorContainer &error)
     return true;
 }
 
-/**
- * @brief wait for new incoming unix-socket-connections
- *
- * @param error reference for error-output
- */
-bool
-UnixDomainServer::waitForIncomingConnection(bool* abort,
-                                            ErrorContainer &error)
-{
-    uint32_t length = sizeof(struct sockaddr_un);
-
-    //make new connection
-    const int fd = accept(serverFd, reinterpret_cast<struct sockaddr*>(&m_server), &length);
-
-    if(*abort) {
-        return true;
-    }
-
-    if(fd < 0)
-    {
-        error.addMeesage("Failed accept incoming connection on unix-server with address: \""
-                         + m_socketFile
-                         + "\"");
-        return false;
-    }
-
-    LOG_INFO("Successfully accepted incoming connection on unix-socket server with address: \""
-             + m_socketFile
-             + "\"");
-
-    // create new socket-object from file-descriptor
-    const std::string name = "UDS_socket";    
-    UnixDomainSocket unixSocket(fd);
-    NetSocket<UnixDomainSocket>* netSocket = new NetSocket<UnixDomainSocket>(std::move(unixSocket),
-                                                                             name);
-    m_processConnection(m_target, netSocket);
-
-    return true;
-}
 
 } // namespace Network
 } // namespace Kitsunemimi

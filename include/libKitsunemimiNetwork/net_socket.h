@@ -1,5 +1,5 @@
 /**
- *  @file    abstract_socket.h
+ *  @file    net_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
@@ -53,7 +53,7 @@ public:
 
     ~NetSocket()
     {
-
+        closeSocket();
     }
 
     /**

@@ -27,17 +27,12 @@ UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
     m_type = 1;
 }
 
-UnixDomainSocket::UnixDomainSocket()
-{
-
-}
+UnixDomainSocket::UnixDomainSocket() {}
 
 /**
  * @brief destructor
  */
-UnixDomainSocket::~UnixDomainSocket()
-{
-}
+UnixDomainSocket::~UnixDomainSocket() {}
 
 /**
  * @brief init socket on client-side

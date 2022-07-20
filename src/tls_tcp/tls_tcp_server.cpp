@@ -31,7 +31,7 @@ TlsTcpServer::TlsTcpServer(const uint16_t port,
     m_keyFile = keyFile;
     m_caFile = caFile;
 
-    type = static_cast<serverTypes>(3);
+    type = 3;
 }
 
 TlsTcpServer::TlsTcpServer()

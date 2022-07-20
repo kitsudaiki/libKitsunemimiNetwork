@@ -19,13 +19,12 @@
 #include <stdio.h>
 
 #include <libKitsunemimiCommon/logger.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 
 namespace Kitsunemimi
 {
 namespace Network
 {
-class UnixDomainSocket;
-
 template<class>
 class NetSocket;
 
@@ -37,7 +36,6 @@ public:
     ~UnixDomainServer();
 
     bool initServer(ErrorContainer &error);
-    bool waitForIncomingConnection(bool* abort, ErrorContainer &error);
 
     int serverFd = 0;
     uint32_t type = 0;
