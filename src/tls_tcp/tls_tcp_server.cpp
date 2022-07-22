@@ -18,74 +18,38 @@ namespace Network
 /**
  * @brief constructor
  */
-TlsTcpServer::TlsTcpServer(void* target,
-                           void (*processConnection)(void*, AbstractSocket*),
-                           const std::string &threadName,
+TlsTcpServer::TlsTcpServer(TcpServer&& server,
                            const std::string &certFile,
                            const std::string &keyFile,
                            const std::string &caFile)
-    : TcpServer(target,
-                processConnection,
-                threadName)
 {
-    m_certFile = certFile;
-    m_keyFile = keyFile;
-    m_caFile = caFile;
-
-    m_type = TLS_TCP_SERVER;
+    this->server = std::move(server);
+    this->port = server.getPort();
+    this->certFile = certFile;
+    this->keyFile = keyFile;
+    this->caFile = caFile;
+    this->socketAddr = server.socketAddr;
 }
+
+/**
+ * @brief default-constructor
+ */
+TlsTcpServer::TlsTcpServer() {}
 
 /**
  * @brief destructor
  */
-TlsTcpServer::~TlsTcpServer()
-{
-    closeServer();
-}
+TlsTcpServer::~TlsTcpServer() {}
 
 /**
- * @brief wait for new incoming tcp-connections
+ * @brief get file-descriptor
  *
- * @param error reference for error-output
+ * @return file-descriptor
  */
-bool
-TlsTcpServer::waitForIncomingConnection(ErrorContainer &error)
+int
+TlsTcpServer::getServerFd() const
 {
-    uint32_t length = sizeof(struct sockaddr_in);
-
-    //make new connection
-    const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
-
-    if(m_abort) {
-        return true;
-    }
-
-    if(fd < 0)
-    {
-        error.addMeesage("Failed accept incoming connection on tcp-server with port: "
-                         + std::to_string(m_port));
-        return false;
-    }
-
-    // create new socket-object from file-descriptor
-    const std::string name = getThreadName() + "_client";
-    TlsTcpSocket* tcpSocket = new TlsTcpSocket(fd,
-                                               name,
-                                               m_certFile,
-                                               m_keyFile,
-                                               m_caFile);
-    if(tcpSocket->initOpenssl(error) == false)
-    {
-        delete tcpSocket;
-        return false;
-    }
-
-    LOG_INFO("Successfully accepted incoming connection on encrypted tcp-socket server with "
-             "port : " + std::to_string(m_port));
-
-    m_processConnection(m_target, tcpSocket);
-
-    return true;
+    return server.getServerFd();
 }
 
 } // namespace Network

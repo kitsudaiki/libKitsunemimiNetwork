@@ -9,30 +9,53 @@
 #ifndef UNIX_DOMAIN_SERVER_H
 #define UNIX_DOMAIN_SERVER_H
 
-#include <string>
-#include <libKitsunemimiNetwork/abstract_server.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include <libKitsunemimiCommon/logger.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 
 namespace Kitsunemimi
 {
 namespace Network
 {
-class UnixDomainSocket;
+template<class>
+class NetSocket;
+
+template <class>
+class NetServer;
 
 class UnixDomainServer
-        : public AbstractServer
 {
 public:
-    UnixDomainServer(void* target,
-                     void (*processConnection)(void*, AbstractSocket*),
-                     const std::string &threadName);
+    UnixDomainServer(const std::string &socketFile);
     ~UnixDomainServer();
 
-    bool initServer(const std::string &socketFile, ErrorContainer &error);
-    bool waitForIncomingConnection(ErrorContainer &error);
+    bool initServer(ErrorContainer &error);
 
 private:
+    friend NetServer<UnixDomainServer>;
+
+    UnixDomainServer();
+
+    int getServerFd() const;
+
+    int serverFd = 0;
+    uint32_t type = 0;
+
+    uint16_t m_port = 0;
+    struct sockaddr_un socketAddr;
+    std::string caFile = "";
+    std::string certFile = "";
+    std::string keyFile = "";
+
     std::string m_socketFile = "";
-    struct sockaddr_un m_server;
 };
 
 } // namespace Network

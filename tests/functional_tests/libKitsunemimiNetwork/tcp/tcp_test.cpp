@@ -9,8 +9,8 @@
 #include "tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/tcp/tcp_server.h>
-#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
+#include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/net_server.h>
 #include <libKitsunemimiCommon/threading/thread_handler.h>
 
 namespace Kitsunemimi
@@ -23,7 +23,7 @@ namespace Network
  */
 uint64_t processMessageTcp(void* target,
                            Kitsunemimi::RingBuffer* recvBuffer,
-                           AbstractSocket*)
+                           NetSocket<TcpSocket>*)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -39,10 +39,10 @@ uint64_t processMessageTcp(void* target,
  * processConnectionTcp-callback
  */
 void processConnectionTcp(void* target,
-                          AbstractSocket* socket)
+                          NetSocket<TcpSocket>* socket)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
-    targetTest->m_socketServerSide = static_cast<TcpSocket*>(socket);
+    targetTest->m_socketServerSide = socket;
     socket->setMessageCallback(target, &processMessageTcp);
     socket->startThread();
 }
@@ -65,7 +65,6 @@ void
 Tcp_Test::initTestCase()
 {
     m_buffer = new DataBuffer(1000);
-    m_server = new TcpServer(this, &processConnectionTcp, "Tcp_Test");
 }
 
 /**
@@ -77,15 +76,23 @@ Tcp_Test::checkConnectionInit()
     ErrorContainer error;
 
     // init server
-    TEST_EQUAL(m_server->getType(), AbstractServer::TCP_SERVER);
-    TEST_EQUAL(m_server->initServer(12345, error), true);
+    TcpServer tcpServer(12345);
+    TEST_EQUAL(tcpServer.initServer(error), true);
+    m_server = new NetServer<TcpServer>(std::move(tcpServer),
+                                        this,
+                                        &processConnectionTcp,
+                                        "Tcp_Test");
+
+    TEST_EQUAL(m_server->getType(), 2);
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
-    m_socketClientSide = new TcpSocket("127.0.0.1", 12345, "Tcp_Test_client");
-    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
-    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
-    TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TCP_SOCKET);
+    TcpSocket tcpSocket("127.0.0.1", 12345);
+    m_socketClientSide = new NetSocket<TcpSocket>(std::move(tcpSocket),
+                                                  "Tcp_Test_client");
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
+    TEST_EQUAL(m_socketClientSide->getType(), 2);
 
     usleep(100000);
 }

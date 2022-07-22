@@ -22,49 +22,60 @@ namespace Kitsunemimi
 {
 namespace Network
 {
+class UnixDomainServer;
+class TcpServer;
 class TlsTcpServer;
 
-class TlsTcpSocket
-        : public TcpSocket
-{
-    friend class TlsTcpServer;
+template <class>
+class NetSocket;
 
+template <class>
+class NetServer;
+
+class TlsTcpSocket
+{
 public:
-    TlsTcpSocket(const std::string &address,
-                 const uint16_t port,
-                 const std::string &threadName,
+    TlsTcpSocket(TcpSocket&& socket,
                  const std::string &certFile,
                  const std::string &keyFile,
-                 const std::string &caFile="");
+                 const std::string &caFile = "");
+
     ~TlsTcpSocket();
+
+private:
+    friend NetSocket<TlsTcpSocket>;
+    friend NetServer<UnixDomainServer>;
+    friend NetServer<TcpServer>;
+    friend NetServer<TlsTcpServer>;
+
+    TlsTcpSocket();
+
+    TcpSocket socket;
+    uint32_t type = 3;
+    std::string certFile = "";
+    std::string keyFile = "";
+    std::string caFile = "";
+
+    int getSocketFd() const;
 
     bool initClientSide(ErrorContainer &error);
 
-protected:
-    SSL_CTX* m_ctx;
-    SSL* m_ssl;
-    std::string m_certFile = "";
-    std::string m_keyFile = "";
-    std::string m_caFile = "";
-
     bool initOpenssl(ErrorContainer &error);
-
-    TlsTcpSocket(const int socketFd,
-                 const std::string &threadName,
-                 const std::string &certFile,
-                 const std::string &keyFile,
-                 const std::string &caFile="");
 
     long recvData(int,
                   void* bufferPosition,
                   const size_t bufferSize,
                   int);
+
     ssize_t sendData(int,
                      const void* bufferPosition,
                      const size_t bufferSize,
                      int);
 
     bool cleanupOpenssl();
+
+    SSL_CTX* m_ctx = nullptr;
+    SSL* m_ssl = nullptr;
 };
 
 } // namespace Network

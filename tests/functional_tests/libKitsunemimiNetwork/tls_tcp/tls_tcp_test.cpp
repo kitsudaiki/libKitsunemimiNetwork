@@ -9,8 +9,8 @@
 #include "tls_tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
+#include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/net_server.h>
 
 #include <cert_init.h>
 
@@ -24,11 +24,10 @@ namespace Network
  */
 uint64_t processMessageTlsTcp(void* target,
                               Kitsunemimi::RingBuffer* recvBuffer,
-                              AbstractSocket*)
+                              NetSocket<TlsTcpSocket>*)
 {
     TlsTcp_Test* targetTest = static_cast<TlsTcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
-
     if(dataPointer == nullptr) {
         return 0;
     }
@@ -41,10 +40,10 @@ uint64_t processMessageTlsTcp(void* target,
  * processConnectionTlsTcp-callback
  */
 void processConnectionTlsTcp(void* target,
-                             AbstractSocket* socket)
+                             NetSocket<TlsTcpSocket>* socket)
 {
     TlsTcp_Test* targetTest = static_cast<TlsTcp_Test*>(target);
-    targetTest->m_socketServerSide = static_cast<TlsTcpSocket*>(socket);
+    targetTest->m_socketServerSide = socket;
     socket->setMessageCallback(target, &processMessageTlsTcp);
     socket->startThread();
 }
@@ -69,11 +68,6 @@ TlsTcp_Test::initTestCase()
     writeTestCerts();
 
     m_buffer = new DataBuffer(1000);
-    m_server = new TlsTcpServer(this,
-                                &processConnectionTlsTcp,
-                                "TlsTcp_Test",
-                                std::string("/tmp/cert.pem"),
-                                std::string("/tmp/key.pem"));
 }
 
 /**
@@ -85,19 +79,28 @@ TlsTcp_Test::checkConnectionInit()
     ErrorContainer error;
 
     // init server
-    TEST_EQUAL(m_server->getType(), AbstractServer::TLS_TCP_SERVER);
-    TEST_EQUAL(m_server->initServer(12345, error), true);
+    TcpServer tcpServer(12345);
+    TEST_EQUAL(tcpServer.initServer(error), true);
+
+    TlsTcpServer tlsTcpServer(std::move(tcpServer),
+                              "/tmp/cert.pem",
+                              "/tmp/key.pem");
+    m_server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
+                                           this,
+                                           &processConnectionTlsTcp,
+                                           "TlsTcp_Test");
+
+    TEST_EQUAL(m_server->getType(), 3);
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
-    m_socketClientSide = new TlsTcpSocket("127.0.0.1",
-                                          12345,
-                                          "TlsTcp_Test_client",
-                                          "/tmp/cert.pem",
-                                          "/tmp/key.pem");
-    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
-    TEST_EQUAL(m_socketClientSide->initClientSide(error), true);
-    TEST_EQUAL(m_socketClientSide->getType(), AbstractSocket::TLS_TCP_SOCKET);
+    TcpSocket tcpSocket("127.0.0.1", 12345);
+    TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
+                              "/tmp/cert.pem",
+                              "/tmp/key.pem");
+    m_socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), "Tcp_Test_client");
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
+    TEST_EQUAL(m_socketClientSide->getType(), 3);
 
     usleep(100000);
 }

@@ -16,8 +16,17 @@ namespace Kitsunemimi
 struct DataBuffer;
 namespace Network
 {
+class TcpServer;
+class TcpSocket;
+
 class TlsTcpServer;
 class TlsTcpSocket;
+
+template<class>
+class NetSocket;
+
+template<class>
+class NetServer;
 
 class TlsTcp_Test
         : public Kitsunemimi::CompareTestHelper
@@ -26,7 +35,7 @@ public:
     TlsTcp_Test();
 
     DataBuffer* m_buffer = nullptr;
-    TlsTcpSocket* m_socketServerSide = nullptr;
+    NetSocket<TlsTcpSocket>* m_socketServerSide = nullptr;
 
 private:
     void initTestCase();
@@ -35,8 +44,8 @@ private:
     void checkBigDataTransfer();
     void cleanupTestCase();
 
-    TlsTcpServer* m_server = nullptr;
-    TlsTcpSocket* m_socketClientSide = nullptr;
+    NetServer<TlsTcpServer>* m_server = nullptr;
+    NetSocket<TlsTcpSocket>* m_socketClientSide = nullptr;
 };
 
 } // namespace Network

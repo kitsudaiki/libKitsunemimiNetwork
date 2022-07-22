@@ -20,22 +20,22 @@ namespace Network
  *
  * @param socketFile
  */
-UnixDomainSocket::UnixDomainSocket(const std::string &socketFile,
-                                   const std::string &threadName)
-    : AbstractSocket(threadName)
+UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
 {
-    m_socketFile = socketFile;
-    m_isClientSide = true;
-    m_type = UNIX_SOCKET;
+    this->m_socketFile = socketFile;
+    this->isClientSide = true;
+    this->type = 1;
 }
+
+/**
+ * @brief default-constructor
+ */
+UnixDomainSocket::UnixDomainSocket() {}
 
 /**
  * @brief destructor
  */
-UnixDomainSocket::~UnixDomainSocket()
-{
-    closeSocket();
-}
+UnixDomainSocket::~UnixDomainSocket() {}
 
 /**
  * @brief init socket on client-side
@@ -47,7 +47,7 @@ UnixDomainSocket::~UnixDomainSocket()
 bool
 UnixDomainSocket::initClientSide(ErrorContainer &error)
 {
-    if(m_isConnected) {
+    if(socketFd > 0) {
         return true;
     }
 
@@ -56,7 +56,7 @@ UnixDomainSocket::initClientSide(ErrorContainer &error)
         return false;
     }
 
-    m_isConnected = true;
+    isConnected = true;
     LOG_INFO("Successfully initialized unix-socket client to targe: " + m_socketFile);
 
     return true;
@@ -68,14 +68,23 @@ UnixDomainSocket::initClientSide(ErrorContainer &error)
  *
  * @param socketFd file-descriptor of the socket-socket
  */
-UnixDomainSocket::UnixDomainSocket(const int socketFd,
-                                   const std::string &threadName)
-    : AbstractSocket(threadName)
+UnixDomainSocket::UnixDomainSocket(const int socketFd)
 {
-    m_socket = socketFd;
-    m_isClientSide = false;
-    m_type = UNIX_SOCKET;
-    m_isConnected = true;
+    this->socketFd = socketFd;
+    this->isClientSide = false;
+    this->type = 1;
+    this->isConnected = true;
+}
+
+/**
+ * @brief get file-descriptor
+ *
+ * @return file-descriptor
+ */
+int
+UnixDomainSocket::getSocketFd() const
+{
+    return socketFd;
 }
 
 /**
@@ -102,8 +111,8 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
     }
 
     // create socket
-    m_socket = socket(PF_LOCAL, SOCK_STREAM, 0);
-    if(m_socket < 0)
+    socketFd = socket(PF_LOCAL, SOCK_STREAM, 0);
+    if(socketFd < 0)
     {
         error.addMeesage("Failed to create a unix-socket");
         error.addSolution("Maybe no permissions to create a unix-socket on the system");
@@ -116,7 +125,7 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
     address.sun_path[m_socketFile.size()] = '\0';
 
     // create connection
-    if(connect(m_socket, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
+    if(connect(socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         error.addMeesage("Failed to connect unix-socket to server with addresse: \""
                          + m_socketFile
@@ -127,8 +136,8 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
         return false;
     }
 
-    m_socketAddr = address;
-    m_isConnected = true;
+    socketAddr = address;
+    isConnected = true;
 
     return true;
 }

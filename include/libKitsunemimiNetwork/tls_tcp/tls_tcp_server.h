@@ -12,32 +12,52 @@
 #include <string>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
+
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
 
 namespace Kitsunemimi
 {
 namespace Network
 {
 
+template <class>
+class NetServer;
+
 class TlsTcpServer
-        : public TcpServer
 {
 public:
-    TlsTcpServer(void* target,
-                 void (*processConnection)(void*, AbstractSocket*),
-                 const std::string &threadName,
+    TlsTcpServer(TcpServer&& server,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile = "");
     ~TlsTcpServer();
 
-    bool waitForIncomingConnection(ErrorContainer &error);
-
 private:
-    std::string m_caFile = "";
-    std::string m_certFile = "";
-    std::string m_keyFile = "";
+    friend NetServer<TlsTcpServer>;
+
+    TlsTcpServer();
+
+    int getServerFd() const;
+
+    std::string caFile = "";
+    std::string certFile = "";
+    std::string keyFile = "";
+
+    uint16_t port = 0;
+    uint32_t type = 3;
+
+    TcpServer server;
+    struct sockaddr_in socketAddr;
 };
 
 } // namespace Network

@@ -6,7 +6,6 @@
  *  @copyright MIT License
  */
 
-#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
 #include <libKitsunemimiNetwork/unix/unix_domain_server.h>
 #include <libKitsunemimiCommon/logger.h>
 
@@ -17,38 +16,35 @@ namespace Network
 
 /**
  * @brief constructor
+ *
+ * @param socketFile file for the unix-domain-socket
  */
-UnixDomainServer::UnixDomainServer(void* target,
-                                   void (*processConnection)(void*, AbstractSocket*),
-                                   const std::string &threadName)
-    : AbstractServer(target,
-                     processConnection,
-                     threadName)
+UnixDomainServer::UnixDomainServer(const std::string &socketFile)
 {
-    m_type = UNIX_SERVER;
+    this->m_socketFile = socketFile;
+    this->type = 1;
 }
+
+/**
+ * @brief default-constructor
+ */
+UnixDomainServer::UnixDomainServer() {}
 
 /**
  * @brief destructor
  */
-UnixDomainServer::~UnixDomainServer()
-{
-    closeServer();
-}
+UnixDomainServer::~UnixDomainServer() {}
 
 /**
  * @brief creates a server on a specific port
  *
- * @param port port-number where the server should be listen
  * @param error reference for error-output
  *
  * @return false, if server creation failed, else true
  */
 bool
-UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &error)
+UnixDomainServer::initServer(ErrorContainer &error)
 {
-    m_socketFile = socketFile;
-
     // check file-path length to avoid conflics, when copy to the sockaddr_un-object
     if(m_socketFile.size() > 100)
     {
@@ -61,8 +57,8 @@ UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &erro
     }
 
     // create socket
-    m_serverSocket = socket(AF_LOCAL, SOCK_STREAM, 0);
-    if(m_serverSocket < 0)
+    serverFd = socket(AF_LOCAL, SOCK_STREAM, 0);
+    if(serverFd < 0)
     {
         error.addMeesage("Failed to create a unix-socket");
         error.addSolution("Maybe no permissions to create a unix-socket on the system");
@@ -70,19 +66,19 @@ UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &erro
     }
 
     unlink(m_socketFile.c_str());
-    m_server.sun_family = AF_LOCAL;
-    strncpy(m_server.sun_path, m_socketFile.c_str(), m_socketFile.size());
-    m_server.sun_path[m_socketFile.size()] = '\0';
+    socketAddr.sun_family = AF_LOCAL;
+    strncpy(socketAddr.sun_path, m_socketFile.c_str(), m_socketFile.size());
+    socketAddr.sun_path[m_socketFile.size()] = '\0';
 
     // bind to port
-    if(bind(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
+    if(bind(serverFd, reinterpret_cast<struct sockaddr*>(&socketAddr), sizeof(socketAddr)) < 0)
     {
         error.addMeesage("Failed to bind unix-socket to addresse: \"" + m_socketFile + "\"");
         return false;
     }
 
     // start listening for incoming connections
-    if(listen(m_serverSocket, 5) == -1)
+    if(listen(serverFd, 5) == -1)
     {
         error.addMeesage("Failed listen on unix-socket on addresse: \"" + m_socketFile + "\"");
         return false;
@@ -94,40 +90,14 @@ UnixDomainServer::initServer(const std::string &socketFile, ErrorContainer &erro
 }
 
 /**
- * @brief wait for new incoming unix-socket-connections
+ * @brief get file-descriptor
  *
- * @param error reference for error-output
+ * @return file-descriptor
  */
-bool
-UnixDomainServer::waitForIncomingConnection(ErrorContainer &error)
+int
+UnixDomainServer::getServerFd() const
 {
-    uint32_t length = sizeof(struct sockaddr_un);
-
-    //make new connection
-    const int fd = accept(m_serverSocket, reinterpret_cast<struct sockaddr*>(&m_server), &length);
-
-    if(m_abort) {
-        return true;
-    }
-
-    if(fd < 0)
-    {
-        error.addMeesage("Failed accept incoming connection on unix-server with address: \""
-                         + m_socketFile
-                         + "\"");
-        return false;
-    }
-
-    LOG_INFO("Successfully accepted incoming connection on unix-socket server with address: \""
-             + m_socketFile
-             + "\"");
-
-    // create new socket-object from file-descriptor
-    const std::string name = getThreadName() + "_client";
-    UnixDomainSocket* unixSocket = new UnixDomainSocket(fd, name);
-    m_processConnection(m_target, unixSocket);
-
-    return true;
+    return serverFd;
 }
 
 } // namespace Network

@@ -19,6 +19,12 @@ namespace Network
 class UnixDomainServer;
 class UnixDomainSocket;
 
+template<class>
+class NetSocket;
+
+template<class>
+class NetServer;
+
 class UnixDomain_Test
         : public Kitsunemimi::MemoryLeakTestHelpter
 {
@@ -26,7 +32,7 @@ public:
     UnixDomain_Test();
 
     DataBuffer* m_buffer = nullptr;
-    UnixDomainSocket* m_socketServerSide = nullptr;
+    NetSocket<UnixDomainSocket>* m_socketServerSide = nullptr;
 
 private:
     void initTestCase();
@@ -35,8 +41,8 @@ private:
     void checkBigDataTransfer();
     void cleanupTestCase();
 
-    UnixDomainServer* m_server = nullptr;
-    UnixDomainSocket* m_socketClientSide = nullptr;
+    NetServer<UnixDomainServer>* m_server = nullptr;
+    NetSocket<UnixDomainSocket>* m_socketClientSide = nullptr;
 };
 
 } // namespace Network

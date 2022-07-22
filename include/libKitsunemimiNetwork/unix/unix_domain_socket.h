@@ -9,34 +9,47 @@
 #ifndef UNIX_DOMAIN_SOCKET_H
 #define UNIX_DOMAIN_SOCKET_H
 
-#include <libKitsunemimiNetwork/abstract_socket.h>
+#include <libKitsunemimiNetwork/net_socket.h>
 
 namespace Kitsunemimi
 {
 namespace Network
 {
 class UnixDomainServer;
+class TcpServer;
+class TlsTcpServer;
+
+template <class>
+class NetSocket;
+
+template <class>
+class NetServer;
 
 class UnixDomainSocket
-        : public AbstractSocket
 {
-    friend class UnixDomainServer;
 
 public:
-    UnixDomainSocket(const std::string &socketFile,
-                     const std::string &threadName);
+    UnixDomainSocket(const std::string &socketFile);
     ~UnixDomainSocket();
 
+private:
+    friend NetSocket<UnixDomainSocket>;
+    friend NetServer<UnixDomainServer>;
+    friend NetServer<TcpServer>;
+    friend NetServer<TlsTcpServer>;
+
+    UnixDomainSocket();
+    UnixDomainSocket(const int socketFd);
+
+    sockaddr_un socketAddr;
+    bool isConnected = false;
+    bool isClientSide = false;
+    int socketFd = 0;
+    uint32_t type = 0;;
+
     bool initClientSide(ErrorContainer &error);
-
-protected:
-    std::string m_socketFile = "";
-    sockaddr_un m_socketAddr;
-
-    UnixDomainSocket(const int socketFd,
-                     const std::string &threadName);
-
     bool initSocket(ErrorContainer &error);
+    int getSocketFd() const;
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,
@@ -45,6 +58,8 @@ protected:
                      const void* bufferPosition,
                      const size_t bufferSize,
                      int flags);
+
+    std::string m_socketFile = "";
 };
 
 } // namespace Network
