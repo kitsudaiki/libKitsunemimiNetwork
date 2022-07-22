@@ -1,6 +1,6 @@
 # libKitsunemimiNetwork
 
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/kitsudaiki/libKitsunemimiNetwork?label=build%20and%20test&style=flat-square)
+![Github workfloat status](https://img.shields.io/cirrus/github/kitsudaiki/libKitsunemimiNetwork/master?label=build%20and%20test&style=flat-square)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kitsudaiki/libKitsunemimiNetwork?label=version&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/kitsudaiki/libKitsunemimiNetwork?style=flat-square)
 ![C++Version](https://img.shields.io/badge/c%2B%2B-17-blue?style=flat-square)
