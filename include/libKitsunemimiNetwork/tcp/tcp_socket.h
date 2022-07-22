@@ -32,27 +32,44 @@ namespace Kitsunemimi
 {
 namespace Network
 {
+class UnixDomainServer;
+class TcpServer;
+class TlsTcpServer;
+class TlsTcpSocket;
+
+template <class>
+class NetSocket;
+
+template <class>
+class NetServer;
 
 class TcpSocket
 {
 public:
     TcpSocket(const std::string &address,
               const uint16_t port);
-    TcpSocket();
     ~TcpSocket();
 
-    std::string m_address = "";
-    uint16_t m_port = 0;
-    sockaddr_in m_socketAddr;
-    bool m_isConnected = false;
-    bool m_isClientSide = false;
-    int m_socketFd = 0;
-    uint32_t m_type = 0;
+private:
+    friend NetSocket<TcpSocket>;
+    friend NetServer<UnixDomainServer>;
+    friend NetServer<TcpServer>;
+    friend NetServer<TlsTcpServer>;
+    friend TlsTcpSocket;
+
+    TcpSocket();
+
+    sockaddr_in socketAddr;
+    bool isConnected = false;
+    bool isClientSide = false;
+    int socketFd = 0;
+    uint32_t type = 0;
 
     TcpSocket(const int socketFd);
 
     bool initClientSide(ErrorContainer &error);
     bool initSocket(ErrorContainer &error);
+    int getSocketFd() const;
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,
@@ -61,6 +78,11 @@ public:
                      const void* bufferPosition,
                      const size_t bufferSize,
                      int flags);
+
+    const std::string &getAddress() const;
+
+    std::string m_address = "";
+    uint16_t m_port = 0;
 };
 
 } // namespace Network

@@ -26,16 +26,24 @@ TcpSocket::TcpSocket(const std::string &address,
 {
     m_address = address;
     m_port = port;
-    m_isClientSide = true;
-    m_type = 2;
+    isClientSide = true;
+    type = 2;
 }
 
+/**
+ * @brief default-constructor
+ */
 TcpSocket::TcpSocket() {}
 
 /**
  * @brief destructor
  */
 TcpSocket::~TcpSocket() {}
+
+int TcpSocket::getSocketFd() const
+{
+    return socketFd;
+}
 
 /**
  * @brief init socket on client-side
@@ -47,7 +55,7 @@ TcpSocket::~TcpSocket() {}
 bool
 TcpSocket::initClientSide(ErrorContainer &error)
 {
-    if(m_isConnected) {
+    if(socketFd > 0) {
         return true;
     }
 
@@ -55,7 +63,7 @@ TcpSocket::initClientSide(ErrorContainer &error)
         return false;
     }
 
-    m_isConnected = true;
+    isConnected = true;
     LOG_INFO("Successfully initialized tcp-socket client to target: " + m_address);
 
     return true;
@@ -69,10 +77,10 @@ TcpSocket::initClientSide(ErrorContainer &error)
  */
 TcpSocket::TcpSocket(const int socketFd)
 {
-    m_socketFd = socketFd;
-    m_isClientSide = false;
-    m_type = 2;
-    m_isConnected = true;
+    this->socketFd = socketFd;
+    this->isClientSide = false;
+    this->type = 2;
+    this->isConnected = true;
 }
 
 /**
@@ -90,8 +98,8 @@ TcpSocket::initSocket(ErrorContainer &error)
     unsigned long addr;
 
     // create socket
-    m_socketFd = socket(AF_INET, SOCK_STREAM, 0);
-    if(m_socketFd < 0)
+    socketFd = socket(AF_INET, SOCK_STREAM, 0);
+    if(socketFd < 0)
     {
         error.addMeesage("Failed to create a tcp-socket");
         error.addSolution("Maybe no permissions to create a tcp-socket on the system");
@@ -100,7 +108,7 @@ TcpSocket::initSocket(ErrorContainer &error)
 
     // set TCP_NODELAY for sure
     int optval = 1;
-    if(setsockopt(m_socketFd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
+    if(setsockopt(socketFd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
     {
         error.addMeesage("'setsockopt'-function failed");
         return false;
@@ -133,14 +141,14 @@ TcpSocket::initSocket(ErrorContainer &error)
     address.sin_port = htons(m_port);
 
     // create connection
-    if(connect(m_socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
+    if(connect(socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         error.addMeesage("Failed to initialized tcp-socket client to target: " + m_address);
         error.addSolution("Check if the target-server is running and reable");
         return false;
     }
 
-    m_socketAddr = address;
+    socketAddr = address;
 
     return true;
 }
@@ -171,6 +179,17 @@ TcpSocket::sendData(int socket,
                     int flags)
 {
     return send(socket, bufferPosition, bufferSize, flags);
+}
+
+/**
+ * @brief get address
+ *
+ * @return address
+ */
+const std::string&
+TcpSocket::getAddress() const
+{
+    return m_address;
 }
 
 } // namespace Network

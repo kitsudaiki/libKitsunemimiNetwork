@@ -9,8 +9,6 @@
 #include "tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/tcp/tcp_server.h>
-#include <libKitsunemimiNetwork/tcp/tcp_socket.h>
 #include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiNetwork/net_server.h>
 #include <libKitsunemimiCommon/threading/thread_handler.h>
@@ -90,10 +88,10 @@ Tcp_Test::checkConnectionInit()
 
     // init client
     TcpSocket tcpSocket("127.0.0.1", 12345);
-    TEST_EQUAL(tcpSocket.initClientSide(error), true);
-    TEST_EQUAL(tcpSocket.initClientSide(error), true);
     m_socketClientSide = new NetSocket<TcpSocket>(std::move(tcpSocket),
                                                   "Tcp_Test_client");
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), 2);
 
     usleep(100000);

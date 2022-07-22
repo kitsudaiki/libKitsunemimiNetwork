@@ -22,11 +22,14 @@ namespace Network
  */
 UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
 {
-    m_socketFile = socketFile;
-    m_isClientSide = true;
-    m_type = 1;
+    this->m_socketFile = socketFile;
+    this->isClientSide = true;
+    this->type = 1;
 }
 
+/**
+ * @brief default-constructor
+ */
 UnixDomainSocket::UnixDomainSocket() {}
 
 /**
@@ -44,7 +47,7 @@ UnixDomainSocket::~UnixDomainSocket() {}
 bool
 UnixDomainSocket::initClientSide(ErrorContainer &error)
 {
-    if(m_isConnected) {
+    if(socketFd > 0) {
         return true;
     }
 
@@ -53,7 +56,7 @@ UnixDomainSocket::initClientSide(ErrorContainer &error)
         return false;
     }
 
-    m_isConnected = true;
+    isConnected = true;
     LOG_INFO("Successfully initialized unix-socket client to targe: " + m_socketFile);
 
     return true;
@@ -67,10 +70,21 @@ UnixDomainSocket::initClientSide(ErrorContainer &error)
  */
 UnixDomainSocket::UnixDomainSocket(const int socketFd)
 {
-    m_socketFd = socketFd;
-    m_isClientSide = false;
-    m_type = 1;
-    m_isConnected = true;
+    this->socketFd = socketFd;
+    this->isClientSide = false;
+    this->type = 1;
+    this->isConnected = true;
+}
+
+/**
+ * @brief get file-descriptor
+ *
+ * @return file-descriptor
+ */
+int
+UnixDomainSocket::getSocketFd() const
+{
+    return socketFd;
 }
 
 /**
@@ -97,8 +111,8 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
     }
 
     // create socket
-    m_socketFd = socket(PF_LOCAL, SOCK_STREAM, 0);
-    if(m_socketFd < 0)
+    socketFd = socket(PF_LOCAL, SOCK_STREAM, 0);
+    if(socketFd < 0)
     {
         error.addMeesage("Failed to create a unix-socket");
         error.addSolution("Maybe no permissions to create a unix-socket on the system");
@@ -111,7 +125,7 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
     address.sun_path[m_socketFile.size()] = '\0';
 
     // create connection
-    if(connect(m_socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
+    if(connect(socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
     {
         error.addMeesage("Failed to connect unix-socket to server with addresse: \""
                          + m_socketFile
@@ -122,8 +136,8 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
         return false;
     }
 
-    m_socketAddr = address;
-    m_isConnected = true;
+    socketAddr = address;
+    isConnected = true;
 
     return true;
 }

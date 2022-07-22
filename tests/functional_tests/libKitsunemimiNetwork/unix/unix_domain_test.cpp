@@ -9,8 +9,6 @@
 #include "unix_domain_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
-#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
 #include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiNetwork/net_server.h>
 
@@ -89,20 +87,12 @@ UnixDomain_Test::checkConnectionInit()
 
     usleep(100000);
 
-    // check too long path
-    UnixDomainSocket failSocket("/tmp/sock.uds11111111111111111111111"
-                                "111111111111111111111111111111111111"
-                                "111111111111111111111111111111111111"
-                                "111111111111111111111111111111111111"
-                                "111111111111111111111111111111111111");
-    TEST_EQUAL(failSocket.initClientSide(error), false);
-
     // init client
     UnixDomainSocket udsSocket("/tmp/sock.uds");
-    TEST_EQUAL(udsSocket.initClientSide(error), true);
-    TEST_EQUAL(udsSocket.initClientSide(error), true);
     m_socketClientSide = new NetSocket<UnixDomainSocket>(std::move(udsSocket),
                                                          "UnixDomain_Test_client");
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), 1);
 
     usleep(100000);

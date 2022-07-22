@@ -23,41 +23,41 @@
 
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
 
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
+
 namespace Kitsunemimi
 {
 namespace Network
 {
-class TlsTcpSocket;
 
-template<class>
-class NetSocket;
+template <class>
+class NetServer;
 
 class TlsTcpServer
 {
 public:
-    TlsTcpServer(const uint16_t port,
+    TlsTcpServer(TcpServer&& server,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile = "");
-    TlsTcpServer();
     ~TlsTcpServer();
 
-    bool initServer(ErrorContainer &error);
-    bool waitForIncomingConnection(bool* abort, ErrorContainer &error);
+private:
+    friend NetServer<TlsTcpServer>;
 
-    std::string m_caFile = "";
-    std::string m_certFile = "";
-    std::string m_keyFile = "";
+    TlsTcpServer();
 
-    int serverFd = 0;
-    uint32_t type = 0;
+    int getServerFd() const;
 
-    // callback-parameter for new incoming connections
-    void* m_target = nullptr;
-    void (*m_processConnection)(void*, NetSocket<TlsTcpSocket>*);
+    std::string caFile = "";
+    std::string certFile = "";
+    std::string keyFile = "";
 
-    uint16_t m_port = 0;
-    struct sockaddr_in m_server;
+    uint16_t port = 0;
+    uint32_t type = 3;
+
+    TcpServer server;
+    struct sockaddr_in socketAddr;
 };
 
 } // namespace Network

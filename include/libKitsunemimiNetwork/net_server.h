@@ -23,9 +23,11 @@
 #include <libKitsunemimiCommon/threading/thread.h>
 #include <libKitsunemimiCommon/logger.h>
 
-#include <libKitsunemimiNetwork/tcp/tcp_server.h>
-#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
 #include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
+#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
+#include <libKitsunemimiNetwork/tcp/tcp_server.h>
+
 
 namespace Kitsunemimi
 {
@@ -33,8 +35,12 @@ struct RingBuffer;
 namespace Network
 {
 class TcpSocket;
-class TlsTcpSocket;
 class UnixDomainSocket;
+class TlsTcpSocket;
+
+class TcpServer;
+class UnixDomainServer;
+class TlsTcpServer;
 
 template<class>
 class NetSocket;
@@ -66,6 +72,17 @@ public:
         m_processUnixDomainConnection = processConnection;
     }
 
+    NetServer(T&& server,
+              void* target,
+              void (*processConnection)(void*, NetSocket<TlsTcpSocket>*),
+              const std::string &threadName)
+        : Kitsunemimi::Thread(threadName)
+    {
+        m_server = std::move(server);
+        m_target = target;
+        m_processTlsTcpConnection = processConnection;
+    }
+
     ~NetServer()
     {
         closeServer();
@@ -86,12 +103,12 @@ public:
         m_abort = true;
 
         // close server-socket
-        if(m_server.serverFd >= 0)
+        if(m_server.getServerFd() >= 0)
         {
             // close server itself
-            shutdown(m_server.serverFd, SHUT_RDWR);
-            close(m_server.serverFd);
-            m_server.serverFd = 0;
+            shutdown(m_server.getServerFd(), SHUT_RDWR);
+            close(m_server.getServerFd());
+            //m_server.serverFd = 0;
         }
 
         LOG_INFO("Successfully closed server");
@@ -118,8 +135,8 @@ protected:
         uint32_t length = sizeof(struct sockaddr_in);
 
         //make new connection
-        const int fd = accept(m_server.serverFd,
-                              reinterpret_cast<struct sockaddr*>(&m_server.m_server),
+        const int fd = accept(m_server.getServerFd(),
+                              reinterpret_cast<struct sockaddr*>(&m_server.socketAddr),
                               &length);
 
         if(m_abort)
@@ -143,6 +160,7 @@ protected:
             TcpSocket tcpSocket(fd);
             NetSocket<TcpSocket>* netSocket =
                     new NetSocket<TcpSocket>(std::move(tcpSocket), name);
+            netSocket->initConnection(error);
             m_processTcpConnection(m_target, netSocket);
         }
         else if(std::is_same<T, UnixDomainServer>::value)
@@ -151,14 +169,31 @@ protected:
             UnixDomainSocket unixSocket(fd);
             NetSocket<UnixDomainSocket>* netSocket =
                     new NetSocket<UnixDomainSocket>(std::move(unixSocket), name);
+            netSocket->initConnection(error);
             m_processUnixDomainConnection(m_target, netSocket);
         }
+        else if(std::is_same<T, TlsTcpServer>::value)
+        {
+            const std::string name = "TLS_TCP_socket";
+            TcpSocket tcpSocket(fd);
+            TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
+                                      m_server.certFile,
+                                      m_server.keyFile,
+                                      m_server.caFile);
+            NetSocket<TlsTcpSocket>* netSocket =
+                    new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), name);
+            netSocket->initConnection(error);
+            m_processTlsTcpConnection(m_target, netSocket);
+        }
+
+        return true;
     }
 
     // callback-parameter for new incoming connections
     void* m_target = nullptr;
     void (*m_processTcpConnection)(void*, NetSocket<TcpSocket>*);
     void (*m_processUnixDomainConnection)(void*, NetSocket<UnixDomainSocket>*);
+    void (*m_processTlsTcpConnection)(void*, NetSocket<TlsTcpSocket>*);
 
     T m_server;
 };

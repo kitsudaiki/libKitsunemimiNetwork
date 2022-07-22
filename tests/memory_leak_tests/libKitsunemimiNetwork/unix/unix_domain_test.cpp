@@ -9,8 +9,6 @@
 #include "unix_domain_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/unix/unix_domain_socket.h>
-#include <libKitsunemimiNetwork/unix/unix_domain_server.h>
 #include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiNetwork/net_server.h>
 
@@ -80,9 +78,10 @@ UnixDomain_Test::UnixDomain_Test()
 
         // test client create and delete
         UnixDomainSocket udsSocket("/tmp/sock.uds");
-        udsSocket.initClientSide(*error);
         m_socketClientSide = new NetSocket<UnixDomainSocket>(std::move(udsSocket),
                                                              "UnixDomain_Test_client");
+        m_socketClientSide->initConnection(*error);
+
         sleep(2);
 
             // send messages

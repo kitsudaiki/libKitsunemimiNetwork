@@ -9,8 +9,6 @@
 #include "tls_tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
 #include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiNetwork/net_server.h>
 
@@ -81,11 +79,13 @@ TlsTcp_Test::checkConnectionInit()
     ErrorContainer error;
 
     // init server
-    TlsTcpServer tlsTcpServer(12345,
-                              std::string("/tmp/cert.pem"),
-                              std::string("/tmp/key.pem"));
-    TEST_EQUAL(tlsTcpServer.initServer(error), true);
-    /*m_server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
+    TcpServer tcpServer(12345);
+    TEST_EQUAL(tcpServer.initServer(error), true);
+
+    TlsTcpServer tlsTcpServer(std::move(tcpServer),
+                              "/tmp/cert.pem",
+                              "/tmp/key.pem");
+    m_server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
                                            this,
                                            &processConnectionTlsTcp,
                                            "TlsTcp_Test");
@@ -94,16 +94,13 @@ TlsTcp_Test::checkConnectionInit()
     TEST_EQUAL(m_server->startThread(), true);
 
     // init client
-    TlsTcpSocket tlsTcpSocket("127.0.0.1",
-                              12345,
-                              "TlsTcp_Test_client",
+    TcpSocket tcpSocket("127.0.0.1", 12345);
+    TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
                               "/tmp/cert.pem",
                               "/tmp/key.pem");
-    TEST_EQUAL(tlsTcpSocket.initClientSide(error), true);
-    TEST_EQUAL(tlsTcpSocket.initClientSide(error), true);
-    m_socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket),
-                                                     "Tcp_Test_client");
-    TEST_EQUAL(m_socketClientSide->getType(), 3);*/
+    m_socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), "Tcp_Test_client");
+    TEST_EQUAL(m_socketClientSide->initConnection(error), true);
+    TEST_EQUAL(m_socketClientSide->getType(), 3);
 
     usleep(100000);
 }
@@ -177,8 +174,8 @@ TlsTcp_Test::checkBigDataTransfer()
 void
 TlsTcp_Test::cleanupTestCase()
 {
-    //TEST_EQUAL(m_socketServerSide->closeSocket(), true);
-    //TEST_EQUAL(m_server->closeServer(), true);
+    TEST_EQUAL(m_socketServerSide->closeSocket(), true);
+    TEST_EQUAL(m_server->closeServer(), true);
     TEST_EQUAL(m_socketServerSide->scheduleThreadForDeletion(), true);
     TEST_EQUAL(m_server->scheduleThreadForDeletion(), true);
 

@@ -28,8 +28,8 @@ HEADERS += \
 
 SOURCES += \
     tcp/tcp_server.cpp \
-    tls_tcp/tls_tcp_server.cpp \
     tcp/tcp_socket.cpp \
+    tls_tcp/tls_tcp_server.cpp \
     tls_tcp/tls_tcp_socket.cpp \
     unix/unix_domain_socket.cpp \
     unix/unix_domain_server.cpp

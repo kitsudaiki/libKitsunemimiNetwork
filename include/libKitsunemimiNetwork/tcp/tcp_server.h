@@ -26,23 +26,39 @@ namespace Kitsunemimi
 {
 namespace Network
 {
+class TlsTcpServer;
+
 template<class>
 class NetSocket;
+
+template <class>
+class NetServer;
 
 class TcpServer
 {
 public:
     TcpServer(const uint16_t port);
-    TcpServer();
     ~TcpServer();
 
     bool initServer(ErrorContainer &error);
 
+private:
+    friend NetServer<TcpServer>;
+    friend TlsTcpServer;
+
+    TcpServer();
+
+    int getServerFd() const;
+    uint16_t getPort() const;
+
     int serverFd = 0;
     uint32_t type = 0;;
+    std::string caFile = "";
+    std::string certFile = "";
+    std::string keyFile = "";
+    struct sockaddr_in socketAddr;
 
     uint16_t m_port = 0;
-    struct sockaddr_in m_server;
 };
 
 } // namespace Network

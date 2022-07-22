@@ -36,8 +36,8 @@ namespace Network
 {
 
 class TcpSocket;
-class TlsTcpSocket;
 class UnixDomainSocket;
+class TlsTcpSocket;
 
 template<class T>
 class NetSocket
@@ -92,6 +92,11 @@ public:
         m_processMessage = processMessage;
     }
 
+    bool initConnection(Kitsunemimi::ErrorContainer &error)
+    {
+        return m_socket.initClientSide(error);
+    }
+
     /**
      * @brief get socket-type
      *
@@ -99,7 +104,7 @@ public:
      */
     uint32_t getType()
     {
-        return m_socket.m_type;
+        return m_socket.type;
     }
 
     /**
@@ -140,7 +145,7 @@ public:
                      ErrorContainer &error)
     {
         // precheck if socket is connected
-        if(m_socket.m_socketFd == 0)
+        if(m_socket.getSocketFd() == 0)
         {
             error.addMeesage("socket is not connected");
             return false;
@@ -148,8 +153,7 @@ public:
 
         // send message
         while(m_lock.test_and_set(std::memory_order_acquire)) { asm(""); }
-
-        const ssize_t successfulSended = m_socket.sendData(m_socket.m_socketFd,
+        const ssize_t successfulSended = m_socket.sendData(m_socket.getSocketFd(),
                                                            message,
                                                            numberOfBytes,
                                                            MSG_NOSIGNAL);
@@ -179,11 +183,11 @@ public:
         m_abort = true;
 
         // close socket if connected
-        if(m_socket.m_socketFd >= 0)
+        if(m_socket.getSocketFd() >= 0)
         {
-            shutdown(m_socket.m_socketFd, SHUT_RDWR);
-            close(m_socket.m_socketFd);
-            m_socket.m_socketFd = 0;
+            shutdown(m_socket.getSocketFd(), SHUT_RDWR);
+            close(m_socket.getSocketFd());
+            //m_socket.getSocketFd() = 0;
         }
 
         // make sure, that the thread is out of the function recvData before further
@@ -209,17 +213,6 @@ private:
     uint64_t (*m_processMessage)(void*, RingBuffer*, NetSocket*);
 
     /**
-     * @brief run-method for the thread-class
-     */
-    void run()
-    {
-        while(m_abort == false) {
-            waitForMessage();
-        }
-        m_isfullyClosed = true;
-    }
-
-    /**
      * @brief wait for new incoming messages
      *
      * @return false, if receive failed or socket is aborted, else true
@@ -236,7 +229,7 @@ private:
         const uint64_t spaceToEnd = Kitsunemimi::getSpaceToEnd_RingBuffer(m_recvBuffer);
 
         // wait for incoming message
-        const long recvSize = m_socket.recvData(m_socket.m_socketFd,
+        const long recvSize = m_socket.recvData(m_socket.getSocketFd(),
                                                 &m_recvBuffer.data[writePosition],
                                                 spaceToEnd,
                                                 0);
@@ -263,8 +256,19 @@ private:
         return true;
     }
 
-private:
     bool m_isfullyClosed = false;
+
+protected:
+    /**
+     * @brief run-method for the thread-class
+     */
+    void run()
+    {
+        while(m_abort == false) {
+            waitForMessage();
+        }
+        m_isfullyClosed = true;
+    }
 };
 
 } // namespace Network

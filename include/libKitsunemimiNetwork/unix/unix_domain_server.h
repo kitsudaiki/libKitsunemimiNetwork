@@ -28,25 +28,34 @@ namespace Network
 template<class>
 class NetSocket;
 
+template <class>
+class NetServer;
+
 class UnixDomainServer
 {
 public:
     UnixDomainServer(const std::string &socketFile);
-    UnixDomainServer();
     ~UnixDomainServer();
 
     bool initServer(ErrorContainer &error);
 
+private:
+    friend NetServer<UnixDomainServer>;
+
+    UnixDomainServer();
+
+    int getServerFd() const;
+
     int serverFd = 0;
     uint32_t type = 0;
-    std::string m_socketFile = "";
-
-    // callback-parameter for new incoming connections
-    void* m_target = nullptr;
-    void (*m_processConnection)(void*, NetSocket<UnixDomainSocket>*);
 
     uint16_t m_port = 0;
-    struct sockaddr_un m_server;
+    struct sockaddr_un socketAddr;
+    std::string caFile = "";
+    std::string certFile = "";
+    std::string keyFile = "";
+
+    std::string m_socketFile = "";
 };
 
 } // namespace Network

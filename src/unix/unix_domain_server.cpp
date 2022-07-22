@@ -21,10 +21,13 @@ namespace Network
  */
 UnixDomainServer::UnixDomainServer(const std::string &socketFile)
 {
-    m_socketFile = socketFile;
-    type = 1;
+    this->m_socketFile = socketFile;
+    this->type = 1;
 }
 
+/**
+ * @brief default-constructor
+ */
 UnixDomainServer::UnixDomainServer() {}
 
 /**
@@ -63,12 +66,12 @@ UnixDomainServer::initServer(ErrorContainer &error)
     }
 
     unlink(m_socketFile.c_str());
-    m_server.sun_family = AF_LOCAL;
-    strncpy(m_server.sun_path, m_socketFile.c_str(), m_socketFile.size());
-    m_server.sun_path[m_socketFile.size()] = '\0';
+    socketAddr.sun_family = AF_LOCAL;
+    strncpy(socketAddr.sun_path, m_socketFile.c_str(), m_socketFile.size());
+    socketAddr.sun_path[m_socketFile.size()] = '\0';
 
     // bind to port
-    if(bind(serverFd, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
+    if(bind(serverFd, reinterpret_cast<struct sockaddr*>(&socketAddr), sizeof(socketAddr)) < 0)
     {
         error.addMeesage("Failed to bind unix-socket to addresse: \"" + m_socketFile + "\"");
         return false;
@@ -86,6 +89,16 @@ UnixDomainServer::initServer(ErrorContainer &error)
     return true;
 }
 
+/**
+ * @brief get file-descriptor
+ *
+ * @return file-descriptor
+ */
+int
+UnixDomainServer::getServerFd() const
+{
+    return serverFd;
+}
 
 } // namespace Network
 } // namespace Kitsunemimi

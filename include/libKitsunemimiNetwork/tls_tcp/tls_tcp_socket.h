@@ -22,50 +22,60 @@ namespace Kitsunemimi
 {
 namespace Network
 {
+class UnixDomainServer;
+class TcpServer;
+class TlsTcpServer;
+
+template <class>
+class NetSocket;
+
+template <class>
+class NetServer;
 
 class TlsTcpSocket
 {
 public:
-    TlsTcpSocket(const std::string &address,
-                 const uint16_t port,
+    TlsTcpSocket(TcpSocket&& socket,
                  const std::string &certFile,
                  const std::string &keyFile,
                  const std::string &caFile = "");
-    TlsTcpSocket();
+
     ~TlsTcpSocket();
 
-    std::string m_address = "";
-    uint16_t m_port = 0;
-    SSL_CTX* m_ctx;
-    SSL* m_ssl;
-    sockaddr_in m_socketAddr;
-    std::string m_certFile = "";
-    std::string m_keyFile = "";
-    std::string m_caFile = "";
-    bool m_isConnected = false;
-    bool m_isClientSide = false;
-    int m_socketFd = 0;
-    uint32_t m_type = 0;
+private:
+    friend NetSocket<TlsTcpSocket>;
+    friend NetServer<UnixDomainServer>;
+    friend NetServer<TcpServer>;
+    friend NetServer<TlsTcpServer>;
+
+    TlsTcpSocket();
+
+    TcpSocket socket;
+    uint32_t type = 3;
+    std::string certFile = "";
+    std::string keyFile = "";
+    std::string caFile = "";
+
+    int getSocketFd() const;
+
+    bool initClientSide(ErrorContainer &error);
 
     bool initOpenssl(ErrorContainer &error);
-    bool initClientSide(ErrorContainer &error);
-    bool initSocket(ErrorContainer &error);
-
-    TlsTcpSocket(const int socketFd,
-                 const std::string &certFile,
-                 const std::string &keyFile,
-                 const std::string &caFile="");
 
     long recvData(int,
                   void* bufferPosition,
                   const size_t bufferSize,
                   int);
+
     ssize_t sendData(int,
                      const void* bufferPosition,
                      const size_t bufferSize,
                      int);
 
     bool cleanupOpenssl();
+
+    SSL_CTX* m_ctx = nullptr;
+    SSL* m_ssl = nullptr;
 };
 
 } // namespace Network

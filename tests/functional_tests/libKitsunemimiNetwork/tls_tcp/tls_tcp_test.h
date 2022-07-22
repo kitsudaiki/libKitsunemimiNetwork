@@ -16,6 +16,9 @@ namespace Kitsunemimi
 struct DataBuffer;
 namespace Network
 {
+class TcpServer;
+class TcpSocket;
+
 class TlsTcpServer;
 class TlsTcpSocket;
 

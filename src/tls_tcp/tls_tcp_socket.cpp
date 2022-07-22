@@ -25,46 +25,21 @@ namespace Network
  * @param keyFile path to key-file
  * @param caFile path to ca-file
  */
-TlsTcpSocket::TlsTcpSocket(const std::string &address,
-                           const uint16_t port,
+TlsTcpSocket::TlsTcpSocket(TcpSocket&& socket,
                            const std::string &certFile,
                            const std::string &keyFile,
                            const std::string &caFile)
 {
-    m_address = address;
-    m_port = port;
-    m_certFile = certFile;
-    m_keyFile = keyFile;
-    m_caFile = caFile;
-    m_type = 3;
-}
-
-TlsTcpSocket::TlsTcpSocket()
-{
-
+    this->socket = std::move(socket);
+    this->certFile = certFile;
+    this->keyFile = keyFile;
+    this->caFile = caFile;
 }
 
 /**
- * @brief constructor for the server-side of the tcp-connection, which is called by the
- *        tcp-server for each incoming connection
- *
- * @param socketFd file-descriptor of the socket-socket
- * @param certFile path to certificate-file
- * @param keyFile path to key-file
- * @param caFile path to ca-file
+ * @brief default-constructor
  */
-TlsTcpSocket::TlsTcpSocket(const int socketFd,
-                           const std::string &certFile,
-                           const std::string &keyFile,
-                           const std::string &caFile)
-{
-    m_socketFd = socketFd;
-    m_certFile = certFile;
-    m_keyFile = keyFile;
-    m_caFile = caFile;
-    m_type = 3;
-    m_isConnected = true;
-}
+TlsTcpSocket::TlsTcpSocket() {}
 
 /**
  * @brief destructor
@@ -75,73 +50,14 @@ TlsTcpSocket::~TlsTcpSocket()
 }
 
 /**
- * @brief init tcp-socket and connect to the server
+ * @brief get file-descriptor
  *
- * @param error reference for error-output
- *
- * @return false, if socket-creation or connection to the server failed, else true
+ * @return file-descriptor
  */
-bool
-TlsTcpSocket::initSocket(ErrorContainer &error)
+int
+TlsTcpSocket::getSocketFd() const
 {
-    struct sockaddr_in address;
-    struct hostent* hostInfo;
-    unsigned long addr;
-
-    // create socket
-    m_socketFd = socket(AF_INET, SOCK_STREAM, 0);
-    if(m_socketFd < 0)
-    {
-        error.addMeesage("Failed to create a tcp-socket");
-        error.addSolution("Maybe no permissions to create a tcp-socket on the system");
-        return false;
-    }
-
-    // set TCP_NODELAY for sure
-    int optval = 1;
-    if(setsockopt(m_socketFd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(int)) < 0)
-    {
-        error.addMeesage("'setsockopt'-function failed");
-        return false;
-    }
-
-    // set server-address
-    memset(&address, 0, sizeof(address));
-    if((addr = inet_addr(m_address.c_str())) != INADDR_NONE)
-    {
-        memcpy(reinterpret_cast<char*>(&address.sin_addr), &addr, sizeof(addr));
-    }
-    else
-    {
-        // get server-connection via host-name instead of ip-address
-        hostInfo = gethostbyname(m_address.c_str());
-        if(hostInfo == nullptr)
-        {
-            error.addMeesage("Failed to get host by address: " + m_address);
-            error.addSolution("Check DNS, which is necessary to resolve the address");
-            return false;
-        }
-
-        memcpy(reinterpret_cast<char*>(&address.sin_addr),
-               hostInfo->h_addr,
-               static_cast<size_t>(hostInfo->h_length));
-    }
-
-    // set other informations
-    address.sin_family = AF_INET;
-    address.sin_port = htons(m_port);
-
-    // create connection
-    if(connect(m_socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0)
-    {
-        error.addMeesage("Failed to initialized tcp-socket client to target: " + m_address);
-        error.addSolution("Check if the target-server is running and reable");
-        return false;
-    }
-
-    m_socketAddr = address;
-
-    return true;
+    return socket.getSocketFd();
 }
 
 /**
@@ -154,20 +70,19 @@ TlsTcpSocket::initSocket(ErrorContainer &error)
 bool
 TlsTcpSocket::initClientSide(ErrorContainer &error)
 {
-    if(m_isConnected) {
-        return true;
-    }
-
-    if(initSocket(error) == false) {
-        return false;
+    if(socket.socketFd == 0)
+    {
+        if(socket.initClientSide(error) == false) {
+            return false;
+        }
     }
 
     if(initOpenssl(error) == false) {
         return false;
     }
 
-    m_isConnected = true;
-    LOG_INFO("Successfully initialized encrypted tcp-socket client to targe: " + m_address);
+    LOG_INFO("Successfully initialized encrypted tcp-socket client to targe: "
+             + socket.getAddress());
 
     return true;
 }
@@ -189,7 +104,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
 
     // set ssl-type
     const SSL_METHOD* method;
-    if(m_isClientSide) {
+    if(socket.isClientSide) {
         method = TLS_client_method();
     } else {
         method = TLS_server_method();
@@ -205,34 +120,34 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     SSL_CTX_set_options(m_ctx, SSL_OP_SINGLE_DH_USE);
 
     // set certificate
-    result = SSL_CTX_use_certificate_file(m_ctx, m_certFile.c_str(), SSL_FILETYPE_PEM);
+    result = SSL_CTX_use_certificate_file(m_ctx, certFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
         error.addMeesage("Failed to load certificate file for ssl-encrytion. File path: \""
-                         + m_certFile
+                         + certFile
                          + "\"");
-        error.addSolution("check if file \"" + m_certFile+ "\" exist and "
+        error.addSolution("check if file \"" + certFile+ "\" exist and "
                            "contains a valid certificate");
         return false;
     }
 
     // set key
-    result = SSL_CTX_use_PrivateKey_file(m_ctx, m_keyFile.c_str(), SSL_FILETYPE_PEM);
+    result = SSL_CTX_use_PrivateKey_file(m_ctx, keyFile.c_str(), SSL_FILETYPE_PEM);
     if(result <= 0)
     {
-        error.addMeesage("Failed to load key file for ssl-encrytion. File path: " + m_keyFile);
-        error.addSolution("check if file \"" + m_keyFile+ "\" exist and contains a valid key");
+        error.addMeesage("Failed to load key file for ssl-encrytion. File path: " + keyFile);
+        error.addSolution("check if file \"" + keyFile+ "\" exist and contains a valid key");
         return false;
     }
 
     // set CA-file if exist
-    if(m_caFile != "")
+    if(caFile != "")
     {
-        result = SSL_CTX_load_verify_locations(m_ctx, m_caFile.c_str(), nullptr);
+        result = SSL_CTX_load_verify_locations(m_ctx, caFile.c_str(), nullptr);
         if(result <= 0)
         {
-            error.addMeesage("Failed to load CA file for ssl-encrytion. File path: " + m_caFile);
-            error.addSolution("check if file \"" + m_caFile+ "\" exist and contains a valid CA");
+            error.addMeesage("Failed to load CA file for ssl-encrytion. File path: " + caFile);
+            error.addSolution("check if file \"" + caFile+ "\" exist and contains a valid CA");
             return false;
         }
 
@@ -247,10 +162,10 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
         error.addMeesage("Failed to ini ssl");
         return false;
     }
-    SSL_set_fd(m_ssl, m_socketFd);
+    SSL_set_fd(m_ssl, socket.socketFd);
 
     // enable certificate validation, if ca-file was set
-    if(m_caFile != "")
+    if(caFile != "")
     {
         // SSL_VERIFY_PEER -> check cert if exist
         // SSL_VERIFY_FAIL_IF_NO_PEER_CERT -> server requires cert
@@ -261,7 +176,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     }
 
     // process tls-handshake
-    if(m_isClientSide)
+    if(socket.isClientSide)
     {
         // try to connect to server
         result = SSL_connect(m_ssl);

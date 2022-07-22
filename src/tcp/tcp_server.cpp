@@ -20,10 +20,13 @@ namespace Network
  */
 TcpServer::TcpServer(const uint16_t port)
 {
-    m_port = port;
-    type = 2;
+    this->m_port = port;
+    this->type = 2;
 }
 
+/**
+ * @brief default-constructor
+ */
 TcpServer::TcpServer() {}
 
 /**
@@ -60,13 +63,13 @@ TcpServer::initServer(ErrorContainer &error)
     }
 
     // set server-settings
-    memset(&m_server, 0, sizeof (m_server));
-    m_server.sin_family = AF_INET;
-    m_server.sin_addr.s_addr = htonl(INADDR_ANY);
-    m_server.sin_port = htons(m_port);
+    memset(&socketAddr, 0, sizeof(socketAddr));
+    socketAddr.sin_family = AF_INET;
+    socketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    socketAddr.sin_port = htons(m_port);
 
     // bind to port
-    if(bind(serverFd, reinterpret_cast<struct sockaddr*>(&m_server), sizeof(m_server)) < 0)
+    if(bind(serverFd, reinterpret_cast<struct sockaddr*>(&socketAddr), sizeof(socketAddr)) < 0)
     {
         error.addMeesage("Failed to bind tcp-socket to port: " + std::to_string(m_port));
         return false;
@@ -82,6 +85,28 @@ TcpServer::initServer(ErrorContainer &error)
     LOG_INFO("Successfully initialized tcp-socket server on port: " + std::to_string(m_port));
 
     return true;
+}
+
+/**
+ * @brief get file-descriptor
+ *
+ * @return file-descriptor
+ */
+int
+TcpServer::getServerFd() const
+{
+    return serverFd;
+}
+
+/**
+ * @brief get server-port
+ *
+ * @return server-port
+ */
+uint16_t
+TcpServer::getPort() const
+{
+    return m_port;
 }
 
 } // namespace Network
