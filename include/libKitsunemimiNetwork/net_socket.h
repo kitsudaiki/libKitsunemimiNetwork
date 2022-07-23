@@ -44,6 +44,12 @@ class NetSocket
         : public Kitsunemimi::Thread
 {
 public:
+    /**
+     * @brief constructor
+     *
+     * @param socketbase-socket-object
+     * @param threadName name of the thread of the socket
+     */
     NetSocket(T&& socket,
               const std::string &threadName)
         : Kitsunemimi::Thread(threadName)
@@ -51,6 +57,9 @@ public:
         m_socket = std::move(socket);
     }
 
+    /**
+     * @brief destructor
+     */
     ~NetSocket()
     {
         closeSocket();
@@ -59,12 +68,12 @@ public:
     /**
      * @brief add new callback for incoming messages
      *
-     * @param target
-     * @param processMessage
+     * @param target target-object of the callback-functions
+     * @param processMessage callback-function
      *
      * @return false, if object was nullptr, else true
      */
-    void setMessageCallback(void *target,
+    void setMessageCallback(void* target,
                             uint64_t (*processMessage)(void*,
                                                        Kitsunemimi::RingBuffer*,
                                                        NetSocket<TcpSocket>*))
@@ -73,7 +82,15 @@ public:
         m_processMessage = processMessage;
     }
 
-    void setMessageCallback(void *target,
+    /**
+     * @brief add new callback for incoming messages
+     *
+     * @param target target-object of the callback-functions
+     * @param processMessage callback-function
+     *
+     * @return false, if object was nullptr, else true
+     */
+    void setMessageCallback(void* target,
                             uint64_t (*processMessage)(void*,
                                                        Kitsunemimi::RingBuffer*,
                                                        NetSocket<TlsTcpSocket>*))
@@ -82,8 +99,15 @@ public:
         m_processMessage = processMessage;
     }
 
-
-    void setMessageCallback(void *target,
+    /**
+     * @brief add new callback for incoming messages
+     *
+     * @param target target-object of the callback-functions
+     * @param processMessage callback-function
+     *
+     * @return false, if object was nullptr, else true
+     */
+    void setMessageCallback(void* target,
                             uint64_t (*processMessage)(void*,
                                                        Kitsunemimi::RingBuffer*,
                                                        NetSocket<UnixDomainSocket>*))
@@ -92,6 +116,13 @@ public:
         m_processMessage = processMessage;
     }
 
+    /**
+     * @brief initialize new connection to a server
+     *
+     * @param error reference for error-output
+     *
+     * @return true, if successful, else false
+     */
     bool initConnection(Kitsunemimi::ErrorContainer &error)
     {
         return m_socket.initClientSide(error);

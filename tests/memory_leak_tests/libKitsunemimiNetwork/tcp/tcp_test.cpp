@@ -55,12 +55,12 @@ Tcp_Test::Tcp_Test()
 
     // init for one-time-allocations
     TcpServer tcpServer2(12345);
-    tcpServer2.initServer(*error);
     m_server = new NetServer<TcpServer>(std::move(tcpServer2),
                                         this,
                                         &processConnectionTcp,
                                         "Tcp_Test");
 
+    m_server->initServer(*error);
     m_server->scheduleThreadForDeletion();
     sleep(2);
 
@@ -69,11 +69,11 @@ Tcp_Test::Tcp_Test()
     m_buffer = new DataBuffer(1000);
     error = new ErrorContainer();
     TcpServer tcpServer(12345);
-    tcpServer.initServer(*error);
     m_server = new NetServer<TcpServer>(std::move(tcpServer),
                                         this,
                                         &processConnectionTcp,
                                         "Tcp_Test");
+    m_server->initServer(*error);
     m_server->startThread();
 
         // test client create and delete

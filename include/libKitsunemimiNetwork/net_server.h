@@ -50,6 +50,15 @@ class NetServer
         : public Kitsunemimi::Thread
 {
 public:
+
+    /**
+     * @brief constructor for tcp-typ-socket
+     *
+     * @param server base-server
+     * @param target target-object for the callback
+     * @param processConnection callback-function
+     * @param threadName name of the thread of the server
+     */
     NetServer(T&& server,
               void* target,
               void (*processConnection)(void*, NetSocket<TcpSocket>*),
@@ -61,6 +70,14 @@ public:
         m_processTcpConnection = processConnection;
     }
 
+    /**
+     * @brief constructor for uds-typ-socket
+     *
+     * @param server base-server
+     * @param target target-object for the callback
+     * @param processConnection callback-function
+     * @param threadName name of the thread of the server
+     */
     NetServer(T&& server,
               void* target,
               void (*processConnection)(void*, NetSocket<UnixDomainSocket>*),
@@ -72,6 +89,14 @@ public:
         m_processUnixDomainConnection = processConnection;
     }
 
+    /**
+     * @brief constructor for tls-typ-socket
+     *
+     * @param server base-server
+     * @param target target-object for the callback
+     * @param processConnection callback-function
+     * @param threadName name of the thread of the server
+     */
     NetServer(T&& server,
               void* target,
               void (*processConnection)(void*, NetSocket<TlsTcpSocket>*),
@@ -83,16 +108,41 @@ public:
         m_processTlsTcpConnection = processConnection;
     }
 
+    /**
+     * @brief destructor
+     */
     ~NetServer()
     {
         closeServer();
     }
 
+    /**
+     * @brief get type of the server
+     *
+     * @return type-id (1=UDS, 2=TCP, 3=TLS_TCP)
+     */
     uint32_t getType()
     {
         return m_server.type;
     }
 
+    /**
+     * @brief initialize server
+     *
+     * @param error reference for error-output
+     *
+     * @return true, if successful, else false
+     */
+    bool initServer(ErrorContainer &error)
+    {
+        return m_server.initServer(error);
+    }
+
+    /**
+     * @brief close-server
+     *
+     * @return true, if successful, else false
+     */
     bool closeServer()
     {
         // precheck
@@ -130,6 +180,13 @@ protected:
         }
     };
 
+    /**
+     * @brief wait for new incoming connection
+     *
+     * @param error reference for error-output
+     *
+     * @return true, if successful, else false
+     */
     bool waitForIncomingConnections(Kitsunemimi::ErrorContainer &error)
     {
         uint32_t length = sizeof(struct sockaddr_in);

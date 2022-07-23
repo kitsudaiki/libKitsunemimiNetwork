@@ -8,7 +8,11 @@
 
 ## Description
 
-This is a small library for network connections. It provides servers and clients for unix-domain-sockets, tcp-sockets and ssl encrypted tcp-sockets. 
+This is a small library for network connections. It provides servers and clients for 
+
+- unix-domain-sockets
+- tcp-sockets
+- tls encrypted tcp-sockets
 
 ## Build
 
@@ -33,7 +37,7 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.23.0 |  https://github.com/kitsudaiki/libKitsunemimiCommon.git
+libKitsunemimiCommon | v0.26.1 |  https://github.com/kitsudaiki/libKitsunemimiCommon.git
 
 HINT: These Kitsunemimi-Libraries will be downloaded and build automatically with the build-script below.
 
@@ -57,46 +61,117 @@ Tested on Debian and Ubuntu. If you use Centos, Arch, etc and the build-script f
 
 ## Usage
 
-(sorry, that the usage-chapter here is very short, but while writing I found some points, which must become better.)
+### Init-overview
 
-This libray contains servers and clients for unix-domain-sockets, tcp-sockets and ssl encrypted tcp-sockets. Each socket and server runs in its own thread.
+The following snippets show only the differences in initializing the different server and clients. The rest (send messages, close connections and so on) is basically identical and is schown by the complete example after this overview.
 
-The inheritance tree of the classes has the following look. For servers its the same with only servers instead of sockets.
+#### Unix-domain-connection
 
-```
-        Thread (libKitsunemimiCommon)
-          ^
-          |
-    AbstractSocket
-    ^            ^
-    |            |
-TcpSocket    UnixDomainSocket
-    ^
-    |
-TlsTcpSocket
-```
-
-
-Example to create server and socket:
-(the `TlsTcpSocket` of the example can also replaced by the `UnixDomainSocket` or `TcpSocket`. Only the values of the conectructor are different)
+- server:
 
 ```cpp
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
-#include <libKitsunemimiNetwork/tls_tcp/tls_tcp_socket.h>
+UnixDomainServer udsServer("/tmp/sock.uds");
+NetServer<UnixDomainServer>* server = nullptr;
+m_server = new NetServer<UnixDomainServer>(std::move(udsServer),
+                                           this,
+                                           &processConnectionUnixDomain,
+                                           "UnixDomain_Test");      // <- base-name for threads of server and clients
+
+server->initServer(error)
+```
+
+- client:
+
+```cpp
+UnixDomainSocket udsSocket("/tmp/sock.uds");        // <- file-path , whiere the unix-domain-server is listen
+m_socketClientSide = new NetSocket<UnixDomainSocket>(std::move(udsSocket),
+                                                     "UnixDomain_Test_client");   // <- thread-name for the client
+NetSocket<UnixDomainSocket>* ssocketClientSide = nullptr;
+socketClientSide->initConnection(error)
+```
+
+#### TCP-connection
+
+- server:
+
+```cpp
+// create tcp-server
+TcpServer tcpServer(12345);                                     // <- init server with port
+NetServer<TcpServer>* server = nullptr;
+server = new NetServer<TcpServer>(std::move(tcpServer),
+                                     buffer,                    // <- demo-buffer, which is forwarded to the 
+                                                                //        target void-pointer in the callback
+                                     &processConnectionTlsTcp,  // <- callback for new incoming connections
+                                     "Tcp_Test");               // <- base-name for threads of server and clients
+
+server->initServer(error)
+```
+
+- client:
+
+```cpp
+TcpSocket tcpSocket("127.0.0.1",                                      // <- server-address
+                    12345);                                           // <- server-port
+NetSocket<TcpSocket>* ssocketClientSide = nullptr;
+ssocketClientSide = new NetSocket<TcpSocket>(std::move(tcpSocket), 
+                                             "Tcp_Test_client");      // <- thread-name for the client
+socketClientSide->initConnection(error)
+```
+
+
+#### TLS-encrypted TCP-connection
+
+- server:
+
+```cpp
+// create tcp-server
+TcpServer tcpServer(12345);                                       // <- init server with port
+TlsTcpServer tlsTcpServer(std::move(tcpServer),
+                          "/tmp/cert.pem",                        // <- path to certificate-file for tls-encryption
+                          "/tmp/key.pem");                        // <- path to key-file for tls-encryption
+NetServer<TlsTcpServer>* server = nullptr;
+server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
+                                     buffer,                    // <- demo-buffer, which is forwarded to the 
+                                                                //        target void-pointer in the callback
+                                     &processConnectionTlsTcp,  // <- callback for new incoming connections
+                                     "TlsTcp_Test");            // <- base-name for threads of server and clients
+
+server->initServer(error)
+```
+
+- client:
+
+```cpp
+TcpSocket tcpSocket("127.0.0.1",    // <- server-address
+                    12345);         // <- server-port
+TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
+                          "/tmp/cert.pem",             // <- path to certificate-file for tls-encryption
+                          "/tmp/key.pem");             // <- path to key-file for tls-encryption
+NetSocket<TlsTcpSocket>* ssocketClientSide = nullptr;
+ssocketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), 
+                                                "TlsTcp_Test_client");      // <- thread-name for the client
+socketClientSide->initConnection(error)
+```
+
+
+### Complete example
+
+Example to create server and client with TCP-connectiona and TLS-encryption:
+
+```cpp
+#include <libKitsunemimiNetwork/netserver.h>
+#include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiCommon/buffer/data_buffer.h>
 
 using namespace Kitsunemimi::Network;
 
-TlsTcpServer* server = nullptr;
-TlsTcpSocket* socketClientSide = nullptr;
-
 // callback for new incoming messages
 uint64_t processMessageTlsTcp(void* target,
-                              RingBuffer* recvBuffer,
-                              AbstractSocket*)
+                              Kitsunemimi::RingBuffer* recvBuffer,
+                              NetSocket<TlsTcpSocket>*)
 {
-	// here in this example the demo-buffer, which was registered in the server
-	// is converted back from the void-pointer into the original object-pointer
+    // here in this example the demo-buffer, which was registered in the server
+    // is converted back from the void-pointer into the original object-pointer
     Kitsunemimi::DataBuffer* targetBuffer = static_cast<Kitsunemimi::DataBuffer*>(target);
 
     // get data from the message-ring-buffer
@@ -112,11 +187,11 @@ uint64_t processMessageTlsTcp(void* target,
 }
 
 // callback for new incoming connections
-void processConnectionTlsTcp(void* target,
-                             AbstractSocket* socket)
+void processConnection(void* target,
+                             NetSocket<TlsTcpSocket>* socket)
 {
-	// set callback-method for incoming messages on the new socket
-	// you can also create a new buffer here and don't need to forward the void-pointer
+    // set callback-method for incoming messages on the new socket
+    // you can also create a new buffer here and don't need to forward the void-pointer
     socket->setMessageCallback(target, &processMessageTlsTcp);
 
     // start the thread of the socket
@@ -125,42 +200,79 @@ void processConnectionTlsTcp(void* target,
 
 // init the demo-buffer from above
 Kitsunemimi::DataBuffer* buffer = new Kitsunemimi::DataBuffer(1000);
-ErrorContainer error;
+Kitsunemimi::ErrorContainer error;
 
-// create server
-server = new TlsTcpServer(buffer,                      // <- demo-buffer, which is forwarded to the 
-                                                       //        target void-pointer in the callback
-                          &processConnectionTlsTcp,    // <- callback for new incoming connections
-                          "tls-thread"                 // <- base-name for threads of server and clients
-                          "/tmp/cert.pem",
-                          "/tmp/key.pem");   // <- callback-method for new incoming connections
+NetServer<TlsTcpServer>* server = nullptr;
+NetSocket<TlsTcpSocket>* socketClientSide = nullptr;
+
+
+//================================================================================
+//                                    SERVER
+//================================================================================
+
+// create tcp-server
+TcpServer tcpServer(12345);                                       // <- init server with port
+TlsTcpServer tlsTcpServer(std::move(tcpServer),
+                          "/tmp/cert.pem",                        // <- path to certificate-file for tls-encryption
+                          "/tmp/key.pem");                        // <- path to key-file for tls-encryption
+server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
+                                     buffer,                    // <- demo-buffer, which is forwarded to the 
+                                                                //        target void-pointer in the callback
+                                     &processConnectionTlsTcp,  // <- callback for new incoming connections
+                                     "TlsTcp_Test");            // <- base-name for threads of server and clients
+
+// start listening on the port
+if(server->initServer(error) == false) 
+{
+    // do error-handling
+    LOG_ERROR(error);
+}
                                     
-// let the server listen on port 12345
-server->initServer(12345, error);
 // start the thread, so it can create a socket for every incoming 
 //    connection in the background
 server->startThread();
 
-// create a client which works as client and connect to the server
-socketClientSide = new TlsTcpSocket("127.0.0.1",   // <- server-address
-                                    12345,         // <- server-port
-                                    "/tmp/cert.pem",
-                                    "/tmp/key.pem");
+
+//================================================================================
+//                                    CLIENT
+//================================================================================
+
+TcpSocket tcpSocket("127.0.0.1",    // <- server-address
+                    12345);         // <- server-port
+TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
+                          "/tmp/cert.pem",
+                          "/tmp/key.pem");
+socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), 
+                                               "TlsTcp_Test_client");       // <- thread-name for the client
+if(socketClientSide->initConnection(error) == false) 
+{
+    // do error-handling
+    LOG_ERROR(error);
+}
+
 // if the client should only send and never receive messages,
 //    it doesn't need the following two lines. These init the buffer
 //    for incoming messages and starting the thread of the client-socket
-socketClientSide->addNetworkTrigger(buffer, &processMessageTlsTcp);
+socketClientSide->setMessageCallback(buffer, &processMessageTlsTcp);
 socketClientSide->startThread();
 
 // send data
-socketClientSide->sendMessage(std::string("any message"), error);
+socketClientSide->sendMessage("any message", error);
 // instead of socketClientSide you can use socketServerSide the same way
 
-// teminate connectioin
+
+//================================================================================
+//                                    CLOSE_ALL
+//================================================================================
+
+// teminate client connection
 socketClientSide->closeSocket();
 socketClientSide->scheduleThreadForDeletion();
-```
 
+// teminate server
+server->closeServer();
+server->scheduleThreadForDeletion();
+```
 
 ## Contributing
 

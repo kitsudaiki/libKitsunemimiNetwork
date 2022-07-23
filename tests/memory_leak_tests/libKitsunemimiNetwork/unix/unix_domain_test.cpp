@@ -56,11 +56,11 @@ UnixDomain_Test::UnixDomain_Test()
     error = new ErrorContainer();
 
     UnixDomainServer udsServer2("/tmp/sock.uds");
-    udsServer2.initServer(*error);
     m_server = new NetServer<UnixDomainServer>(std::move(udsServer2),
                                                this,
                                                &processConnectionUnixDomain,
                                                "UnixDomain_Test");
+    m_server->initServer(*error);
     m_server->scheduleThreadForDeletion();
     sleep(2);
 
@@ -69,11 +69,11 @@ UnixDomain_Test::UnixDomain_Test()
     m_buffer = new DataBuffer(1000);
     error = new ErrorContainer();
     UnixDomainServer udsServer("/tmp/sock.uds");
-    udsServer.initServer(*error);
     m_server = new NetServer<UnixDomainServer>(std::move(udsServer),
                                                this,
                                                &processConnectionUnixDomain,
                                                "UnixDomain_Test");
+    m_server->initServer(*error);
     m_server->startThread();
 
         // test client create and delete
