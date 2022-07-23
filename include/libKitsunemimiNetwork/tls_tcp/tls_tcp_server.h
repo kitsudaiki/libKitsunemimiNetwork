@@ -47,6 +47,7 @@ private:
 
     TlsTcpServer();
 
+    bool initServer(ErrorContainer &error);
     int getServerFd() const;
 
     std::string caFile = "";

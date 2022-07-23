@@ -77,12 +77,12 @@ Tcp_Test::checkConnectionInit()
 
     // init server
     TcpServer tcpServer(12345);
-    TEST_EQUAL(tcpServer.initServer(error), true);
     m_server = new NetServer<TcpServer>(std::move(tcpServer),
                                         this,
                                         &processConnectionTcp,
                                         "Tcp_Test");
 
+    TEST_EQUAL(m_server->initServer(error), true);
     TEST_EQUAL(m_server->getType(), 2);
     TEST_EQUAL(m_server->startThread(), true);
 

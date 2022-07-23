@@ -40,13 +40,13 @@ public:
     TcpServer(const uint16_t port);
     ~TcpServer();
 
-    bool initServer(ErrorContainer &error);
-
 private:
     friend NetServer<TcpServer>;
     friend TlsTcpServer;
 
     TcpServer();
+
+    bool initServer(ErrorContainer &error);
 
     int getServerFd() const;
     uint16_t getPort() const;

@@ -80,7 +80,6 @@ TlsTcp_Test::checkConnectionInit()
 
     // init server
     TcpServer tcpServer(12345);
-    TEST_EQUAL(tcpServer.initServer(error), true);
 
     TlsTcpServer tlsTcpServer(std::move(tcpServer),
                               "/tmp/cert.pem",
@@ -90,6 +89,7 @@ TlsTcp_Test::checkConnectionInit()
                                            &processConnectionTlsTcp,
                                            "TlsTcp_Test");
 
+    TEST_EQUAL(m_server->initServer(error), true);
     TEST_EQUAL(m_server->getType(), 3);
     TEST_EQUAL(m_server->startThread(), true);
 

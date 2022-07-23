@@ -37,6 +37,17 @@ TlsTcpServer::TlsTcpServer(TcpServer&& server,
 TlsTcpServer::TlsTcpServer() {}
 
 /**
+ * @brief TlsTcpServer::initServer
+ * @param error
+ * @return
+ */
+bool
+TlsTcpServer::initServer(ErrorContainer &error)
+{
+    return server.initServer(error);
+}
+
+/**
  * @brief destructor
  */
 TlsTcpServer::~TlsTcpServer() {}

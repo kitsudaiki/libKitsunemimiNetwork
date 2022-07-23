@@ -37,14 +37,13 @@ public:
     UnixDomainServer(const std::string &socketFile);
     ~UnixDomainServer();
 
-    bool initServer(ErrorContainer &error);
-
 private:
     friend NetServer<UnixDomainServer>;
 
     UnixDomainServer();
 
     int getServerFd() const;
+    bool initServer(ErrorContainer &error);
 
     int serverFd = 0;
     uint32_t type = 0;

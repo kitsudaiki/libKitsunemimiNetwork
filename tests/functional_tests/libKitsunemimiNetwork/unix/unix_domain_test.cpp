@@ -75,13 +75,13 @@ UnixDomain_Test::checkConnectionInit()
     ErrorContainer error;
     // check too long path
     UnixDomainServer udsServer("/tmp/sock.uds");
-    TEST_EQUAL(udsServer.initServer(error), true);
     m_server = new NetServer<UnixDomainServer>(std::move(udsServer),
                                                this,
                                                &processConnectionUnixDomain,
                                                "UnixDomain_Test");
 
     // init server
+    TEST_EQUAL(m_server->initServer(error), true);
     TEST_EQUAL(m_server->getType(), 1);
     TEST_EQUAL(m_server->startThread(), true);
 
