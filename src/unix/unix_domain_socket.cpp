@@ -23,7 +23,7 @@ namespace Network
 UnixDomainSocket::UnixDomainSocket(const std::string &socketFile)
 {
     this->m_socketFile = socketFile;
-    this->isClientSide = true;
+    this->m_isClientSide = true;
     this->type = 1;
 }
 
@@ -71,7 +71,7 @@ UnixDomainSocket::initClientSide(ErrorContainer &error)
 UnixDomainSocket::UnixDomainSocket(const int socketFd)
 {
     this->socketFd = socketFd;
-    this->isClientSide = false;
+    this->m_isClientSide = false;
     this->type = 1;
     this->isConnected = true;
 }
@@ -140,6 +140,17 @@ UnixDomainSocket::initSocket(ErrorContainer &error)
     isConnected = true;
 
     return true;
+}
+
+/**
+ * @brief check if socket is on client-side of the connection
+ *
+ * @return true, if socket is client-side, else false
+ */
+bool
+UnixDomainSocket::isClientSide() const
+{
+    return m_isClientSide;
 }
 
 /**

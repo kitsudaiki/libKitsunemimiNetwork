@@ -1,29 +1,18 @@
 /**
- *  @file    net_socket.h
+ *  @file    template_socket.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef NET_SOCKET_H
-#define NET_SOCKET_H
+#ifndef KITSUNEMIMI_NETWORK_TEMPLATE_SOCKET_H
+#define KITSUNEMIMI_NETWORK_TEMPLATE_SOCKET_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <cinttypes>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <string>
-#include <vector>
-#include <errno.h>
-#include <atomic>
 
+#include <libKitsunemimiNetwork/abstract_socket.h>
 #include <libKitsunemimiCommon/threading/thread.h>
 #include <libKitsunemimiCommon/logger.h>
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
@@ -40,8 +29,8 @@ class UnixDomainSocket;
 class TlsTcpSocket;
 
 template<class T>
-class NetSocket
-        : public Kitsunemimi::Thread
+class TemplateSocket
+        : public AbstractSocket
 {
 public:
     /**
@@ -50,9 +39,9 @@ public:
      * @param socketbase-socket-object
      * @param threadName name of the thread of the socket
      */
-    NetSocket(T&& socket,
-              const std::string &threadName)
-        : Kitsunemimi::Thread(threadName)
+    TemplateSocket(T&& socket,
+                   const std::string &threadName)
+        : AbstractSocket(threadName)
     {
         m_socket = std::move(socket);
     }
@@ -60,60 +49,9 @@ public:
     /**
      * @brief destructor
      */
-    ~NetSocket()
+    ~TemplateSocket()
     {
         closeSocket();
-    }
-
-    /**
-     * @brief add new callback for incoming messages
-     *
-     * @param target target-object of the callback-functions
-     * @param processMessage callback-function
-     *
-     * @return false, if object was nullptr, else true
-     */
-    void setMessageCallback(void* target,
-                            uint64_t (*processMessage)(void*,
-                                                       Kitsunemimi::RingBuffer*,
-                                                       NetSocket<TcpSocket>*))
-    {
-        m_target = target;
-        m_processMessage = processMessage;
-    }
-
-    /**
-     * @brief add new callback for incoming messages
-     *
-     * @param target target-object of the callback-functions
-     * @param processMessage callback-function
-     *
-     * @return false, if object was nullptr, else true
-     */
-    void setMessageCallback(void* target,
-                            uint64_t (*processMessage)(void*,
-                                                       Kitsunemimi::RingBuffer*,
-                                                       NetSocket<TlsTcpSocket>*))
-    {
-        m_target = target;
-        m_processMessage = processMessage;
-    }
-
-    /**
-     * @brief add new callback for incoming messages
-     *
-     * @param target target-object of the callback-functions
-     * @param processMessage callback-function
-     *
-     * @return false, if object was nullptr, else true
-     */
-    void setMessageCallback(void* target,
-                            uint64_t (*processMessage)(void*,
-                                                       Kitsunemimi::RingBuffer*,
-                                                       NetSocket<UnixDomainSocket>*))
-    {
-        m_target = target;
-        m_processMessage = processMessage;
     }
 
     /**
@@ -143,9 +81,9 @@ public:
      *
      * @return true, if socket is on client-side of the connection
      */
-    bool isClientSide() const
+    bool isClientSide()
     {
-        return m_socket.m_isClientSide;
+        return m_socket.isClientSide();
     }
 
     /**
@@ -239,10 +177,6 @@ private:
     std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
     T m_socket;
 
-    // callback-parameter
-    void* m_target = nullptr;
-    uint64_t (*m_processMessage)(void*, RingBuffer*, NetSocket*);
-
     /**
      * @brief wait for new incoming messages
      *
@@ -305,4 +239,4 @@ protected:
 } // namespace Network
 } // namespace Kitsunemimi
 
-#endif // NET_SOCKET_H
+#endif // KITSUNEMIMI_NETWORK_TEMPLATE_SOCKET_H

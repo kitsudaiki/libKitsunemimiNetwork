@@ -1,33 +1,25 @@
 /**
- *  @file    net_server.h
+ *  @file    template_server.h
  *
  *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
  *  @copyright MIT License
  */
 
-#ifndef NET_SERVER_H
-#define NET_SERVER_H
+#ifndef KITSUNEMIMI_NETWORK_TEMPLATE_SERVER_H
+#define KITSUNEMIMI_NETWORK_TEMPLATE_SERVER_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <vector>
 
 #include <libKitsunemimiCommon/threading/thread.h>
 #include <libKitsunemimiCommon/logger.h>
 
-#include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/abstract_server.h>
+#include <libKitsunemimiNetwork/template_socket.h>
 #include <libKitsunemimiNetwork/tls_tcp/tls_tcp_server.h>
 #include <libKitsunemimiNetwork/unix/unix_domain_server.h>
 #include <libKitsunemimiNetwork/tcp/tcp_server.h>
-
 
 namespace Kitsunemimi
 {
@@ -43,75 +35,37 @@ class UnixDomainServer;
 class TlsTcpServer;
 
 template<class>
-class NetSocket;
+class TemplateSocket;
 
 template<class T>
-class NetServer
-        : public Kitsunemimi::Thread
+class TemplateServer
+        : public AbstractServer
 {
 public:
 
     /**
-     * @brief constructor for tcp-typ-socket
+     * @brief constructor for template of a server
      *
      * @param server base-server
      * @param target target-object for the callback
      * @param processConnection callback-function
      * @param threadName name of the thread of the server
      */
-    NetServer(T&& server,
-              void* target,
-              void (*processConnection)(void*, NetSocket<TcpSocket>*),
-              const std::string &threadName)
-        : Kitsunemimi::Thread(threadName)
+    TemplateServer(T&& server,
+                   void* target,
+                   void (*processConnection)(void*, AbstractSocket*),
+                   const std::string &threadName)
+        : AbstractServer(target,
+                         processConnection,
+                         threadName)
     {
         m_server = std::move(server);
-        m_target = target;
-        m_processTcpConnection = processConnection;
-    }
-
-    /**
-     * @brief constructor for uds-typ-socket
-     *
-     * @param server base-server
-     * @param target target-object for the callback
-     * @param processConnection callback-function
-     * @param threadName name of the thread of the server
-     */
-    NetServer(T&& server,
-              void* target,
-              void (*processConnection)(void*, NetSocket<UnixDomainSocket>*),
-              const std::string &threadName)
-        : Kitsunemimi::Thread(threadName)
-    {
-        m_server = std::move(server);
-        m_target = target;
-        m_processUnixDomainConnection = processConnection;
-    }
-
-    /**
-     * @brief constructor for tls-typ-socket
-     *
-     * @param server base-server
-     * @param target target-object for the callback
-     * @param processConnection callback-function
-     * @param threadName name of the thread of the server
-     */
-    NetServer(T&& server,
-              void* target,
-              void (*processConnection)(void*, NetSocket<TlsTcpSocket>*),
-              const std::string &threadName)
-        : Kitsunemimi::Thread(threadName)
-    {
-        m_server = std::move(server);
-        m_target = target;
-        m_processTlsTcpConnection = processConnection;
     }
 
     /**
      * @brief destructor
      */
-    ~NetServer()
+    ~TemplateServer()
     {
         closeServer();
     }
@@ -215,19 +169,19 @@ protected:
         {
             const std::string name = "TCP_socket";
             TcpSocket tcpSocket(fd);
-            NetSocket<TcpSocket>* netSocket =
-                    new NetSocket<TcpSocket>(std::move(tcpSocket), name);
+            TemplateSocket<TcpSocket>* netSocket =
+                    new TemplateSocket<TcpSocket>(std::move(tcpSocket), name);
             netSocket->initConnection(error);
-            m_processTcpConnection(m_target, netSocket);
+            m_processConnection(m_target, netSocket);
         }
         else if(std::is_same<T, UnixDomainServer>::value)
         {
             const std::string name = "UDS_socket";
             UnixDomainSocket unixSocket(fd);
-            NetSocket<UnixDomainSocket>* netSocket =
-                    new NetSocket<UnixDomainSocket>(std::move(unixSocket), name);
+            TemplateSocket<UnixDomainSocket>* netSocket =
+                    new TemplateSocket<UnixDomainSocket>(std::move(unixSocket), name);
             netSocket->initConnection(error);
-            m_processUnixDomainConnection(m_target, netSocket);
+            m_processConnection(m_target, netSocket);
         }
         else if(std::is_same<T, TlsTcpServer>::value)
         {
@@ -237,20 +191,14 @@ protected:
                                       m_server.certFile,
                                       m_server.keyFile,
                                       m_server.caFile);
-            NetSocket<TlsTcpSocket>* netSocket =
-                    new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), name);
+            TemplateSocket<TlsTcpSocket>* netSocket =
+                    new TemplateSocket<TlsTcpSocket>(std::move(tlsTcpSocket), name);
             netSocket->initConnection(error);
-            m_processTlsTcpConnection(m_target, netSocket);
+            m_processConnection(m_target, netSocket);
         }
 
         return true;
     }
-
-    // callback-parameter for new incoming connections
-    void* m_target = nullptr;
-    void (*m_processTcpConnection)(void*, NetSocket<TcpSocket>*);
-    void (*m_processUnixDomainConnection)(void*, NetSocket<UnixDomainSocket>*);
-    void (*m_processTlsTcpConnection)(void*, NetSocket<TlsTcpSocket>*);
 
     T m_server;
 };
@@ -258,4 +206,4 @@ protected:
 } // namespace Network
 } // namespace Kitsunemimi
 
-#endif // NET_SERVER_H
+#endif // KITSUNEMIMI_NETWORK_TEMPLATE_SERVER_H

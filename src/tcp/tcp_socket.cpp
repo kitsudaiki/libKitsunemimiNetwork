@@ -26,7 +26,7 @@ TcpSocket::TcpSocket(const std::string &address,
 {
     m_address = address;
     m_port = port;
-    isClientSide = true;
+    m_isClientSide = true;
     type = 2;
 }
 
@@ -78,7 +78,7 @@ TcpSocket::initClientSide(ErrorContainer &error)
 TcpSocket::TcpSocket(const int socketFd)
 {
     this->socketFd = socketFd;
-    this->isClientSide = false;
+    this->m_isClientSide = false;
     this->type = 2;
     this->isConnected = true;
 }
@@ -151,6 +151,17 @@ TcpSocket::initSocket(ErrorContainer &error)
     socketAddr = address;
 
     return true;
+}
+
+/**
+ * @brief check if socket is on client-side of the connection
+ *
+ * @return true, if socket is client-side, else false
+ */
+bool
+TcpSocket::isClientSide() const
+{
+    return m_isClientSide;
 }
 
 /**

@@ -16,14 +16,16 @@ namespace Kitsunemimi
 struct DataBuffer;
 namespace Network
 {
+class AbstractSocket;
+
 class UnixDomainServer;
 class UnixDomainSocket;
 
 template<class>
-class NetSocket;
+class TemplateSocket;
 
 template<class>
-class NetServer;
+class TemplateServer;
 
 class UnixDomain_Test
         : public Kitsunemimi::MemoryLeakTestHelpter
@@ -32,7 +34,7 @@ public:
     UnixDomain_Test();
 
     DataBuffer* m_buffer = nullptr;
-    NetSocket<UnixDomainSocket>* m_socketServerSide = nullptr;
+    AbstractSocket* m_socketServerSide = nullptr;
 
 private:
     void initTestCase();
@@ -41,8 +43,8 @@ private:
     void checkBigDataTransfer();
     void cleanupTestCase();
 
-    NetServer<UnixDomainServer>* m_server = nullptr;
-    NetSocket<UnixDomainSocket>* m_socketClientSide = nullptr;
+    TemplateServer<UnixDomainServer>* m_server = nullptr;
+    TemplateSocket<UnixDomainSocket>* m_socketClientSide = nullptr;
 };
 
 } // namespace Network
