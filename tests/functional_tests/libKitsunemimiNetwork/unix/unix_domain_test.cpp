@@ -76,9 +76,9 @@ UnixDomain_Test::checkConnectionInit()
     // check too long path
     UnixDomainServer udsServer("/tmp/sock.uds");
     m_server = new TemplateServer<UnixDomainServer>(std::move(udsServer),
-                                               this,
-                                               &processConnectionUnixDomain,
-                                               "UnixDomain_Test");
+                                                    this,
+                                                    &processConnectionUnixDomain,
+                                                    "UnixDomain_Test");
 
     // init server
     TEST_EQUAL(m_server->initServer(error), true);
@@ -90,7 +90,7 @@ UnixDomain_Test::checkConnectionInit()
     // init client
     UnixDomainSocket udsSocket("/tmp/sock.uds");
     m_socketClientSide = new TemplateSocket<UnixDomainSocket>(std::move(udsSocket),
-                                                         "UnixDomain_Test_client");
+                                                              "UnixDomain_Test_client");
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), 1);

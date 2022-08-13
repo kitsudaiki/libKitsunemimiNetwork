@@ -39,6 +39,8 @@ public:
                    const std::string &threadName);
     ~AbstractServer();
 
+    virtual bool closeServer() = 0;
+
 protected:
     // callback-parameter
     void* m_target = nullptr;

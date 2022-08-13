@@ -85,9 +85,9 @@ TlsTcp_Test::checkConnectionInit()
                               "/tmp/cert.pem",
                               "/tmp/key.pem");
     m_server = new TemplateServer<TlsTcpServer>(std::move(tlsTcpServer),
-                                           this,
-                                           &processConnectionTlsTcp,
-                                           "TlsTcp_Test");
+                                                this,
+                                                &processConnectionTlsTcp,
+                                                "TlsTcp_Test");
 
     TEST_EQUAL(m_server->initServer(error), true);
     TEST_EQUAL(m_server->getType(), 3);
@@ -98,7 +98,8 @@ TlsTcp_Test::checkConnectionInit()
     TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
                               "/tmp/cert.pem",
                               "/tmp/key.pem");
-    m_socketClientSide = new TemplateSocket<TlsTcpSocket>(std::move(tlsTcpSocket), "Tcp_Test_client");
+    m_socketClientSide = new TemplateSocket<TlsTcpSocket>(std::move(tlsTcpSocket),
+                                                          "Tcp_Test_client");
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), 3);
 

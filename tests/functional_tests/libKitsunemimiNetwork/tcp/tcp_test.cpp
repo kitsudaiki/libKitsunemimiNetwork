@@ -78,9 +78,9 @@ Tcp_Test::checkConnectionInit()
     // init server
     TcpServer tcpServer(12345);
     m_server = new TemplateServer<TcpServer>(std::move(tcpServer),
-                                        this,
-                                        &processConnectionTcp,
-                                        "Tcp_Test");
+                                             this,
+                                             &processConnectionTcp,
+                                             "Tcp_Test");
 
     TEST_EQUAL(m_server->initServer(error), true);
     TEST_EQUAL(m_server->getType(), 2);
@@ -89,7 +89,7 @@ Tcp_Test::checkConnectionInit()
     // init client
     TcpSocket tcpSocket("127.0.0.1", 12345);
     m_socketClientSide = new TemplateSocket<TcpSocket>(std::move(tcpSocket),
-                                                  "Tcp_Test_client");
+                                                       "Tcp_Test_client");
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), 2);

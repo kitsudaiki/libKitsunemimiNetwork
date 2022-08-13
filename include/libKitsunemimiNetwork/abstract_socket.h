@@ -46,6 +46,7 @@ public:
                                                        Kitsunemimi::RingBuffer*,
                                                        AbstractSocket*));
 
+    virtual bool initConnection(Kitsunemimi::ErrorContainer &error) = 0;
     virtual bool isClientSide() = 0;
     virtual uint32_t getType() = 0;
     virtual bool sendMessage(const std::string &message, ErrorContainer &error) = 0;
