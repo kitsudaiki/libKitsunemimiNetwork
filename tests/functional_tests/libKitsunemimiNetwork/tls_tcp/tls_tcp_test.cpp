@@ -9,8 +9,8 @@
 #include "tls_tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/net_socket.h>
-#include <libKitsunemimiNetwork/net_server.h>
+#include <libKitsunemimiNetwork/template_socket.h>
+#include <libKitsunemimiNetwork/template_server.h>
 
 #include <cert_init.h>
 
@@ -24,7 +24,7 @@ namespace Network
  */
 uint64_t processMessageTlsTcp(void* target,
                               Kitsunemimi::RingBuffer* recvBuffer,
-                              NetSocket<TlsTcpSocket>*)
+                              AbstractSocket*)
 {
     TlsTcp_Test* targetTest = static_cast<TlsTcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -40,7 +40,7 @@ uint64_t processMessageTlsTcp(void* target,
  * processConnectionTlsTcp-callback
  */
 void processConnectionTlsTcp(void* target,
-                             NetSocket<TlsTcpSocket>* socket)
+                             AbstractSocket* socket)
 {
     TlsTcp_Test* targetTest = static_cast<TlsTcp_Test*>(target);
     targetTest->m_socketServerSide = socket;
@@ -84,7 +84,7 @@ TlsTcp_Test::checkConnectionInit()
     TlsTcpServer tlsTcpServer(std::move(tcpServer),
                               "/tmp/cert.pem",
                               "/tmp/key.pem");
-    m_server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
+    m_server = new TemplateServer<TlsTcpServer>(std::move(tlsTcpServer),
                                            this,
                                            &processConnectionTlsTcp,
                                            "TlsTcp_Test");
@@ -98,7 +98,7 @@ TlsTcp_Test::checkConnectionInit()
     TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
                               "/tmp/cert.pem",
                               "/tmp/key.pem");
-    m_socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), "Tcp_Test_client");
+    m_socketClientSide = new TemplateSocket<TlsTcpSocket>(std::move(tlsTcpSocket), "Tcp_Test_client");
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->getType(), 3);
 

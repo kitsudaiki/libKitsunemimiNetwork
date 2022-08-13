@@ -29,10 +29,10 @@ namespace Network
 class TlsTcpServer;
 
 template<class>
-class NetSocket;
+class TemplateSocket;
 
 template <class>
-class NetServer;
+class TemplateServer;
 
 class TcpServer
 {
@@ -41,7 +41,7 @@ public:
     ~TcpServer();
 
 private:
-    friend NetServer<TcpServer>;
+    friend TemplateServer<TcpServer>;
     friend TlsTcpServer;
 
     TcpServer();

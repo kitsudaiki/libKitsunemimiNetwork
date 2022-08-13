@@ -71,11 +71,11 @@ The following snippets show only the differences in initializing the different s
 
 ```cpp
 UnixDomainServer udsServer("/tmp/sock.uds");
-NetServer<UnixDomainServer>* server = nullptr;
-m_server = new NetServer<UnixDomainServer>(std::move(udsServer),
-                                           this,
-                                           &processConnectionUnixDomain,
-                                           "UnixDomain_Test");      // <- base-name for threads of server and clients
+TemplateServer<UnixDomainServer>* server = nullptr;
+m_server = new TemplateServer<UnixDomainServer>(std::move(udsServer),
+                                                this,
+                                                &processConnectionUnixDomain,
+                                               "UnixDomain_Test");      // <- base-name for threads of server and clients
 
 server->initServer(error)
 ```
@@ -84,9 +84,9 @@ server->initServer(error)
 
 ```cpp
 UnixDomainSocket udsSocket("/tmp/sock.uds");        // <- file-path , whiere the unix-domain-server is listen
-m_socketClientSide = new NetSocket<UnixDomainSocket>(std::move(udsSocket),
-                                                     "UnixDomain_Test_client");   // <- thread-name for the client
-NetSocket<UnixDomainSocket>* ssocketClientSide = nullptr;
+m_socketClientSide = new TemplateSocket<UnixDomainSocket>(std::move(udsSocket),
+                                                          "UnixDomain_Test_client");   // <- thread-name for the client
+TemplateSocket<UnixDomainSocket>* ssocketClientSide = nullptr;
 socketClientSide->initConnection(error)
 ```
 
@@ -97,12 +97,12 @@ socketClientSide->initConnection(error)
 ```cpp
 // create tcp-server
 TcpServer tcpServer(12345);                                     // <- init server with port
-NetServer<TcpServer>* server = nullptr;
-server = new NetServer<TcpServer>(std::move(tcpServer),
-                                     buffer,                    // <- demo-buffer, which is forwarded to the 
-                                                                //        target void-pointer in the callback
-                                     &processConnectionTlsTcp,  // <- callback for new incoming connections
-                                     "Tcp_Test");               // <- base-name for threads of server and clients
+TemplateServer<TcpServer>* server = nullptr;
+server = new TemplateServer<TcpServer>(std::move(tcpServer),
+                                       buffer,                    // <- demo-buffer, which is forwarded to the 
+                                                                 //        target void-pointer in the callback
+                                       &processConnectionTlsTcp,  // <- callback for new incoming connections
+                                       "Tcp_Test");               // <- base-name for threads of server and clients
 
 server->initServer(error)
 ```
@@ -112,9 +112,9 @@ server->initServer(error)
 ```cpp
 TcpSocket tcpSocket("127.0.0.1",                                      // <- server-address
                     12345);                                           // <- server-port
-NetSocket<TcpSocket>* ssocketClientSide = nullptr;
-ssocketClientSide = new NetSocket<TcpSocket>(std::move(tcpSocket), 
-                                             "Tcp_Test_client");      // <- thread-name for the client
+TemplateSocket<TcpSocket>* ssocketClientSide = nullptr;
+ssocketClientSide = new TemplateSocket<TcpSocket>(std::move(tcpSocket), 
+                                                  "Tcp_Test_client");      // <- thread-name for the client
 socketClientSide->initConnection(error)
 ```
 
@@ -129,12 +129,12 @@ TcpServer tcpServer(12345);                                       // <- init ser
 TlsTcpServer tlsTcpServer(std::move(tcpServer),
                           "/tmp/cert.pem",                        // <- path to certificate-file for tls-encryption
                           "/tmp/key.pem");                        // <- path to key-file for tls-encryption
-NetServer<TlsTcpServer>* server = nullptr;
-server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
-                                     buffer,                    // <- demo-buffer, which is forwarded to the 
-                                                                //        target void-pointer in the callback
-                                     &processConnectionTlsTcp,  // <- callback for new incoming connections
-                                     "TlsTcp_Test");            // <- base-name for threads of server and clients
+TemplateServer<TlsTcpServer>* server = nullptr;
+server = new TemplateServer<TlsTcpServer>(std::move(tlsTcpServer),
+                                          buffer,                    // <- demo-buffer, which is forwarded to the 
+                                                                     //        target void-pointer in the callback
+                                          &processConnectionTlsTcp,  // <- callback for new incoming connections
+                                          "TlsTcp_Test");            // <- base-name for threads of server and clients
 
 server->initServer(error)
 ```
@@ -147,9 +147,9 @@ TcpSocket tcpSocket("127.0.0.1",    // <- server-address
 TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
                           "/tmp/cert.pem",             // <- path to certificate-file for tls-encryption
                           "/tmp/key.pem");             // <- path to key-file for tls-encryption
-NetSocket<TlsTcpSocket>* ssocketClientSide = nullptr;
-ssocketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), 
-                                                "TlsTcp_Test_client");      // <- thread-name for the client
+TemplateSocket<TlsTcpSocket>* ssocketClientSide = nullptr;
+ssocketClientSide = new TemplateSocket<TlsTcpSocket>(std::move(tlsTcpSocket), 
+                                                     "TlsTcp_Test_client");      // <- thread-name for the client
 socketClientSide->initConnection(error)
 ```
 
@@ -168,7 +168,7 @@ using namespace Kitsunemimi::Network;
 // callback for new incoming messages
 uint64_t processMessageTlsTcp(void* target,
                               Kitsunemimi::RingBuffer* recvBuffer,
-                              NetSocket<TlsTcpSocket>*)
+                              AbstractSocket*)
 {
     // here in this example the demo-buffer, which was registered in the server
     // is converted back from the void-pointer into the original object-pointer
@@ -188,7 +188,7 @@ uint64_t processMessageTlsTcp(void* target,
 
 // callback for new incoming connections
 void processConnection(void* target,
-                             NetSocket<TlsTcpSocket>* socket)
+                       AbstractSocket* socket)
 {
     // set callback-method for incoming messages on the new socket
     // you can also create a new buffer here and don't need to forward the void-pointer
@@ -202,8 +202,8 @@ void processConnection(void* target,
 Kitsunemimi::DataBuffer* buffer = new Kitsunemimi::DataBuffer(1000);
 Kitsunemimi::ErrorContainer error;
 
-NetServer<TlsTcpServer>* server = nullptr;
-NetSocket<TlsTcpSocket>* socketClientSide = nullptr;
+TemplateServer<TlsTcpServer>* server = nullptr;
+TemplateSocket<TlsTcpSocket>* socketClientSide = nullptr;
 
 
 //================================================================================
@@ -215,11 +215,11 @@ TcpServer tcpServer(12345);                                       // <- init ser
 TlsTcpServer tlsTcpServer(std::move(tcpServer),
                           "/tmp/cert.pem",                        // <- path to certificate-file for tls-encryption
                           "/tmp/key.pem");                        // <- path to key-file for tls-encryption
-server = new NetServer<TlsTcpServer>(std::move(tlsTcpServer),
-                                     buffer,                    // <- demo-buffer, which is forwarded to the 
-                                                                //        target void-pointer in the callback
-                                     &processConnectionTlsTcp,  // <- callback for new incoming connections
-                                     "TlsTcp_Test");            // <- base-name for threads of server and clients
+server = new TemplateServer<TlsTcpServer>(std::move(tlsTcpServer),
+                                          buffer,                    // <- demo-buffer, which is forwarded to the 
+                                                                     //        target void-pointer in the callback
+                                          &processConnectionTlsTcp,  // <- callback for new incoming connections
+                                          "TlsTcp_Test");            // <- base-name for threads of server and clients
 
 // start listening on the port
 if(server->initServer(error) == false) 
@@ -242,8 +242,8 @@ TcpSocket tcpSocket("127.0.0.1",    // <- server-address
 TlsTcpSocket tlsTcpSocket(std::move(tcpSocket),
                           "/tmp/cert.pem",
                           "/tmp/key.pem");
-socketClientSide = new NetSocket<TlsTcpSocket>(std::move(tlsTcpSocket), 
-                                               "TlsTcp_Test_client");       // <- thread-name for the client
+socketClientSide = new TemplateSocket<TlsTcpSocket>(std::move(tlsTcpSocket), 
+                                                    "TlsTcp_Test_client");       // <- thread-name for the client
 if(socketClientSide->initConnection(error) == false) 
 {
     // do error-handling

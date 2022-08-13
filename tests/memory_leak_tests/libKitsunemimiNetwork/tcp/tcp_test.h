@@ -17,14 +17,16 @@ struct RingBuffer;
 struct DataBuffer;
 namespace Network
 {
+class AbstractSocket;
+
 class TcpServer;
 class TcpSocket;
 
 template<class>
-class NetSocket;
+class TemplateSocket;
 
 template<class>
-class NetServer;
+class TemplateServer;
 
 class Tcp_Test
         : public Kitsunemimi::MemoryLeakTestHelpter
@@ -33,11 +35,11 @@ public:
     Tcp_Test();
 
     DataBuffer* m_buffer = nullptr;
-    NetSocket<TcpSocket>* m_socketServerSide = nullptr;
+    AbstractSocket* m_socketServerSide = nullptr;
 
 private:
-    NetServer<TcpServer>* m_server = nullptr;
-    NetSocket<TcpSocket>* m_socketClientSide = nullptr;
+    TemplateServer<TcpServer>* m_server = nullptr;
+    TemplateSocket<TcpSocket>* m_socketClientSide = nullptr;
 };
 
 } // namespace Network

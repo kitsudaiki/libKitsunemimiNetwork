@@ -26,10 +26,10 @@ namespace Kitsunemimi
 namespace Network
 {
 template<class>
-class NetSocket;
+class TemplateSocket;
 
 template <class>
-class NetServer;
+class TemplateServer;
 
 class UnixDomainServer
 {
@@ -38,7 +38,7 @@ public:
     ~UnixDomainServer();
 
 private:
-    friend NetServer<UnixDomainServer>;
+    friend TemplateServer<UnixDomainServer>;
 
     UnixDomainServer();
 

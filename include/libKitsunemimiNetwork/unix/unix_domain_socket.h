@@ -9,7 +9,7 @@
 #ifndef UNIX_DOMAIN_SOCKET_H
 #define UNIX_DOMAIN_SOCKET_H
 
-#include <libKitsunemimiNetwork/net_socket.h>
+#include <libKitsunemimiNetwork/template_socket.h>
 
 namespace Kitsunemimi
 {
@@ -20,10 +20,10 @@ class TcpServer;
 class TlsTcpServer;
 
 template <class>
-class NetSocket;
+class TemplateSocket;
 
 template <class>
-class NetServer;
+class TemplateServer;
 
 class UnixDomainSocket
 {
@@ -33,23 +33,24 @@ public:
     ~UnixDomainSocket();
 
 private:
-    friend NetSocket<UnixDomainSocket>;
-    friend NetServer<UnixDomainServer>;
-    friend NetServer<TcpServer>;
-    friend NetServer<TlsTcpServer>;
+    friend TemplateSocket<UnixDomainSocket>;
+    friend TemplateServer<UnixDomainServer>;
+    friend TemplateServer<TcpServer>;
+    friend TemplateServer<TlsTcpServer>;
 
     UnixDomainSocket();
     UnixDomainSocket(const int socketFd);
 
     sockaddr_un socketAddr;
     bool isConnected = false;
-    bool isClientSide = false;
+    bool m_isClientSide = false;
     int socketFd = 0;
     uint32_t type = 0;;
 
     bool initClientSide(ErrorContainer &error);
     bool initSocket(ErrorContainer &error);
     int getSocketFd() const;
+    bool isClientSide() const;
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,

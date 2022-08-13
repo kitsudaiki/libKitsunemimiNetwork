@@ -9,8 +9,8 @@
 #include "unix_domain_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/net_socket.h>
-#include <libKitsunemimiNetwork/net_server.h>
+#include <libKitsunemimiNetwork/template_socket.h>
+#include <libKitsunemimiNetwork/template_server.h>
 
 namespace Kitsunemimi
 {
@@ -22,7 +22,7 @@ namespace Network
  */
 uint64_t processMessageUnixDomain(void* target,
                                   Kitsunemimi::RingBuffer* recvBuffer,
-                                  NetSocket<UnixDomainSocket>*)
+                                  AbstractSocket*)
 {
     UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -38,7 +38,7 @@ uint64_t processMessageUnixDomain(void* target,
  * processConnectionUnixDomain-callback
  */
 void processConnectionUnixDomain(void* target,
-                                 NetSocket<UnixDomainSocket>* socket)
+                                 AbstractSocket* socket)
 {
     UnixDomain_Test* targetTest = static_cast<UnixDomain_Test*>(target);
     targetTest->m_socketServerSide = socket;
@@ -75,7 +75,7 @@ UnixDomain_Test::checkConnectionInit()
     ErrorContainer error;
     // check too long path
     UnixDomainServer udsServer("/tmp/sock.uds");
-    m_server = new NetServer<UnixDomainServer>(std::move(udsServer),
+    m_server = new TemplateServer<UnixDomainServer>(std::move(udsServer),
                                                this,
                                                &processConnectionUnixDomain,
                                                "UnixDomain_Test");
@@ -89,7 +89,7 @@ UnixDomain_Test::checkConnectionInit()
 
     // init client
     UnixDomainSocket udsSocket("/tmp/sock.uds");
-    m_socketClientSide = new NetSocket<UnixDomainSocket>(std::move(udsSocket),
+    m_socketClientSide = new TemplateSocket<UnixDomainSocket>(std::move(udsSocket),
                                                          "UnixDomain_Test_client");
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);

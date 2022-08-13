@@ -31,7 +31,7 @@ namespace Network
 {
 
 template <class>
-class NetServer;
+class TemplateServer;
 
 class TlsTcpServer
 {
@@ -43,7 +43,7 @@ public:
     ~TlsTcpServer();
 
 private:
-    friend NetServer<TlsTcpServer>;
+    friend TemplateServer<TlsTcpServer>;
 
     TlsTcpServer();
 

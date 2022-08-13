@@ -27,10 +27,10 @@ class TcpServer;
 class TlsTcpServer;
 
 template <class>
-class NetSocket;
+class TemplateSocket;
 
 template <class>
-class NetServer;
+class TemplateServer;
 
 class TlsTcpSocket
 {
@@ -43,10 +43,10 @@ public:
     ~TlsTcpSocket();
 
 private:
-    friend NetSocket<TlsTcpSocket>;
-    friend NetServer<UnixDomainServer>;
-    friend NetServer<TcpServer>;
-    friend NetServer<TlsTcpServer>;
+    friend TemplateSocket<TlsTcpSocket>;
+    friend TemplateServer<UnixDomainServer>;
+    friend TemplateServer<TcpServer>;
+    friend TemplateServer<TlsTcpServer>;
 
     TlsTcpSocket();
 
@@ -57,10 +57,9 @@ private:
     std::string caFile = "";
 
     int getSocketFd() const;
-
     bool initClientSide(ErrorContainer &error);
-
     bool initOpenssl(ErrorContainer &error);
+    bool isClientSide() const;
 
     long recvData(int,
                   void* bufferPosition,

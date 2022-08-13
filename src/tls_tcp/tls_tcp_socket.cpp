@@ -104,7 +104,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
 
     // set ssl-type
     const SSL_METHOD* method;
-    if(socket.isClientSide) {
+    if(isClientSide()) {
         method = TLS_client_method();
     } else {
         method = TLS_server_method();
@@ -176,7 +176,7 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     }
 
     // process tls-handshake
-    if(socket.isClientSide)
+    if(isClientSide())
     {
         // try to connect to server
         result = SSL_connect(m_ssl);
@@ -201,6 +201,17 @@ TlsTcpSocket::initOpenssl(ErrorContainer &error)
     }
 
     return true;
+}
+
+/**
+ * @brief check if socket is on client-side of the connection
+ *
+ * @return true, if socket is client-side, else false
+ */
+bool
+TlsTcpSocket::isClientSide() const
+{
+    return socket.isClientSide();
 }
 
 /**

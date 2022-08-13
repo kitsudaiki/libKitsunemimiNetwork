@@ -9,8 +9,8 @@
 #include "tcp_test.h"
 #include <libKitsunemimiCommon/buffer/ring_buffer.h>
 
-#include <libKitsunemimiNetwork/net_socket.h>
-#include <libKitsunemimiNetwork/net_server.h>
+#include <libKitsunemimiNetwork/template_socket.h>
+#include <libKitsunemimiNetwork/template_server.h>
 #include <libKitsunemimiCommon/threading/thread_handler.h>
 
 namespace Kitsunemimi
@@ -23,7 +23,7 @@ namespace Network
  */
 uint64_t processMessageTcp(void* target,
                            Kitsunemimi::RingBuffer* recvBuffer,
-                           NetSocket<TcpSocket>*)
+                           AbstractSocket*)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     const uint8_t* dataPointer = getDataPointer_RingBuffer(*recvBuffer, recvBuffer->usedSize);
@@ -39,7 +39,7 @@ uint64_t processMessageTcp(void* target,
  * processConnectionTcp-callback
  */
 void processConnectionTcp(void* target,
-                          NetSocket<TcpSocket>* socket)
+                          AbstractSocket* socket)
 {
     Tcp_Test* targetTest = static_cast<Tcp_Test*>(target);
     targetTest->m_socketServerSide = socket;
@@ -77,7 +77,7 @@ Tcp_Test::checkConnectionInit()
 
     // init server
     TcpServer tcpServer(12345);
-    m_server = new NetServer<TcpServer>(std::move(tcpServer),
+    m_server = new TemplateServer<TcpServer>(std::move(tcpServer),
                                         this,
                                         &processConnectionTcp,
                                         "Tcp_Test");
@@ -88,7 +88,7 @@ Tcp_Test::checkConnectionInit()
 
     // init client
     TcpSocket tcpSocket("127.0.0.1", 12345);
-    m_socketClientSide = new NetSocket<TcpSocket>(std::move(tcpSocket),
+    m_socketClientSide = new TemplateSocket<TcpSocket>(std::move(tcpSocket),
                                                   "Tcp_Test_client");
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);
     TEST_EQUAL(m_socketClientSide->initConnection(error), true);

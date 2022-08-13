@@ -38,10 +38,10 @@ class TlsTcpServer;
 class TlsTcpSocket;
 
 template <class>
-class NetSocket;
+class TemplateSocket;
 
 template <class>
-class NetServer;
+class TemplateServer;
 
 class TcpSocket
 {
@@ -51,17 +51,17 @@ public:
     ~TcpSocket();
 
 private:
-    friend NetSocket<TcpSocket>;
-    friend NetServer<UnixDomainServer>;
-    friend NetServer<TcpServer>;
-    friend NetServer<TlsTcpServer>;
+    friend TemplateSocket<TcpSocket>;
+    friend TemplateServer<UnixDomainServer>;
+    friend TemplateServer<TcpServer>;
+    friend TemplateServer<TlsTcpServer>;
     friend TlsTcpSocket;
 
     TcpSocket();
 
     sockaddr_in socketAddr;
     bool isConnected = false;
-    bool isClientSide = false;
+    bool m_isClientSide = false;
     int socketFd = 0;
     uint32_t type = 0;
 
@@ -70,6 +70,7 @@ private:
     bool initClientSide(ErrorContainer &error);
     bool initSocket(ErrorContainer &error);
     int getSocketFd() const;
+    bool isClientSide() const;
     long recvData(int socket,
                   void* bufferPosition,
                   const size_t bufferSize,
