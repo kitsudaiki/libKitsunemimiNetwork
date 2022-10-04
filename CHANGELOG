@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.0] - 2022-10-04
+
+### Changed
+- use templates to reduce the performance-impact of the inheritence
+
+
 ## [0.8.2] - 2021-11-20
 
 ### Fixed
