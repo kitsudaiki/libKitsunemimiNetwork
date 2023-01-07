@@ -163,7 +163,7 @@ Example to create server and client with TCP-connectiona and TLS-encryption:
 #include <libKitsunemimiNetwork/net_socket.h>
 #include <libKitsunemimiCommon/buffer/data_buffer.h>
 
-using namespace Kitsunemimi::Network;
+using namespace Kitsunemimi;
 
 // callback for new incoming messages
 uint64_t processMessageTlsTcp(void* target,
