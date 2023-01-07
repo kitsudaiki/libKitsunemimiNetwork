@@ -26,8 +26,7 @@
 namespace Kitsunemimi
 {
 struct RingBuffer;
-namespace Network
-{
+
 class AbstractSocket;
 
 class AbstractServer
@@ -47,7 +46,6 @@ protected:
     void (*m_processConnection)(void*, AbstractSocket*);
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // KITSUNEMIMI_NETWORK_ABSTRACT_SERVER_H

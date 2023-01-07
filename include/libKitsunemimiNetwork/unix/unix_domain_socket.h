@@ -13,8 +13,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 class UnixDomainServer;
 class TcpServer;
 class TlsTcpServer;
@@ -63,7 +61,6 @@ private:
     std::string m_socketFile = "";
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // UNIX_DOMAIN_SOCKET_H

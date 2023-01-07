@@ -16,8 +16,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * processMessageTlsTcp-callback
@@ -183,5 +181,4 @@ TlsTcp_Test::cleanupTestCase()
     delete m_buffer;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

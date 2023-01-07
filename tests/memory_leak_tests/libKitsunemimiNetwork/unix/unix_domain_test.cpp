@@ -14,8 +14,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * processMessageUnixDomain-callback
@@ -110,5 +108,4 @@ UnixDomain_Test::UnixDomain_Test()
     CHECK_MEMORY();
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

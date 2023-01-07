@@ -16,7 +16,7 @@ int main()
 {
     Kitsunemimi::initConsoleLogger(true);
 
-    Kitsunemimi::Network::UnixDomain_Test();
-    Kitsunemimi::Network::Tcp_Test();
-    Kitsunemimi::Network::TlsTcp_Test();
+    Kitsunemimi::UnixDomain_Test();
+    Kitsunemimi::Tcp_Test();
+    Kitsunemimi::TlsTcp_Test();
 }

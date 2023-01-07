@@ -15,8 +15,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * processMessageTcp-callback
@@ -110,5 +108,4 @@ Tcp_Test::Tcp_Test()
     CHECK_MEMORY();
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

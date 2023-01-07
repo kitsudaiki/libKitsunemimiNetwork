@@ -14,8 +14,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * processMessageUnixDomain-callback
@@ -173,5 +171,4 @@ UnixDomain_Test::cleanupTestCase()
     delete m_buffer;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

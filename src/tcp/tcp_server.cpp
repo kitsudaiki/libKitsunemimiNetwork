@@ -10,8 +10,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief constructor
@@ -109,5 +107,4 @@ TcpServer::getPort() const
     return m_port;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

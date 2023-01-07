@@ -12,8 +12,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief AbstractSocket::AbstractSocket
@@ -46,5 +44,4 @@ AbstractSocket::setMessageCallback(void* target,
     m_processMessage = processMessage;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

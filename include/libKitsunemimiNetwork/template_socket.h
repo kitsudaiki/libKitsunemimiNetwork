@@ -21,8 +21,6 @@
 namespace Kitsunemimi
 {
 struct RingBuffer;
-namespace Network
-{
 
 class TcpSocket;
 class UnixDomainSocket;
@@ -236,7 +234,6 @@ protected:
     }
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // KITSUNEMIMI_NETWORK_TEMPLATE_SOCKET_H

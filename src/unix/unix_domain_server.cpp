@@ -11,8 +11,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief constructor
@@ -100,6 +98,5 @@ UnixDomainServer::getServerFd() const
     return serverFd;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi
 

@@ -12,8 +12,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief AbstractServer::AbstractServer
@@ -34,5 +32,4 @@ AbstractServer::~AbstractServer()
 {
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

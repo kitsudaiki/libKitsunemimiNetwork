@@ -14,8 +14,7 @@
 namespace Kitsunemimi
 {
 struct DataBuffer;
-namespace Network
-{
+
 class AbstractSocket;
 
 class UnixDomainServer;
@@ -47,7 +46,6 @@ private:
     TemplateSocket<UnixDomainSocket>* m_socketClientSide = nullptr;
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // UNIX_DOMAIN_TEST_H

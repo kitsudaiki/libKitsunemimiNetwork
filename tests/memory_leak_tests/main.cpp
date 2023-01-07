@@ -13,6 +13,6 @@
 
 int main()
 {
-    Kitsunemimi::Network::UnixDomain_Test();
-    Kitsunemimi::Network::Tcp_Test();
+    Kitsunemimi::UnixDomain_Test();
+    Kitsunemimi::Tcp_Test();
 }
