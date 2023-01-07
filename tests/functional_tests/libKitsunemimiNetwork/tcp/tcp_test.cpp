@@ -15,8 +15,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * processMessageTcp-callback
@@ -172,5 +170,4 @@ Tcp_Test::cleanupTestCase()
     delete m_buffer;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

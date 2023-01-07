@@ -20,8 +20,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 class UnixDomainServer;
 class TcpServer;
 class TlsTcpServer;
@@ -77,7 +75,6 @@ private:
     SSL* m_ssl = nullptr;
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // TLS_TCP_SOCKET_H

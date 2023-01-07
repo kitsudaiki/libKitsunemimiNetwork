@@ -15,8 +15,7 @@ namespace Kitsunemimi
 {
 struct RingBuffer;
 struct DataBuffer;
-namespace Network
-{
+
 class AbstractSocket;
 
 class TcpServer;
@@ -42,7 +41,6 @@ private:
     TemplateSocket<TcpSocket>* m_socketClientSide = nullptr;
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // TCPSOCKET_TCPSERVER_TEST_H

@@ -12,8 +12,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief constructor for the socket-side of the tcp-connection
@@ -203,5 +201,4 @@ TcpSocket::getAddress() const
     return m_address;
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

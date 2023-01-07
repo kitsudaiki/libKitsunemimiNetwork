@@ -12,8 +12,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief constructor
@@ -63,5 +61,4 @@ TlsTcpServer::getServerFd() const
     return server.getServerFd();
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

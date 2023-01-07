@@ -27,8 +27,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 template <class>
 class TemplateServer;
@@ -61,7 +59,6 @@ private:
     struct sockaddr_in socketAddr;
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // TLS_TCP_SERVER_H

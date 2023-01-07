@@ -12,8 +12,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 
 /**
  * @brief constructor for the socket-side of the unix-socket-connection
@@ -181,5 +179,4 @@ UnixDomainSocket::sendData(int socket,
     return send(socket, bufferPosition, bufferSize, flags);
 }
 
-} // namespace Network
 } // namespace Kitsunemimi

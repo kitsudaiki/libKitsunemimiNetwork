@@ -6,8 +6,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 const std::string testCert = "-----BEGIN CERTIFICATE-----\n"
         "MIIDYDCCAkigAwIBAgIJAPrYys+kYk3BMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV\n"
         "BAYTAkRFMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX\n"
@@ -66,7 +64,6 @@ void writeTestCerts()
     Kitsunemimi::writeFile("/tmp/key.pem", testKey, error, true);
 }
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // CERT_INIT_H

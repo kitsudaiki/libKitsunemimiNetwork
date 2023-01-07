@@ -23,8 +23,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 template<class>
 class TemplateSocket;
 
@@ -57,7 +55,6 @@ private:
     std::string m_socketFile = "";
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // UNIX_DOMAIN_SERVER_H

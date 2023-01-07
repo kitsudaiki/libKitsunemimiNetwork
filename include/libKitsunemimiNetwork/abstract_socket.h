@@ -31,8 +31,6 @@
 namespace Kitsunemimi
 {
 struct RingBuffer;
-namespace Network
-{
 
 class AbstractSocket
         : public Kitsunemimi::Thread
@@ -61,7 +59,6 @@ protected:
     uint64_t (*m_processMessage)(void*, RingBuffer*, AbstractSocket*);
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // KITSUNEMIMI_NETWORK_ABSTRACT_SOCKET_H

@@ -30,8 +30,6 @@
 
 namespace Kitsunemimi
 {
-namespace Network
-{
 class UnixDomainServer;
 class TcpServer;
 class TlsTcpServer;
@@ -86,7 +84,6 @@ private:
     uint16_t m_port = 0;
 };
 
-} // namespace Network
 } // namespace Kitsunemimi
 
 #endif // TCP_SOCKET_H
